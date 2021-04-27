@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CocoonBs4Example</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <%= render 'layouts/header' %>
+    <div class="container">
+      <%# Rails flash messages styled for Twitter Bootstrap 3.0 %>
+      <% flash.each do |key, value| %>
+        <div class="<%= flash_class(key) %>">
+          <a class="close" data-dismiss="alert">x</a>
+          <%= value %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </div>
+  </body>
+</html>

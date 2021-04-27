@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card bg-primary text-white">
+      <div class="card-header"> <%= "#{@season.year}" %>
+      </div>
+      <div class="card-body bg-light text-dark">
+        <% current_week = @season.getCurrentWeek %>
+        <%= link_to "[edit]", edit_season_path(@season) %>
+        <%= link_to "[Delete]", @season, method: :delete,
+          data: {confirm: "Are you sure?"}, title: "Delete Season #{@season.year}" %>
+        <ul class="list-group">
+          <li class="list-group-item"><b>Type:</b>
+            <% if @season.nfl_league %>
+              NFL League
+            <% else %>
+              College League
+            <% end  %>
+          </li>
+          <li class="list-group-item"><b>Number of Weeks: </b> <%= "#{@season.number_of_weeks}" %></li>
+          <li class="list-group-item">
+            <% if current_week %>
+              <b>Current Week: </b> <%= "#{current_week.week_number} " %>
+            <% else %>
+              <b>Current Week: </b> <%= "No weeks created yet" %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

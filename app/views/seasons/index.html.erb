@@ -1,0 +1,49 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
+        data-target="#bootstrapTestModal">
+  Test Bootstrap Functionality
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="bootstrapTestModal" tabindex="-1" role="dialog"
+     aria-labelledby="bootstrapTestModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Bootstrap Test</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bootstrap is working properly!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Start of main view -->
+<h1>List of Seasons</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Season Year</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @seasons.each do |season| %>
+      <td><%= link_to season.year, season %></td>
+      <td><%= link_to 'Show', season, class:"btn btn-outline-secondary btn-xs"%>
+          <%= link_to 'Edit', edit_season_path(season), class:"btn btn-outline-secondary btn-xs"%>
+          <%= link_to "Delete", season, method: :delete,
+          data: {confirm: "Are you sure?"}, title: "Delete Season #{season.year}",
+          class: "btn btn-danger btn-xs" %></td>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Create new season", new_season_path %>
