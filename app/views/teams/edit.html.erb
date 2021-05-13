@@ -1,0 +1,24 @@
+<% provide(:title, "Edit Team") %>
+
+<h1>Edit Team</h1>
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="panel panel-primary">
+      <div class="panel-header">Edit Team Info</div>
+      <div class="panel-body">
+        <%= simple_form_for @team, html: { class: 'form-horizontal' },
+          wrapper: :horizontal_form,
+          wrapper_mappings: {
+            check_boxes: :horizontal_collection,
+            radio_buttons: :horizontal_collection,
+            file: :horizontal_file,
+            boolean: :horizontal_boolean
+          } do |f| %>
+            <%= render 'fields', f: f, edit: 1 %>
+            <%= f.button :submit, 'Update Team Info', class: "btn btn-large btn-primary" %>
+          <% end %>
+      </div>
+    </div>
+  </div>
+</div>

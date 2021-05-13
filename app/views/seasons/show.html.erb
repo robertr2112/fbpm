@@ -1,3 +1,4 @@
+<% provide(:title, "Season #{@season.year}") %>
 <div class="row">
   <div class="col-sm-8">
     <div class="card bg-primary text-white">
@@ -19,7 +20,7 @@
           <li class="list-group-item"><b>Number of Weeks: </b> <%= "#{@season.number_of_weeks}" %></li>
           <li class="list-group-item">
             <% if current_week %>
-              <b>Current Week: </b> <%= "#{current_week.week_number} " %>
+              <b>Current Week: </b> <%= link_to "#{current_week.week_number}", week_path(current_week) %>
             <% else %>
               <b>Current Week: </b> <%= "No weeks created yet" %>
             <% end %>

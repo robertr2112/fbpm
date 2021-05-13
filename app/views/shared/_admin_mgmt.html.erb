@@ -1,0 +1,43 @@
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <%= link_to "Seasons", seasons_path, class: "nav-link active" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to "Weeks", '#', class: "nav-link" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to "Teams", teams_path, class: "nav-link" %>
+  </li>
+</ul>
+
+<!--
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="seasons-tab" data-toggle="tab" href="#seasons" role="tab"
+          aria-controls="seasons" aria-selected="true">Seasons</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="weeks-tab" data-toggle="tab" href="#weeks" role="tab"
+          aria-controls="weeks" aria-selected="false">Weeks</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="teams-tab" data-toggle="tab" href="#teams" role="tab"
+          aria-controls="teams" aria-selected="false">Teams</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="seasons" role="tabpanel"
+      aria-labelledby="seasons-tab">
+    <% season = current_season(1) %>
+    <%= link_to "Show #{season.year} Season", current_season(1) %>
+    <%= link_to "Show all seasons", seasons_path %>
+  </div>
+  <div class="tab-pane fade" id="weeks" role="tabpanel" aria-labelledby="weeks-tab">
+    Weeks tab
+  </div>
+  <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="teams-tab">Teams tab</div>
+</div>
+-->

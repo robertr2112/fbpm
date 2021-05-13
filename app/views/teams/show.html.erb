@@ -1,0 +1,18 @@
+<% provide(:title, "Show Team") %>
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="panel panel-primary">
+      <div class="panel-header"><%= @team.name %></div>
+      <div class="panel-body">
+        <%= image_tag(asset_path(@team.imagePath), size: "120x90") %>
+        <% if @team.nfl %>
+          NFL Team<br />
+        <% else %>
+          NCAA Team<br />
+        <% end %>
+        <p><% @team.imagePath %>
+      </div>
+    </div>
+  </div>
+</div>
