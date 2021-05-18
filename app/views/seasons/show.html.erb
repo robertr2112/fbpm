@@ -25,6 +25,20 @@
               <b>Current Week: </b> <%= "No weeks created yet" %>
             <% end %>
           </li>
+          <li class="list-group-item">
+            <div class="dropdown">
+              <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                      id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                Show Week
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <% @season.weeks.order(:week_number).each do | week | %>
+                  <%= link_to "#{week.week_number}", week_path(week), class: "dropdown-item" %>
+                <% end %>
+              </div>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
