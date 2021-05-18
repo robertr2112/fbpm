@@ -25,6 +25,10 @@ class Week < ApplicationRecord
 
   STATES = { Pend: 0, Open: 1, Closed: 2, Final: 3 }
 
+  before_create do
+    self.state = Week::STATES[:Pend]
+  end
+
   belongs_to :season
   has_many   :games, inverse_of: :week, dependent: :destroy
 
@@ -32,7 +36,7 @@ class Week < ApplicationRecord
 
   validates :state, inclusion:   { in: 0..3 }
   validates :week_number, numericality: { only_integer: true, greater_than: 0,
-                                          less_than_or_equal_to: 17}
+                                          less_than_or_equal_to: 18}
   validate :gamesValid?
 
   def setState(state)

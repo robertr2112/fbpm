@@ -2,16 +2,24 @@
 #
 # Table name: games
 #
-#  id            :integer          not null, primary key
-#  homeTeamIndex :integer
+#  id            :bigint           not null, primary key
 #  awayTeamIndex :integer
-#  spread        :integer
-#  week_id       :integer
-#  homeTeamScore :integer          default(0)
-#  awayTeamScore :integer          default(0)
-#  created_at    :datetime
-#  updated_at    :datetime
+#  awayTeamScore :integer
 #  game_date     :datetime
+#  homeTeamIndex :integer
+#  homeTeamScore :integer
+#  spread        :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  week_id       :bigint
+#
+# Indexes
+#
+#  index_games_on_week_id  (week_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (week_id => weeks.id)
 #
 
 require 'rails_helper'

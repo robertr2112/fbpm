@@ -61,7 +61,7 @@ class SeasonsController < ApplicationController
     def season_params
       params.require(:season).permit(:year, :nfl_league, :number_of_weeks, :current_week,
                                      weeks_attributes:[:id, :season_id,
-                                                       :week_number, :_destroy,
+                                                       :week_number, :state, :_destroy,
                                      games_attributes:[:id, :week_id, :homeTeamIndex,
                                                      :awayTeamIndex, :spread,
                                                      :homeTeamScore, :awayTeamScore,

@@ -2,14 +2,14 @@
 #
 # Table name: seasons
 #
-#  id              :integer          not null, primary key
-#  year            :string(255)
-#  state           :integer
+#  id              :bigint           not null, primary key
+#  current_week    :integer
 #  nfl_league      :boolean
 #  number_of_weeks :integer
-#  current_week    :integer
-#  created_at      :datetime
-#  updated_at      :datetime
+#  state           :integer
+#  year            :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 require 'rails_helper'

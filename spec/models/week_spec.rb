@@ -56,8 +56,8 @@ RSpec.describe Week, type: :model do
       it { should_not be_valid }
     end
     
-    describe "should reject an invalid week_number > 17" do
-      before { @week.week_number = 18}
+    describe "should reject an invalid week_number > 18" do
+      before { @week.week_number = 19}
       it { should_not be_valid }
     end
     

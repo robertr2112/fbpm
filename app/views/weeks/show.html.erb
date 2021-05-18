@@ -1,10 +1,13 @@
 <% provide(:title, "Week #{@week.week_number} Games") %>
 
+<!-- Render the navigation bars -->
+<%= render 'shared/mgmt_weeks_nav', season: @season, week_number: @week.week_number %>
+
 <!-- Now the main page -->
 <div class="row">
   <div class="col-sm-8">
-    <div class="panel panel-header">
-      <div class="panel-header"><%= "Week #{@week.week_number}" %> &nbsp;-&nbsp;State:
+    <div class="card card-header">
+      <div class="card-header"><%= "Week #{@week.week_number}" %> &nbsp;-&nbsp;State:
            <%= render "shared/show_week_state", week: @week %>
       </div>
       <div class="panel-body">

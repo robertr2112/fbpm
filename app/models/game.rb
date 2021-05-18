@@ -23,6 +23,12 @@
 #
 class Game < ApplicationRecord
 
+  before_create do
+    self.homeTeamScore = 0
+    self.awayTeamScore = 0
+    self.spread = 0
+  end
+
   belongs_to :week
 
   validates :homeTeamIndex, inclusion: { :in => 0..100 }
