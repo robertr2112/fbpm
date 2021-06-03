@@ -13,10 +13,6 @@
 #
 #  index_weeks_on_season_id  (season_id)
 #
-# Foreign Keys
-#
-#  fk_rails_...  (season_id => seasons.id)
-#
 FactoryBot.define do
   factory :week do
     state        { 0 }

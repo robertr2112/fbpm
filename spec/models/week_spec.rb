@@ -2,12 +2,16 @@
 #
 # Table name: weeks
 #
-#  id          :integer          not null, primary key
-#  season_id   :integer
+#  id          :bigint           not null, primary key
 #  state       :integer
 #  week_number :integer
-#  created_at  :datetime
-#  updated_at  :datetime
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  season_id   :bigint
+#
+# Indexes
+#
+#  index_weeks_on_season_id  (season_id)
 #
 
 require 'rails_helper'

@@ -4,22 +4,14 @@
 #
 #  id            :bigint           not null, primary key
 #  awayTeamIndex :integer
-#  awayTeamScore :integer
+#  awayTeamScore :integer          default(0)
 #  game_date     :datetime
 #  homeTeamIndex :integer
-#  homeTeamScore :integer
+#  homeTeamScore :integer          default(0)
 #  spread        :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  week_id       :bigint
-#
-# Indexes
-#
-#  index_games_on_week_id  (week_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (week_id => weeks.id)
+#  week_id       :integer
 #
 class Game < ApplicationRecord
 
