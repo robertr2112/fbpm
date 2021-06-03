@@ -1,4 +1,8 @@
 <% provide(:title, "Season #{@season.year}") %>
+
+<!-- Render the navigation bars -->
+<%= render 'shared/mgmt_weeks_nav', season: @season, week_number: @season.current_week %>
+
 <div class="row">
   <div class="col-sm-8">
     <div class="card bg-primary text-white">
