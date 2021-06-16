@@ -9,13 +9,13 @@
                     placeholder: "Away Team",
                     include_blank: true,
                     autofocus: true,
-                    input_html: { id: "awayteam", class: "game_team" } %>
+                    input_html: { class: "awayteam game_team" } %>
       <%= f.input :homeTeamIndex, label: false,
                     collection: Team.all.where(nfl: true), value_method: :id,
                     label_method: :name,
                     placeholder: "Home Team",
                     include_blank: true,
-                    input_html: { id: "hometeam", class: "game_team" } %>
+                    input_html: { class: "hometeam game_team" } %>
       <%= f.input :_destroy, as: :hidden %>
       &nbsp;&nbsp;&nbsp;
       <%= link_to_remove_association "remove", f %>

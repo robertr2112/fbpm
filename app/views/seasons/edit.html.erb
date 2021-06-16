@@ -31,6 +31,8 @@
           </div>
 
           <%= f.button :submit, 'Update season', class: "btn btn-large btn-primary" %>
+          <%= link_to 'Cancel', season_path(@season), type: 'button',
+                         class: "btn btn-large btn-danger" %>
         <% end %>
       </div>
     </div>

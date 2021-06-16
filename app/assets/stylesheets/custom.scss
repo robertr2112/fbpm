@@ -40,3 +40,13 @@ h1, h2, h3, h4, h5, h6 {
   line-height: .5;
   border-radius: .2rem;
 }
+
+/* Remove simple form checks and exes on validations */
+.was-validated .custom-select:valid {
+  background-image: none;
+}
+
+
+.was-validated .custom-select:invalid {
+  background-image: none;
+}

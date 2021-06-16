@@ -32,6 +32,8 @@
             </div>
 
             <%= f.button :submit, label: "Edit week", class: 'btn btn-large btn-primary' %>
+            <%= link_to 'Cancel', week_path(@week), type: 'button',
+                         class: "btn btn-large btn-danger" %>
 
           <% end %>
         </div>
