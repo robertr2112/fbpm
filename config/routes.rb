@@ -1,9 +1,16 @@
 
 Rails.application.routes.draw do
 
-  root 'seasons#index'
-
+  resources :users
+  resources :sessions, only: [:new, :create, :destroy]
   resources :teams, only: [:edit, :update, :index, :show]
+  
+  # Static routes
+  root 'seasons#index' # Temporary root page
+  #root  'static_pages#home'
+  match '/signup',            to: 'users#new',                    via: 'get'
+  match '/signin',            to: 'sessions#new',                 via: 'get'
+  match '/signout',           to: 'sessions#destroy',             via: 'delete'
 
   # Seasons and weeks paths
   match 'weeks/open/:id',       to: 'weeks#open',        as: :open,          via: 'get'
@@ -17,6 +24,10 @@ Rails.application.routes.draw do
     resources :weeks
   end
   resources :weeks, only: [:edit, :update, :show, :destroy]
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

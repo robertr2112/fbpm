@@ -5,7 +5,7 @@ RSpec.feature "User pages", type: :feature do
   subject { page }
 
   feature "index" do
-    let (:user){ 
+    let (:user){
       FactoryBot.create(:user) }
 
     before do
@@ -60,8 +60,8 @@ RSpec.feature "User pages", type: :feature do
       FactoryBot.create(:user, name: "Ben", email: "ben@example.com")
       visit users_path
     end
-    
-    scenario { 
+
+    scenario {
       save_and_open_page
       should have_title('All users') }
     scenario { should have_content('All users') }
@@ -75,7 +75,7 @@ RSpec.feature "User pages", type: :feature do
 
   feature "profile page" do
     let(:user) { FactoryBot.create(:user) }
-    before do 
+    before do
       sign_in user
       visit user_path(user)
     end
@@ -90,7 +90,7 @@ RSpec.feature "User pages", type: :feature do
     scenario { should have_content('Sign up') }
     scenario { should have_title(full_title('Sign up')) }
   end
-  
+
   feature "signup" do
 
     before { visit signup_path }
@@ -139,7 +139,7 @@ RSpec.feature "User pages", type: :feature do
       sign_in(user)
       visit edit_user_path(user)
     end
-    
+
     context do
     end
 
@@ -150,51 +150,51 @@ RSpec.feature "User pages", type: :feature do
     end
 
     context "with invalid Name" do
-      before do 
+      before do
         fill_in 'user_name', with: ""
-        click_button "Update Profile" 
+        click_button "Update Profile"
       end
- 
+
       scenario { should have_content('can\'t be blank') }
     end
 
     context "with invalid Name" do
-      before do 
+      before do
         fill_in 'user_user_name', with: ""
-        click_button "Update Profile" 
+        click_button "Update Profile"
       end
- 
+
       scenario { should have_content('can\'t be blank') }
     end
- 
+
     context "with invalid Email" do
-      before do 
+      before do
         fill_in 'user_email', with: ""
-        click_button "Update Profile" 
+        click_button "Update Profile"
       end
- 
+
       scenario { should have_content('can\'t be blank') }
     end
- 
+
     context "with invalid Password" do
-      before do 
+      before do
         fill_in 'user_password', with: ""
-        click_button "Update Profile" 
+        click_button "Update Profile"
       end
- 
+
       scenario { should have_content('is too short') }
     end
-    
+
     context "with invalid Password Confirmation" do
-      before do 
+      before do
         fill_in 'user_password_confirmation', with: ""
-        click_button "Update Profile" 
+        click_button "Update Profile"
       end
- 
+
       scenario { should have_content('is too short') }
-    
+
     end
-    
+
     context "with valid information" do
       let(:new_name)  { "New Name" }
       let(:new_user_name)  { "Name1" }
@@ -216,5 +216,3 @@ RSpec.feature "User pages", type: :feature do
     end
   end
 end
-
-
