@@ -1,7 +1,7 @@
 class WeeksController < ApplicationController
-  #before_action :signed_in_user
-  #before_action :confirmed_user
-  #before_action :admin_user, only: [:new, :create, :edit, :update, :destroy, :open, :closed, :final ]
+  before_action :signed_in_user
+  before_action :confirmed_user
+  before_action :admin_user, only: [:new, :create, :edit, :update, :destroy, :open, :closed, :final ]
 
   def new
     @season = Season.find(params[:season_id])

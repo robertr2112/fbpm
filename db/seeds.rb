@@ -5,6 +5,18 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+admin = User.new do |u|
+  u.name = "Admin"
+  u.user_name = "Admin"
+  u.admin = true
+  u.supervisor = true
+  u.confirmed = true
+  u.email = "admin@fbpm.com"
+  u.password = "p8ssw0rd"
+  u.password_confirmation = "p8ssw0rd"
+end
+
+admin.save!
 
 Team.create name: "Arizona Cardinals", nfl: 1,
                                   imagePath: "nfl_teams/nfcw/ari.jpeg"
@@ -68,5 +80,5 @@ Team.create name: "Tampa Bay Buccaneers", nfl: 1,
                                   imagePath: "nfl_teams/nfcs/tb.jpeg"
 Team.create name: "Tennessee Titans", nfl: 1,
                                   imagePath: "nfl_teams/afcs/ten.jpeg"
-Team.create name: "Washington Redskins", nfl: 1,
+Team.create name: "Washington Football Team", nfl: 1,
                                   imagePath: "nfl_teams/nfce/was.jpeg"

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:index, :edit, :update, :show, :destroy]
-  before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: :destroy
+# before_action :signed_in_user, only: [:index, :edit, :update, :show, :destroy]
+# before_action :correct_user, only: [:edit, :update]
+# before_action :admin_user, only: :destroy
 
   def new
     redirect_to(root_path) unless !signed_in?
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
-  
+
   def confirm
     @user = User.find_by_confirmation_token!(params[:confirmation_token])
     if @user
@@ -84,9 +84,9 @@ class UsersController < ApplicationController
     end
     redirect_to users_url
   end
-  
+
   def admin_add
-    if current_user.admin? 
+    if current_user.admin?
       user = User.find(params[:id])
       user.update_attribute(:admin, '1')
       flash[:success] = "Admin status has been granted to User: '#{user.name}!"
@@ -95,9 +95,9 @@ class UsersController < ApplicationController
     end
     redirect_to users_url
   end
-  
+
   def admin_del
-    if current_user.admin? 
+    if current_user.admin?
       user = User.find(params[:id])
       user.update_attribute(:admin, '0')
       flash[:success] = "Admin status has been removed from User: '#{user.name}!"

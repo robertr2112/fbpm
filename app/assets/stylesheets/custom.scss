@@ -50,3 +50,12 @@ h1, h2, h3, h4, h5, h6 {
 .was-validated .custom-select:invalid {
   background-image: none;
 }
+
+ /* miscellaneous */
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}

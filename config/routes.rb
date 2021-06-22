@@ -2,15 +2,16 @@
 Rails.application.routes.draw do
 
   resources :users
-  resources :sessions, only: [:new, :create, :destroy]
   resources :teams, only: [:edit, :update, :index, :show]
-  
+  resources :password_resets
+
   # Static routes
   root 'seasons#index' # Temporary root page
   #root  'static_pages#home'
-  match '/signup',            to: 'users#new',                    via: 'get'
-  match '/signin',            to: 'sessions#new',                 via: 'get'
-  match '/signout',           to: 'sessions#destroy',             via: 'delete'
+  get    '/signup',             to: 'users#new'
+  get    '/login',              to: 'sessions#new'
+  post   '/login',              to: 'sessions#create'
+  delete '/signout',            to: 'sessions#destroy'
 
   # Seasons and weeks paths
   match 'weeks/open/:id',       to: 'weeks#open',        as: :open,          via: 'get'

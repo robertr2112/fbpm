@@ -1,5 +1,9 @@
 class SeasonsController < ApplicationController
 
+  before_action :signed_in_user
+  before_action :confirmed_user
+  before_action :admin_user
+
   def new
     @season = Season.new
     @season.year = Season.getSeasonYear
@@ -68,4 +72,8 @@ class SeasonsController < ApplicationController
                                                      :game_date, :_destroy ]] )
     end
 
+    # Before filters
+    def admin_user
+      redirect_to current_user, notice: "Only an Admin User can access that page!" unless current_user.admin?
+    end
 end
