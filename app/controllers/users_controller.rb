@@ -1,19 +1,19 @@
 class UsersController < ApplicationController
-# before_action :signed_in_user, only: [:index, :edit, :update, :show, :destroy]
-# before_action :correct_user, only: [:edit, :update]
-# before_action :admin_user, only: :destroy
+  before_action :logged_in_user, only: [:index, :edit, :update, :show, :destroy]
+  before_action :correct_user, only: [:edit, :update]
+  before_action :admin_user, only: :destroy
 
   def new
-    redirect_to(root_path) unless !signed_in?
+    redirect_to(root_path) unless !logged_in?
     @user = User.new
   end
 
   def create
-    redirect_to(root_path) unless !signed_in?
+    redirect_to(root_path) unless !logged_in?
     @user = User.new(user_params)
     if @user.save
       # Handle a successful save
-      sign_in(@user, 0)
+      log_in(@user)
       @user.send_user_confirm
       flash[:success] = "Welcome to Football Pool Mania!"
       redirect_to @user
@@ -73,12 +73,12 @@ class UsersController < ApplicationController
       # First we need to delete the pools owned by this user and associated
       # pool memberships
       #
-      if @user.pools
-        @user.pools.each do |pool|
-          pool.remove_memberships
-          pool.recurse_delete
-        end
-      end
+#     if @user.pools
+#       @user.pools.each do |pool|
+#         pool.remove_memberships
+#         pool.recurse_delete
+#       end
+#     end
       @user.destroy
       flash[:success] = "User deleted."
     end

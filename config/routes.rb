@@ -11,7 +11,16 @@ Rails.application.routes.draw do
   get    '/signup',             to: 'users#new'
   get    '/login',              to: 'sessions#new'
   post   '/login',              to: 'sessions#create'
-  delete '/signout',            to: 'sessions#destroy'
+  delete '/logout',             to: 'sessions#destroy'
+
+  match 'users/confirm/:confirmation_token', to: 'users#confirm',
+                       as: :confirm,  via: 'get'
+  match 'users/resend_confirm/:id',  to: 'users#resend_confirm',
+                       as: :resend_confirm,     via: 'get'
+  match 'users/admin_add/:id', to: 'users#admin_add',
+                       as: :admin_add,     via: 'get'
+  match 'users/admin_del/:id', to: 'users#admin_del',
+                       as: :admin_del,     via: 'get'
 
   # Seasons and weeks paths
   match 'weeks/open/:id',       to: 'weeks#open',        as: :open,          via: 'get'

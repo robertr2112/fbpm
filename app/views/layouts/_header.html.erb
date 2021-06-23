@@ -1,13 +1,35 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
-  <%= link_to "Football Pool Mania", root_path, class:'navbar-brand col-4' %>
+<div container>
+  <nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
+    <%= link_to "Football Pool Mania", root_path, class:'navbar-brand col-4' %>
 
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <%= link_to 'Home', seasons_path, class: 'nav-link'  %>
-      </li>
-      <li class="nav-item">
-        <%= link_to 'About', '#', class: 'nav-link'  %>
-      </li>
-    </ul>
-</nav>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav flex-row align-items-center ml-auto">
+        <li class="nav-item">
+          <%= link_to 'Home', root_path, class: 'nav-link'  %>
+        </li>
+        <% if logged_in? %>
+        <li class="nav-item dropdown">
+          <div class="btn-group dropleft">
+            <button type="button" class="btn btn-sm btn-secondary">
+              <%= link_to 'Profile', current_user, class: 'nav-link'  %>
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu">
+              <%= link_to 'Settings', '#', class: 'dropdown-item'  %>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'Log out', logout_path, method: :delete, class: 'dropdown-item'  %>
+            </div>
+          </div>
+        </li>
+        <% else %>
+        <li class="nav-item">
+          <%= link_to 'Log in', login_path, class: 'nav-link'  %>
+        </li>
+        <% end %>
+      </ul>
+  </nav>
+</div>

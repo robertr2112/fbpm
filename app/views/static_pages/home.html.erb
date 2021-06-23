@@ -7,13 +7,13 @@
       and strangers alike. Join an existing pool or create one and invite your
       friends.
     </p>
-    <% if !signed_in? %>
+    <% if !logged_in? %>
       <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
       <br \><small class=main-sign-in>Already a member? <%= link_to "Sign in", signin_path %></small>
     <% elsif !current_user.confirmed? %>
       <p>This user account needs to be confirmed before you can use this site.
       Please look for the email with the subject <i>"Confirm Registration" </i>from
-         info@fbpm.com and click the Confirmation URL.  
+         info@fbpm.com and click the Confirmation URL.
       </p>
     <% else %>
       <%= link_to "Create", new_pool_path %>
@@ -23,6 +23,3 @@
     <% end %>
   </div>
 </div>
-
-
-
