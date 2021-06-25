@@ -11,7 +11,15 @@
 #  spread        :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  week_id       :integer
+#  week_id       :bigint
+#
+# Indexes
+#
+#  index_games_on_week_id  (week_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (week_id => weeks.id)
 #
 class Game < ApplicationRecord
 

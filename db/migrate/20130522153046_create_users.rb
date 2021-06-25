@@ -7,7 +7,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.boolean  :admin, default: false
       t.boolean  :supervisor, default: false
       t.string   :password_digest
-      t.string   :remember_token
+      t.string   :remember_digest
       t.string   :password_reset_token
       t.datetime :password_reset_sent_at
       t.boolean  :confirmed, default: false
@@ -16,6 +16,5 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.timestamps
     end
     add_index :users, :email, unique: true
-    add_index :users, :remember_token
   end
 end

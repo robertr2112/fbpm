@@ -40,12 +40,13 @@ ActiveRecord::Schema.define(version: 2016_11_15_045622) do
     t.integer "homeTeamIndex"
     t.integer "awayTeamIndex"
     t.integer "spread"
-    t.integer "week_id"
+    t.bigint "week_id"
     t.integer "homeTeamScore", default: 0
     t.integer "awayTeamScore", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "game_date"
+    t.index ["week_id"], name: "index_games_on_week_id"
   end
 
   create_table "picks", force: :cascade do |t|
@@ -105,7 +106,7 @@ ActiveRecord::Schema.define(version: 2016_11_15_045622) do
     t.boolean "admin", default: false
     t.boolean "supervisor", default: false
     t.string "password_digest"
-    t.string "remember_token"
+    t.string "remember_digest"
     t.string "password_reset_token"
     t.datetime "password_reset_sent_at"
     t.boolean "confirmed", default: false
@@ -113,16 +114,16 @@ ActiveRecord::Schema.define(version: 2016_11_15_045622) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["remember_token"], name: "index_users_on_remember_token"
   end
 
   create_table "weeks", force: :cascade do |t|
     t.bigint "season_id"
-    t.integer "state"
+    t.integer "state", default: 0
     t.integer "week_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["season_id"], name: "index_weeks_on_season_id"
   end
 
+  add_foreign_key "games", "weeks"
 end

@@ -66,6 +66,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.include AuthenticationHelper
+  config.include ApplicationHelper
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)

@@ -210,7 +210,7 @@ RSpec.feature "User pages", type: :feature do
 
       scenario { should have_title(new_name) }
       scenario { should have_selector('div.alert.alert-success') }
-      scenario { should have_link('Sign out', href: signout_path) }
+      scenario { should have_link('Log out', href: logout_path) }
       specify { expect(user.reload.name).to  eq new_name }
       specify { expect(user.reload.email).to eq new_email }
     end

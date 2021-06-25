@@ -2,20 +2,24 @@
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
-#  name                   :string(255)
-#  user_name              :string(255)
-#  email                  :string(255)
+#  id                     :bigint           not null, primary key
 #  admin                  :boolean          default(FALSE)
-#  supervisor             :boolean          default(FALSE)
-#  password_digest        :string(255)
-#  remember_token         :string(255)
-#  password_reset_token   :string(255)
-#  password_reset_sent_at :datetime
+#  confirmation_token     :string
 #  confirmed              :boolean          default(FALSE)
-#  confirmation_token     :string(255)
-#  created_at             :datetime
-#  updated_at             :datetime
+#  email                  :string
+#  name                   :string
+#  password_digest        :string
+#  password_reset_sent_at :datetime
+#  password_reset_token   :string
+#  remember_digest        :string
+#  supervisor             :boolean          default(FALSE)
+#  user_name              :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_email  (email) UNIQUE
 #
 
 require 'rails_helper'

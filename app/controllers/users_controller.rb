@@ -13,8 +13,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       # Handle a successful save
-      log_in(@user)
       @user.send_user_confirm
+      log_in(@user)
       flash[:success] = "Welcome to Football Pool Mania!"
       redirect_to @user
     else
@@ -38,7 +38,6 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "Profile updated"
-      sign_in(@user, 0)
       redirect_to @user
     else
       render 'edit'
@@ -49,6 +48,7 @@ class UsersController < ApplicationController
     @user = User.find_by_confirmation_token!(params[:confirmation_token])
     if @user
       @user.update_attribute(:confirmed, true)
+      log_in(@user)
       redirect_to root_url, notice: "User account has been confirmed!"
     else
       render :edit
