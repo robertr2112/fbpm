@@ -26,9 +26,9 @@ class User < ApplicationRecord
 
   attr_accessor :remember_token
 
-# has_many :pool_memberships, dependent: :destroy
-# has_many :pools, through: :pool_memberships, dependent: :destroy
-# has_many :entries, dependent: :delete_all
+  has_many :pool_memberships, dependent: :destroy
+  has_many :pools, through: :pool_memberships, dependent: :destroy
+  has_many :entries, dependent: :delete_all
 
   before_save { email.downcase! }
 
@@ -38,7 +38,8 @@ class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  default_scope -> { order(name: :asc) }
 
   has_secure_password
 

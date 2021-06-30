@@ -21,7 +21,7 @@ RSpec.feature "User pages", type: :feature do
       before(:all) { 30.times { FactoryBot.create(:user) } }
       after(:all)  { User.delete_all }
 
-      scenario { should have_selector('div.pagination') }
+      scenario { should have_selector('ul.pagination') }
 
       scenario "should list each user" do
         User.paginate(page: 1).each do |user|
@@ -62,7 +62,6 @@ RSpec.feature "User pages", type: :feature do
     end
 
     scenario {
-      save_and_open_page
       should have_title('All users') }
     scenario { should have_content('All users') }
 

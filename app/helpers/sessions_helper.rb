@@ -68,7 +68,9 @@ module SessionsHelper
   end
 
   def confirmed_user
-     redirect_to root_url unless current_user.confirmed?
+    if current_user
+      redirect_to current_user unless current_user.confirmed?
+    end
   end
 
   def admin_user
@@ -76,12 +78,12 @@ module SessionsHelper
   end
 
   def redirect_back_or(default)
-    redirect_to(session[:return_to] || default)
-    session.delete(:return_to)
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
   end
 
   def store_location
-    session[:return_to] = request.url
+    session[:forwarding_url] = request.url if request.get?
   end
 
 end

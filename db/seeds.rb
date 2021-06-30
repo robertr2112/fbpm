@@ -5,6 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# Create the admin user
 admin = User.new do |u|
   u.name = "Admin"
   u.user_name = "Admin"
@@ -15,7 +17,6 @@ admin = User.new do |u|
   u.password = "p8ssw0rd"
   u.password_confirmation = "p8ssw0rd"
 end
-
 admin.save!
 
 Team.create name: "Arizona Cardinals", nfl: 1,

@@ -29,7 +29,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 ###=================###
 ### Added gems      ###
 ###=================###
-#gem 'faker'
+gem 'faker'
 # The following are for form help
 gem 'select2-rails'
 gem 'simple_form'

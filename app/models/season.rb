@@ -2,15 +2,16 @@
 #
 # Table name: seasons
 #
-#  id              :bigint           not null, primary key
-#  current_week    :integer
+#  id              :integer          not null, primary key
+#  year            :string(255)
+#  state           :integer
 #  nfl_league      :boolean
 #  number_of_weeks :integer
-#  state           :integer
-#  year            :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  current_week    :integer
+#  created_at      :datetime
+#  updated_at      :datetime
 #
+
 class Season < ApplicationRecord
 
   before_create do
@@ -19,15 +20,20 @@ class Season < ApplicationRecord
     self.state = Season::STATES[:Pend]
   end
 
+  STATES = { Pend: 0, Open: 1, Closed: 2 }
+
+  has_many :pools, dependent: :delete_all
   has_many :weeks, dependent: :delete_all
 
   accepts_nested_attributes_for :weeks, allow_destroy: true
 
-  STATES = { Pend: 0, Open: 1, Closed: 2 }
 
   def self.getSeasonYear
     year = Time.now.strftime("%Y").to_i
     month = Time.now.strftime("%m").to_i
+    if (month >= 1) && (month <= 3)
+      year = year - 1
+    end
     return year.to_s
   end
 
@@ -82,5 +88,5 @@ class Season < ApplicationRecord
       self.update_attribute(:current_week, self.current_week+1)
     end
   end
-  
+
 end

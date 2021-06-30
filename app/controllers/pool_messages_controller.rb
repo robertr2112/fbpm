@@ -1,23 +1,23 @@
 class PoolMessagesController < ApplicationController
-  before_action :signed_in_user
+  before_action :logged_in_user
   before_action :confirmed_user
-  
+
   def new
-    @pool = Pool.find(params[:pool_id])
+    @pool = Pool.find_by_id(params[:pool_id])
   end
 
   def create
-    @pool = Pool.find(params[:pool_id])
+    @pool = Pool.find_by_id(params[:pool_id])
     if @pool.nil?
       redirect_to @pool, notice: "Email not sent. Could not find pool!"
     end
-    
+
     if params[:allMembers] == "true"
       mail_group = true
     else
       mail_group = false
     end
-        
+
     if PoolMailer.send_pool_message(@pool, params[:subject], params[:msg], mail_group).deliver_now
       redirect_to @pool, notice: "Email sent!"
     else
@@ -27,7 +27,7 @@ class PoolMessagesController < ApplicationController
 
   # Build an invite message
   def invite
-    @pool = Pool.find(params[:id])
+    @pool = Pool.find_by_id(params[:id])
     if @pool.nil?
       redirect_to @pool, notice: "Email not sent. Could not find pool!"
     end
@@ -42,7 +42,7 @@ class PoolMessagesController < ApplicationController
 
   # Send invite message after form
   def send_invite
-    @pool = Pool.find(params[:id])
+    @pool = Pool.find_by_id(params[:id])
     if @pool.nil?
       redirect_to @pool, notice: "Email not sent. Could not find pool!"
     end
@@ -55,7 +55,7 @@ class PoolMessagesController < ApplicationController
     @email_addr_errors = Array.new
     email_addrs = Array.new
     if !params[:emailPoolList].blank?
-      emailPool = Pool.find(params[:emailPoolList])
+      emailPool = Pool.find_by_id(params[:emailPoolList])
     end
     if emailPool
       emailPool.users.each do |user|
@@ -81,16 +81,16 @@ class PoolMessagesController < ApplicationController
         redirect_to @pool, notice: "Email not sent. There was a problem with the mailer!"
       end
     else
-      flash[:error] = "There were errors with the form!"
+      flash[:danger] = "There were errors with the form!"
       render 'invite'
       return
     end
   end
-  
+
   private
-  
+
     def validate_email(emailAddr)
-     
+
       EmailValidator.valid?(emailAddr)
     end
 end

@@ -2,12 +2,13 @@
 #
 # Table name: teams
 #
-#  id         :bigint           not null, primary key
-#  imagePath  :string
-#  name       :string
+#  id         :integer          not null, primary key
+#  name       :string(255)
 #  nfl        :boolean
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  imagePath  :string(255)
+#  created_at :datetime
+#  updated_at :datetime
 #
+
 class Team < ApplicationRecord
 end

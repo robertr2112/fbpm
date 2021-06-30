@@ -25,11 +25,11 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.paginate(page: params[:page], per_page: 25)
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find_by_id(params[:id])
   end
 
   def edit
@@ -57,28 +57,28 @@ class UsersController < ApplicationController
 
   def resend_confirm
       if current_user.confirmed?
-        redirect_to root_url, notice: "User account has already been confirmed!"
+        redirect_to root_url, warning: "User account has already been confirmed!"
       else
         current_user.send_user_confirm
-      redirect_to root_url, notice: "Confirm message has been resent!"
+      redirect_to root_url, success: "Confirm message has been resent!"
       end
   end
 
   def destroy
-    @user = User.find(params[:id])
+    @user = User.find_by_id(params[:id])
     if current_user?(@user)
-      flash[:notice] = "You cannot delete yourself!"
+      flash[:danger] = "You cannot delete yourself!"
     else
       #
       # First we need to delete the pools owned by this user and associated
       # pool memberships
       #
-#     if @user.pools
-#       @user.pools.each do |pool|
-#         pool.remove_memberships
-#         pool.recurse_delete
-#       end
-#     end
+      if @user.pools
+        @user.pools.each do |pool|
+          pool.remove_memberships
+          pool.recurse_delete
+        end
+      end
       @user.destroy
       flash[:success] = "User deleted."
     end
@@ -87,22 +87,22 @@ class UsersController < ApplicationController
 
   def admin_add
     if current_user.admin?
-      user = User.find(params[:id])
+      user = User.find_by_id(params[:id])
       user.update_attribute(:admin, '1')
       flash[:success] = "Admin status has been granted to User: '#{user.name}!"
     else
-      flash[:error] = "Only an Admin user can update admin status!"
+      flash[:danger] = "Only an Admin user can update admin status!"
     end
     redirect_to users_url
   end
 
   def admin_del
     if current_user.admin?
-      user = User.find(params[:id])
+      user = User.find_by_id(params[:id])
       user.update_attribute(:admin, '0')
       flash[:success] = "Admin status has been removed from User: '#{user.name}!"
     else
-      flash[:error] = "Only an Admin user can update admin status!"
+      flash[:danger] = "Only an Admin user can update admin status!"
     end
     redirect_to users_url
   end
@@ -115,11 +115,16 @@ class UsersController < ApplicationController
     end
 
     def correct_user
-      @user = User.find(params[:id])
+      @user = User.find_by_id(params[:id])
       redirect_to(root_url) unless current_user?(@user)
     end
 
+    # Before filters
     def admin_user
-      redirect_to(root_url) unless current_user.admin?
+      if !current_user.admin?
+        flash[:danger] = 'Only an Admin User can access that page!'
+        redirect_to current_user
+      end
     end
+
 end

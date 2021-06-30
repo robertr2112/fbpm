@@ -1,10 +1,10 @@
 class WeeksController < ApplicationController
-  before_action :signed_in_user
+  before_action :logged_in_user
   before_action :confirmed_user
-  before_action :admin_user, only: [:new, :create, :edit, :update, :destroy, :open, :closed, :final ]
+  before_action :admin_user, except: [:show, :index]
 
   def new
-    @season = Season.find(params[:season_id])
+    @season = Season.find_by_id(params[:season_id])
     if !@season.nil?
       @week = @season.weeks.new
       @game = @week.games.build
@@ -14,18 +14,18 @@ class WeeksController < ApplicationController
         @week.week_number = @season.weeks.order(:week_number).last.week_number + 1
       end
       if @week.week_number > @season.number_of_weeks
-        flash[:error] = "Cannot create week. This would exceed the number of weeks for this Season!"
+        flash[:danger] = "Cannot create week. This would exceed the number of weeks for this Season!"
         redirect_to @season
       end
 
     else
-      flash[:error] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
+      flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
       redirect_to seasons_path
     end
   end
 
   def create
-    @season = Season.find(params[:season_id])
+    @season = Season.find_by_id(params[:season_id])
     if !@season.nil?
       @week = @season.weeks.new(week_params)
       if @season.weeks.order(:week_number).last.blank?
@@ -44,7 +44,7 @@ class WeeksController < ApplicationController
         render 'new'
       end
     else
-      flash[:error] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
+      flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
       redirect_to seasons_path
     end
   end
@@ -60,12 +60,12 @@ class WeeksController < ApplicationController
         @week.week_number = season.weeks.order(:week_number).last.week_number + 1
       end
       if @week.week_number > season.number_of_weeks
-        flash[:error] = "Cannot create week. This would exceed the number of weeks for this Season!"
+        flash[:danger] = "Cannot create week. This would exceed the number of weeks for this Season!"
         redirect_to season
       end
 
     else
-      flash[:error] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
+      flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
       redirect_to seasons_path
     end
 
@@ -82,8 +82,8 @@ class WeeksController < ApplicationController
   end
 
   def add_scores
-    @week = Week.find(params[:id])
-    season = Season.find(@week.season_id)
+    @week = Week.find_by_id(params[:id])
+    season = Season.find_by_id(@week.season_id)
 
     @week.add_scores_nfl_week
 
@@ -92,20 +92,20 @@ class WeeksController < ApplicationController
 
 
   def edit
-    @week = Week.find(params[:id])
+    @week = Week.find_by_id(params[:id])
     @games = @week.games
     if @week.checkStateOpen || @week.checkStateFinal
       if @week.checkStateOpen
-        flash[:notice] = "Can't Edit the scores for the week until it is in the Closed state!"
+        flash[:warning] = "Can't Edit the scores for the week until it is in the Closed state!"
       else
-        flash[:notice] = "Can't Edit the week once it is in the Final state!"
+        flash[:warning] = "Can't Edit the week once it is in the Final state!"
       end
       redirect_to @week
     end
   end
 
   def update
-    @week = Week.find(params[:id])
+    @week = Week.find_by_id(params[:id])
     if @week.update_attributes(week_params)
       flash[:success] = "Successfully updated week #{@week.week_number}."
       redirect_to @week
@@ -115,33 +115,33 @@ class WeeksController < ApplicationController
   end
 
   def show
-    @week = Week.find(params[:id])
-    @season = Season.find(@week.season_id)
+    @week = Week.find_by_id(params[:id])
+    @season = Season.find_by_id(@week.season_id)
     @games = @week.games
   end
 
   def destroy
-    @week = Week.find(params[:id])
-    @season = Season.find(@week.season_id)
+    @week = Week.find_by_id(params[:id])
+    @season = Season.find_by_id(@week.season_id)
     if current_user.admin?
       if @week.deleteSafe?(@season)
         @week.destroy
         flash[:success] = "Successfully deleted Week '#{@week.week_number}'!"
         redirect_to seasons_path
       else
-        flash[:error] = "Cannot delete Week '#{@week.week_number}' because it is not the last week!"
+        flash[:danger] = "Cannot delete Week '#{@week.week_number}' because it is not the last week!"
         redirect_to @week
       end
     else
-      flash[:error] = "Only an Admin user can delete weeks!"
+      flash[:danger] = "Only an Admin user can delete weeks!"
       redirect_to seasons_path
     end
   end
 
   def open
-    @week = Week.find(params[:id])
+    @week = Week.find_by_id(params[:id])
     if @week.games.empty?
-      flash[:error] = "Week #{@week.week_number} is not ready to be Open! You need to enter games for this week!"
+      flash[:danger] = "Week #{@week.week_number} is not ready to be Open! You need to enter games for this week!"
       redirect_to @week
     end
     @week.setState(Week::STATES[:Open])
@@ -149,26 +149,26 @@ class WeeksController < ApplicationController
   end
 
   def closed
-    @week = Week.find(params[:id])
+    @week = Week.find_by_id(params[:id])
     @week.setState(Week::STATES[:Closed])
     redirect_to @week
   end
 
   def final
-    @week = Week.find(params[:id])
+    @week = Week.find_by_id(params[:id])
     if @week.checkStateFinal
-        flash[:error] = "Week #{@week.week_number} is already Final!"
+        flash[:danger] = "Week #{@week.week_number} is already Final!"
         redirect_to @week
     else
       if weekFinalReady(@week)
         @week.setState(Week::STATES[:Final])
         # Update the entries status/totals based on this weeks results
-        @season = Season.find(@week.season_id)
+        @season = Season.find_by_id(@week.season_id)
         @season.updatePools
-        flash[:notice] = "Week #{@week.week_number} is final!"
+        flash[:warning] = "Week #{@week.week_number} is final!"
         redirect_to @week
       else
-        flash[:error] = "Week #{@week.week_number} is not ready to be Final.  Please ensure all scores have been entered."
+        flash[:danger] = "Week #{@week.week_number} is not ready to be Final.  Please ensure all scores have been entered."
         redirect_to @week
       end
     end
@@ -200,7 +200,10 @@ class WeeksController < ApplicationController
 
     # Before filters
     def admin_user
-      redirect_to current_user, notice: "Only an Admin User can access that page!" unless current_user.admin?
+      if !current_user.admin?
+        flash[:danger] = 'Only an Admin User can access that page!'
+        redirect_to current_user
+      end
     end
 
 end

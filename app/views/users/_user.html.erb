@@ -1,31 +1,43 @@
-<li>
-  <%= gravatar_for user, :size => 30 %>
-  <% if user.admin? %>
-  *&nbsp;
-  <% end %>
-  <%= link_to user.name, user %>
-  <% if current_user.admin? %>
-    <% if current_user.supervisor? && !current_user?(user) %>
-      | <%= link_to "delete", user, method: :delete,
-            data: { confirm: "Are you sure?" },
-            :title => "Delete #{user.name}" %>
+<tr>
+  <td>
+    <%= gravatar_for user, :size => 30 %>
+  </td>
+  <td>
+    <% if user.admin? %>
+    *&nbsp;
     <% end %>
-    <% if !user.supervisor? && !current_user?(user) %>
-      <% if user.admin? %>
-        | <%= link_to "Delete Admin status", admin_del_path(user.id),
+    <%= link_to user.name, user %>
+    </td>
+    <% if current_user.admin? %>
+      <% if current_user.supervisor? && !current_user?(user) %>
+        <td>
+          <%= link_to "delete", user, method: :delete,
               data: { confirm: "Are you sure?" },
-              title: "Delete #{user.name} admin status" %>
-      <% else %>
-        | <%= link_to "Add Admin status", admin_add_path(user.id),
+              :title => "Delete #{user.name}" %>
+        </td>
+      <% end %>
+      <% if !user.supervisor? && !current_user?(user) %>
+        <% if user.admin? %>
+          <td>
+            <%= link_to "Delete Admin status", admin_del_path(user.id),
+                data: { confirm: "Are you sure?" },
+                title: "Delete #{user.name} admin status" %>
+          </td>
+        <% else %>
+          <td>
+            <%= link_to "Add Admin status", admin_add_path(user.id),
+                data: { confirm: "Are you sure?" },
+                title: "Add #{user.name} admin status" %>
+          </td>
+        <% end %>
+      <% end %>
+    <% else %>
+      <% if current_user?(user) %>
+        <td>
+          <%= link_to "delete", user, method: :delete,
               data: { confirm: "Are you sure?" },
-              title: "Add #{user.name} admin status" %>
+              :title => "Delete #{user.name}" %>
+        </td>
       <% end %>
     <% end %>
-  <% else %>
-    <% if current_user?(user) %>
-      | <%= link_to "delete", user, method: :delete,
-            data: { confirm: "Are you sure?" },
-            :title => "Delete #{user.name}" %>
-    <% end %>
-  <% end %>
-</li>
+</tr>
