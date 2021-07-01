@@ -1,0 +1,90 @@
+
+This is detailed description of the model/Relationships for the FB_apps App.
+It describes the model and tables that need to be created to create the relationships to
+drive the app.
+
+Tables
+------
+pools
+    id       integer     # This is the base Id for the pools table
+    name     string      # This is the name given to the pool
+    type     integer     # This is the type of pool created (PickEm, 
+                           PickEmSpread, SUP, Survivor) where PickEm is a 
+                           straight pick em of NFL games, PickEmSpread is a
+                           pick em against the spread of NFL games, SUP is 
+                           a Stupid Underdog Pick of college games, Survivor
+                           is a survivor game of NFL games
+    isPublic boolean     # Decides if this is a public or private pool, if 
+                           private then the password needs to be set.
+    encrypted_password string  # Password for the private pool
+    owner_id             # Id of creator/owner of this group
+
+pool_memberships
+    id       integer     # This is the base Id for the pools table
+    user_id  integer     # User Id of the member
+    pool_id  integer     # Id of the pool that owns this member list
+    owner    boolean     # Specifies that this user is owner of the group
+
+users
+    id       integer     # This is the base Id for the pools table
+    name     string      # User's name
+    email    string      # User's email
+    nickname string      # Nickname for the user
+    encrypted_password string  # Stores the password
+    salt     string      # Security keyword
+    admin    boolean     # Whether the user is an Admin user
+
+
+Models
+------
+class User < ActiveRecord::Base
+
+  has_many :pools, :through => :pool_memberships
+  has_many :pool_memberships
+
+  attr_accessor :password
+  attr_accessible :name, :email, :password, :password_confirmation
+
+end
+
+class Pool < ActiveRecord::Base
+
+  has_many :users, :through => :pool_memberships
+  has_many :pool_memberships
+
+  attr_accessible :name, :type, :isPublic, :password
+
+end
+
+class PoolMembership < ActiveRecord::Base
+
+  belongs_to :user
+  belongs_to :pool
+
+  attr_accessible :owner
+end
+
+
+PickEm Design Notes
+-------------------
+Convert the spread to a floating number 
+      <spread = "3.5".to_f>
+Convert even spreads (ie. 3 vs 3.5) spreads to an integer
+      <spread.to_i if (spread % 1) == 0>
+Check to see if spread is a half point or full point (Integer vs Float)
+      <spread.kind_of? Float>
+Check if spread is negative or positive
+      <if spread < 0> Negative
+      <if spread > 0> Positive
+Convert negative number to positive
+      <spread.abs>
+Convert number to stringi
+      <spread.to_s>
+
+DateTime Formatting
+-------------------
+General information - See https://apidock.com/ruby/DateTime/strftime
+
+Date format - game.game_date.strftime("%A, %B %d")
+Time format - game.game_date.strftime("%l:%M %p %Z")
+

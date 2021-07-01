@@ -19,4 +19,5 @@
 //= require select2
 //= require cocoon
 //= require forms
+//= require helpfile.js
 //= require_tree .

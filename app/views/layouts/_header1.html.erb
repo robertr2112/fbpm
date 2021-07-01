@@ -1,0 +1,51 @@
+<div container>
+  <nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
+    <%= link_to "Football Pool Mania", root_path, class:'navbar-brand col-4' %>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbar-list-2" aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse id="navbar-list-2">
+      <ul class="navbar-nav flex-row align-items-center ml-auto">
+        <li class="nav-item">
+          <%= link_to '<i class="fa fa-home fa-fw"></i>Home'.html_safe,
+                 root_path, class: 'nav-link'  %>
+        </li>
+        <li class="nav-item">
+          <%= link_to '<i class="fa fa-users fa-fw"></i>All Users'.html_safe,
+          users_path, class: 'nav-link' %>
+        </li>
+        <% if logged_in? %>
+        <li class="nav-item dropdown">
+          <div class="btn-group dropleft">
+            <button type="button" class="btn btn-sm btn-outline-dark">
+              <%= link_to '<i class="fa fa-user fa-fw"></i>Profile'.html_safe,
+                    current_user, class: 'nav-link'  %>
+            </button>
+            <button type="button"
+                    class="btn btn-sm btn-outline-dark dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu">
+              <%= link_to '<i class=" fa fa-cog fa-fw"></i>Settings'.html_safe,
+                    edit_user_path(current_user), class: 'dropdown-item'  %>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Log out'.html_safe,
+                   logout_path, method: :delete, class: 'dropdown-item'  %>
+            </div>
+          </div>
+        </li>
+        <% else %>
+        <li class="nav-item">
+          <%= link_to '<i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>Log in'.html_safe,
+                     login_path, class: 'nav-link'  %>
+        </li>
+        <% end %>
+      </ul>
+  </nav>
+</div>
