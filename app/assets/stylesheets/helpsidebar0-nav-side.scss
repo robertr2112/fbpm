@@ -1,0 +1,21 @@
+#Scrollspy {
+position: relative;
+   overflow-y: scroll;
+   height: 300px;
+}
+
+.help-sidebar {
+    position: relative;
+    padding: 1rem;
+    margin: 1rem -15px 0px;
+    border-style: solid;
+    border-color: rgb(248, 249, 250);
+    border-image: initial;
+    border-width: 0.2rem 0px 0px;
+}
+
+.help-sidebar-scroll{
+    position: relative;
+    height: 350px;
+    overflow: auto;
+}

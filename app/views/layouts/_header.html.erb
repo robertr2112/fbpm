@@ -1,15 +1,23 @@
-<nav class="header-main">
-  <%= link_to "Football Pool Mania", root_path, class:'header-brand' %>
+<nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
+  <%= link_to "Football Pool Mania", root_path, class:'header-brand navbar-brand col-4' %>
   <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbar-list-2" aria-controls="navbarNav" aria-expanded="false"
           aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse justify-content-end" id="navbar-list-2">
-  <% if logged_in? %>
     <ul class="navbar-nav" id="main-nav-list">
+    <% if logged_in? %>
+      <li class="nav-item">
+        <%= link_to '<i class="fa fa-home fa-fw"></i>Home'.html_safe,
+               root_path, class: 'nav-link'  %>
+      </li>
+      <li class="nav-item">
+        <%= link_to '<i class="fa fa-users fa-fw"></i>All Users'.html_safe,
+        users_path, class: 'nav-link' %>
+      </li>
       <!-- Level one dropdown -->
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown dropleft">
         <a id="dropdownMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
            aria-expanded="false" class="nav-link dropdown-toggle">
            <%= current_user.name %></a>
@@ -31,15 +39,16 @@
       <!-- End Level one -->
     </ul>
   <% else %>
-    <%= form_for(:session, url: login_path, html: {class: 'header-form-inline'}) do |f| %>
-      <div class="header-form-group">
-        <%= f.email_field :email, class: 'header-form-control', id: 'login_email',
-                placeholder: 'Email Address' %>
+    <%= form_for(:session, url: login_path,
+           html: {class: 'header-form-inline form-inline ml-auto'}) do |f| %>
+      <div class="form-group">
+        <%= f.email_field :email, class: 'form-control form-control-sm mr-1',
+              id: 'login_email', placeholder: 'Email Address' %>
       </div>
 
       <div class="header-form-group">
-        <%= f.password_field :password, class: 'header-form-control', id: 'login_password',
-                      placeholder: 'Password' %>
+        <%= f.password_field :password, class: 'form-control form-control-sm mr-1',
+              id: 'login_password', placeholder: 'Password' %>
       </div>
       <%= f.submit "Log in", class: "btn btn-sm btn-primary", id: 'login_button' %>
     <% end %>

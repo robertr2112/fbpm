@@ -1,37 +1,8 @@
 /*****************
  * Header styles *
 /*****************/
-.header-main {
-  @extend .navbar;
-  @extend .navbar-dark;
-  @extend .bg-dark;
-  @extend .navbar-expand-md;
-  @extend .fixed-top;
-/*  background-image: linear-gradient(15deg, #80d0c7 0%, #13547a 100%); */
-}
-
 .header-brand {
-  @extend .navbar-brand;
-  @extend .col-4;
   font-size: inherit;
-}
-
-.header-navbar-toggler {
-  @extend .navbar-toggler;
-}
-
-.header-navbar-toggler-icon {
-  @extend .navbar-toggler-icon;
-}
-
-.header-links {
-  @extend .collapse;
-  @extend .navbar-collapse;
-  @extend .justify-content-end;
-}
-
-.header-navbar-nav  {
-  @extend .navbar-nav;
 }
 
 /*
@@ -46,64 +17,6 @@
   }
 }
 */
-
-.header-nav-item {
-  @extend .nav-item;
-}
-
-.header-nav-link {
-  @extend .nav-link;
-}
-
-/*
- * form form-controls
- */
-.header-form-inline {
-  @extend .form-inline;
-  @extend .ml-auto;
-}
-
-.header-form-group {
-  @extend .form-group;
-}
-
-.header-form-control {
-  @extend .form-control;
-  @extend .form-control-sm;
-  @extend .mr-1;
-}
-
-/*
- * Header dropdown menus
- */
-.header-dropdown {
-  @extend .dropdown;
-}
-
-.header-dropdown-toggle {
-  @extend .dropdown-toggle;
-}
-
-.header-dropdown-menu {
-  @extend .dropdown-menu;
-}
-
-.header-dropdown-item {
-  @extend .dropdown-item;
-}
-
-.header-dropdown-divider {
-  @extend .dropdown-divider;
-}
-
-/*
- * Header buttons
- */
-.header-btn {
-  @extend .btn;
-  @extend .btn-primary;
-  @extend .btn-sm;
-}
 
 /*
  * Make the active header link bold
