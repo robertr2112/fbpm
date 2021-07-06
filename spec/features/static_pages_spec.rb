@@ -11,20 +11,19 @@ RSpec.feature "Static pages", type: :feature do
     scenario { should have_content('Football Pool Mania') }
     scenario { should have_title(full_title('')) }
     scenario "should be able to do a login" do
-      fill_in 'email',    with: user.email.upcase
-      fill_in 'password', with: user.password
-      click_button 'Sign in'
+      fill_in 'login_email',    with: user.email.upcase
+      fill_in 'login_password', with: user.password
+      click_button 'Log in'
       expect(should have_title(full_title(user.name)))
     end
-    
+
     scenario "should have link to create user page" do
       click_link("Sign up now!")
       expect(should have_title(full_title('Sign up')))
     end
-      
+
     scenario "should have link to login page" do
-      click_link("Sign in")
-      expect(should have_title(full_title('Sign in')))
+      expect(should have_link('Log in'))
     end
   end
 

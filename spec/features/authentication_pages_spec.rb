@@ -111,11 +111,13 @@ RSpec.feature "Authentication", type: :feature do
       let(:user) { FactoryBot.create(:user) }
       let(:non_admin) { FactoryBot.create(:user) }
 
-      before { sign_in non_admin, no_capybara: true }
-
       context "submitting a DELETE request to the Users#destroy action" do
-        before { delete user_path(user) }
-        specify { expect(response).to redirect_to(root_path) }
+        specify do
+          sign_in non_admin
+          save_and_open_page
+          delete user_path(user)
+          expect(response).to redirect_to(user_path(non_admin))
+        end
       end
     end
   end

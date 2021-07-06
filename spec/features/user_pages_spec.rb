@@ -21,11 +21,13 @@ RSpec.feature "User pages", type: :feature do
       before(:all) { 30.times { FactoryBot.create(:user) } }
       after(:all)  { User.delete_all }
 
-      scenario { should have_selector('ul.pagination') }
+      scenario "should have page number links" do
+        should have_selector('ul.pagination')
+      end
 
       scenario "should list each user" do
-        User.paginate(page: 1).each do |user|
-          expect(page).to have_selector('li', text: user.name)
+        User.paginate(page: 1).first(20).each do |user|
+          expect(page).to have_selector('td', text: user.name)
         end
       end
     end

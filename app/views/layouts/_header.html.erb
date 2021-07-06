@@ -6,52 +6,96 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse justify-content-end" id="navbar-list-2">
-    <ul class="navbar-nav" id="main-nav-list">
     <% if logged_in? %>
-      <li class="nav-item">
-        <%= link_to '<i class="fa fa-home fa-fw"></i>Home'.html_safe,
-               root_path, class: 'nav-link'  %>
-      </li>
-      <li class="nav-item">
-        <%= link_to '<i class="fa fa-users fa-fw"></i>All Users'.html_safe,
-        users_path, class: 'nav-link' %>
-      </li>
-      <!-- Level one dropdown -->
-      <li class="nav-item dropdown dropleft">
-        <a id="dropdownMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
-           aria-expanded="false" class="nav-link dropdown-toggle">
-           <%= current_user.name %></a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <ul class="navbar-nav" id="main-nav-list">
+        <li class="nav-item">
+          <%= link_to '<i class="fa fa-home fa-fw"></i>Home'.html_safe,
+                 root_path, class: 'nav-link'  %>
+        </li>
+        <!-- Level one dropdown for Pool Management -->
+        <li class="nav-item dropdown">
+          <a id="dropdownMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false" class="nav-link dropdown-toggle">
+             <i class="fa fa-trophy fa-fw"></i>Pool Management
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <%= link_to '<i class="fa fa-football-ball fa-fw"></i>Show all pools'.html_safe,
+               pools_path , class:'dropdown-item' %>
+            <%= link_to '<i class="fa fa-cog fa-fw"></i>Create new pool'.html_safe,
+               new_pool_path , class:'dropdown-item' %>
+            <% if @pool %>
+              <div class="dropdown-divider"></div>
+              <% if !@pool.isOwner?(current_user) %>
+                <% if @pool.isMember?(current_user) %>
+                  <%= link_to "Send Group Message", new_pool_pool_message_path(pool),
+                      class:'dropdown-item' %>
+                  <% if @pool.isOpen? %>
+                    <%= link_to "Leave Pool", leave_path(@pool.id), id: @pool.id,
+                          class:'dropdown-item' %>
+                  <% end %>
+                <% else %>
+                  <% if @pool.isOpen? %>
+                    <%= link_to "Join Pool", join_path(@pool.id), id: @pool.id,
+                          class:'dropdown-item' %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <% if @pool.isOwner?(current_user) %>
+                <%= link_to "Edit pool", edit_pool_path(@pool),
+                      class:'dropdown-item' %>
+                <%= link_to "Delete pool", @pool, method: :delete,
+                      data: {confirm: "Are you sure?"}, title: "Delete#{@pool.name}",
+                      class:'dropdown-item' %>
+                <%= link_to "Send Group Message", new_pool_pool_message_path(@pool),
+                      class:'dropdown-item' %>
+                <%= link_to "Invite people to join", invite_path(@pool.id),
+                      class:'dropdown-item' %>
+              <% end %>
+            <% end %>
+          </div>
+        </li>
+        <!-- End Level one -->
+        <li class="nav-item">
+          <%= link_to '<i class="fa fa-users fa-fw"></i>All Users'.html_safe,
+          users_path, class: 'nav-link' %>
+        </li>
+        <!-- Level one dropdown for User management -->
+        <li class="nav-item dropdown dropleft">
+          <a id="dropdownMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false" class="nav-link dropdown-toggle">
+             <%= current_user.name %></a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-          <%= link_to '<i class="fa fa-user fa-fw"></i>Profile'.html_safe, current_user,
-                class:'dropdown-item' %>
-          <%= link_to '<i class=" fa fa-cog fa-fw"></i>Settings'.html_safe,
-                edit_user_path(current_user), class:'dropdown-item'  %>
-          <% if !current_user.confirmed? %>
-            <%= link_to '<i class="fa fa-envelope fa-fw"></i>Resend Confirmation'.html_safe,
-                resend_confirm_path(current_user), class:'dropdown-item' %>
-          <% end %>
-          <div class="dropdown-divider"></div>
-          <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Log out'.html_safe,
-          logout_path, method: "delete", class:'dropdown-item' %>
+            <%= link_to '<i class="fa fa-user fa-fw"></i>Profile'.html_safe, current_user,
+                  class:'dropdown-item' %>
+            <%= link_to '<i class=" fa fa-cog fa-fw"></i>Settings'.html_safe,
+                  edit_user_path(current_user), class:'dropdown-item'  %>
+            <% if !current_user.confirmed? %>
+              <%= link_to '<i class="fa fa-envelope fa-fw"></i>Resend Confirmation'.html_safe,
+                  resend_confirm_path(current_user), class:'dropdown-item' %>
+            <% end %>
+            <div class="dropdown-divider"></div>
+            <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Log out'.html_safe,
+            logout_path, method: "delete", class:'dropdown-item' %>
+          </div>
+        </li>
+        <!-- End Level one -->
+      </ul>
+    <% else %>
+      <!-- Login form -->
+      <%= form_for(:session, url: login_path,
+             html: {class: 'header-form-inline form-inline ml-auto'}) do |f| %>
+        <div class="form-group">
+          <%= f.email_field :email, class: 'form-control form-control-sm mr-1',
+                id: 'login_email', placeholder: 'Email Address' %>
         </div>
-      </li>
-      <!-- End Level one -->
-    </ul>
-  <% else %>
-    <%= form_for(:session, url: login_path,
-           html: {class: 'header-form-inline form-inline ml-auto'}) do |f| %>
-      <div class="form-group">
-        <%= f.email_field :email, class: 'form-control form-control-sm mr-1',
-              id: 'login_email', placeholder: 'Email Address' %>
-      </div>
 
-      <div class="header-form-group">
-        <%= f.password_field :password, class: 'form-control form-control-sm mr-1',
-              id: 'login_password', placeholder: 'Password' %>
-      </div>
-      <%= f.submit "Log in", class: "btn btn-sm btn-primary", id: 'login_button' %>
+        <div class="header-form-group">
+          <%= f.password_field :password, class: 'form-control form-control-sm mr-1',
+                id: 'login_password', placeholder: 'Password' %>
+        </div>
+        <%= f.submit "Log in", class: "btn btn-sm btn-primary", id: 'login_button' %>
+      <% end %>
     <% end %>
-  <% end %>
   </div>
 </nav>
