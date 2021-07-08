@@ -114,9 +114,8 @@ RSpec.feature "Authentication", type: :feature do
       context "submitting a DELETE request to the Users#destroy action" do
         specify do
           sign_in non_admin
-          save_and_open_page
           delete user_path(user)
-          expect(response).to redirect_to(user_path(non_admin))
+          expect(response).to redirect_to(login_path)
         end
       end
     end

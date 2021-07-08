@@ -18,13 +18,13 @@ class Entry < ApplicationRecord
   has_many   :picks, dependent: :delete_all
 
   def entryStatusGood?
-    if self.survivorStatusIn 
+    if self.survivorStatusIn
       return true
     else
       return false
     end
   end
-  
+
   def madePicks?(week)
     picks = self.picks.where(week_id: week.id)
     picks.each do |pick|

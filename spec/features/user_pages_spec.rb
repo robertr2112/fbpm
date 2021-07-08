@@ -69,7 +69,7 @@ RSpec.feature "User pages", type: :feature do
 
     scenario "should list each user" do
       User.all.each do |user|
-        expect(page).to have_selector('li', text: user.name)
+        expect(page).to have_selector('td', text: user.name)
       end
     end
   end
@@ -141,9 +141,6 @@ RSpec.feature "User pages", type: :feature do
       visit edit_user_path(user)
     end
 
-    context do
-    end
-
     context "page" do
       scenario { should have_content("Update your profile") }
       scenario { should have_title("Edit user") }
@@ -151,48 +148,44 @@ RSpec.feature "User pages", type: :feature do
     end
 
     context "with invalid Name" do
-      before do
+      scenario "it should show message it can't be blank" do
         fill_in 'user_name', with: ""
         click_button "Update Profile"
+        should have_content('can\'t be blank')
       end
-
-      scenario { should have_content('can\'t be blank') }
     end
 
     context "with invalid Name" do
-      before do
+      scenario "it should show message it can't be blank" do
         fill_in 'user_user_name', with: ""
         click_button "Update Profile"
+        should have_content('can\'t be blank')
       end
-
-      scenario { should have_content('can\'t be blank') }
     end
 
     context "with invalid Email" do
-      before do
+      scenario "it should show message it can't be blank" do
         fill_in 'user_email', with: ""
         click_button "Update Profile"
+        should have_content('can\'t be blank')
       end
-
-      scenario { should have_content('can\'t be blank') }
     end
 
     context "with invalid Password" do
-      before do
-        fill_in 'user_password', with: ""
+      scenario "should show password is too short" do
+        fill_in 'user_password', with: "12345"
         click_button "Update Profile"
+        should have_content('is too short')
       end
-
-      scenario { should have_content('is too short') }
     end
 
     context "with invalid Password Confirmation" do
-      before do
-        fill_in 'user_password_confirmation', with: ""
+      scenario do
+        fill_in 'user_password', with: "123456"
+        fill_in 'user_password_confirmation', with: "12345"
         click_button "Update Profile"
+        should have_content('Password confirmation doesn\'t match Password')
       end
-
-      scenario { should have_content('is too short') }
 
     end
 
