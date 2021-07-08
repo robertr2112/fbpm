@@ -64,15 +64,18 @@ group :development, :test do
 end
 
 group :development do
-  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
+  # Access an interactive console on exception pages or by calling 'console' anywhere in
+  # the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  # Spring speeds up development by keeping your application running in the background.
+  # Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-
+  # automate testing with Guard
+  gem 'guard', '2.17.0'
+  gem 'guard-rspec', '4.7.3'
   gem 'annotate'
-# gem 'annotate_models'
   gem 'letter_opener_web'
   gem 'childprocess'
   gem 'pry-rails'
