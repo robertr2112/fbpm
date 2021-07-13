@@ -3,7 +3,7 @@
 # Table name: weeks
 #
 #  id          :bigint           not null, primary key
-#  state       :integer          default(0)
+#  state       :integer
 #  week_number :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null

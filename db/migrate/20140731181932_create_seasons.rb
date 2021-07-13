@@ -1,4 +1,4 @@
-class CreateSeasons < ActiveRecord::Migration[5.2]
+class CreateSeasons < ActiveRecord::Migration
   def change
     create_table :seasons do |t|
       t.string :year

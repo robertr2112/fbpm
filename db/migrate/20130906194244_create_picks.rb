@@ -1,4 +1,4 @@
-class CreatePicks < ActiveRecord::Migration[5.2]
+class CreatePicks < ActiveRecord::Migration
   def change
     create_table :picks do |t|
       t.integer :week_id

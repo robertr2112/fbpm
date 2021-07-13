@@ -1,8 +1,8 @@
-class CreateWeeks < ActiveRecord::Migration[5.2]
+class CreateWeeks < ActiveRecord::Migration
   def change
     create_table :weeks do |t|
       t.belongs_to :season
-      t.integer    :state, default: 0
+      t.integer    :state
       t.integer    :week_number
 
       t.timestamps

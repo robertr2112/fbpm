@@ -1,4 +1,4 @@
-class CreateGamePicks < ActiveRecord::Migration[5.2]
+class CreateGamePicks < ActiveRecord::Migration
   def change
     create_table :game_picks do |t|
       t.belongs_to :pick

@@ -2,14 +2,19 @@
 #
 # Table name: entries
 #
-#  id               :integer          not null, primary key
+#  id               :bigint           not null, primary key
+#  name             :string
+#  supTotalPoints   :integer          default(0)
+#  survivorStatusIn :boolean          default(TRUE)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #  pool_id          :integer
 #  user_id          :integer
-#  name             :string(255)
-#  survivorStatusIn :boolean          default(TRUE)
-#  supTotalPoints   :integer          default(0)
-#  created_at       :datetime
-#  updated_at       :datetime
+#
+# Indexes
+#
+#  index_entries_on_pool_id  (pool_id)
+#  index_entries_on_user_id  (user_id)
 #
 
 class Entry < ApplicationRecord

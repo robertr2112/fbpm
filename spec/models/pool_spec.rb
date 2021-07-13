@@ -2,17 +2,21 @@
 #
 # Table name: pools
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)
-#  season_id       :integer
-#  poolType        :integer
-#  starting_week   :integer          default(1)
+#  id              :bigint           not null, primary key
 #  allowMulti      :boolean          default(FALSE)
 #  isPublic        :boolean          default(TRUE)
-#  password_digest :string(255)
-#  created_at      :datetime
-#  updated_at      :datetime
+#  name            :string
+#  password_digest :string
+#  poolType        :integer
 #  pool_done       :boolean          default(FALSE)
+#  starting_week   :integer          default(1)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  season_id       :bigint
+#
+# Indexes
+#
+#  index_pools_on_season_id  (season_id)
 #
 
 require 'rails_helper'

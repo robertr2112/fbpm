@@ -2,12 +2,16 @@
 #
 # Table name: game_picks
 #
-#  id              :integer          not null, primary key
-#  pick_id         :integer
-#  game_pick_id    :integer
+#  id              :bigint           not null, primary key
 #  chosenTeamIndex :integer
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  game_pick_id    :integer
+#  pick_id         :bigint
+#
+# Indexes
+#
+#  index_game_picks_on_pick_id  (pick_id)
 #
 
 class GamePick < ApplicationRecord
