@@ -2,13 +2,17 @@
 #
 # Table name: picks
 #
-#  id          :integer          not null, primary key
-#  week_id     :integer
-#  entry_id    :integer
-#  week_number :integer
+#  id          :bigint           not null, primary key
 #  totalScore  :integer          default(0)
-#  created_at  :datetime
-#  updated_at  :datetime
+#  week_number :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  entry_id    :integer
+#  week_id     :integer
+#
+# Indexes
+#
+#  index_picks_on_entry_id  (entry_id)
 #
 
 require 'rails_helper'

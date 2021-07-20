@@ -2,12 +2,12 @@
 #
 # Table name: pool_memberships
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  pool_id    :integer
+#  id         :bigint           not null, primary key
 #  owner      :boolean          default(FALSE), not null
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  pool_id    :integer
+#  user_id    :integer
 #
 
 require 'rails_helper'

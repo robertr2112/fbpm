@@ -1,4 +1,4 @@
-class AddGameDateToGames < ActiveRecord::Migration[5.2]
+class AddGameDateToGames < ActiveRecord::Migration[4.2]
   def change
     add_column :games, :game_date, :datetime
   end

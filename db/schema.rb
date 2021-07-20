@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2016_11_15_045622) do
+ActiveRecord::Schema.define(version: 2021_07_13_034057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,13 +40,12 @@ ActiveRecord::Schema.define(version: 2016_11_15_045622) do
     t.integer "homeTeamIndex"
     t.integer "awayTeamIndex"
     t.integer "spread"
-    t.bigint "week_id"
+    t.integer "week_id"
     t.integer "homeTeamScore", default: 0
     t.integer "awayTeamScore", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "game_date"
-    t.index ["week_id"], name: "index_games_on_week_id"
   end
 
   create_table "picks", force: :cascade do |t|
@@ -114,16 +113,16 @@ ActiveRecord::Schema.define(version: 2016_11_15_045622) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["remember_digest"], name: "index_users_on_remember_digest"
   end
 
   create_table "weeks", force: :cascade do |t|
     t.bigint "season_id"
-    t.integer "state", default: 0
+    t.integer "state"
     t.integer "week_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["season_id"], name: "index_weeks_on_season_id"
   end
 
-  add_foreign_key "games", "weeks"
 end

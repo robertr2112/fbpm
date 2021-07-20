@@ -19,7 +19,8 @@
 #
 # Indexes
 #
-#  index_users_on_email  (email) UNIQUE
+#  index_users_on_email            (email) UNIQUE
+#  index_users_on_remember_digest  (remember_digest)
 #
 
 require 'rails_helper'

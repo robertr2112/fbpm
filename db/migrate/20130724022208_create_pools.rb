@@ -1,4 +1,4 @@
-class CreatePools < ActiveRecord::Migration[5.2]
+class CreatePools < ActiveRecord::Migration[4.2]
   def change
     create_table :pools do |t|
       t.string     :name

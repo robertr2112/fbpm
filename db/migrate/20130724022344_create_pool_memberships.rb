@@ -1,4 +1,4 @@
-class CreatePoolMemberships < ActiveRecord::Migration[5.2]
+class CreatePoolMemberships < ActiveRecord::Migration[4.2]
   def change
     create_table :pool_memberships do |t|
       t.integer :user_id
