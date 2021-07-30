@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <%= image_tag(attachments['fbpm_logo.png'].url, class: "img-rounded") %>
+
+    <p>Hi <%= @user.name %>,</p>
+
+    <p>Before you can use your account you need to activate your user account, click the URL below.
+       to activate.</p>
+
+    <p><%= link_to "Activate user account", edit_account_activation_url(@user.activation_token,
+               email: @user.email) %></p>
+
+  </body>
+</html>
