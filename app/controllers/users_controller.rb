@@ -13,9 +13,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       # Handle a successful save
-      @user.send_user_confirm
+      @user.send_activation_email
       log_in(@user)
-      flash[:success] = "Welcome to Football Pool Mania!"
+      flash[:info] = "Please check your email to activate your account."
       redirect_to @user
     else
       @user.password = ""
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.paginate(page: params[:page], per_page: 25)
+    @users = User.where(activated: true).paginate(page: params[:page], per_page: 25)
   end
 
   def show
@@ -42,26 +42,6 @@ class UsersController < ApplicationController
     else
       render 'edit'
     end
-  end
-
-  def confirm
-    @user = User.find_by_confirmation_token!(params[:confirmation_token])
-    if @user
-      @user.update_attribute(:confirmed, true)
-      log_in(@user)
-      redirect_to root_url, notice: "User account has been confirmed!"
-    else
-      render :edit
-    end
-  end
-
-  def resend_confirm
-      if current_user.confirmed?
-        redirect_to root_url, warning: "User account has already been confirmed!"
-      else
-        current_user.send_user_confirm
-      redirect_to root_url, success: "Confirm message has been resent!"
-      end
   end
 
   def destroy
@@ -105,6 +85,18 @@ class UsersController < ApplicationController
       flash[:danger] = "Only an Admin user can update admin status!"
     end
     redirect_to users_url
+  end
+
+  # Setup to resend the activation email
+  def resend_activation
+    user = User.find_by_id(params[:id])
+    if user.activated?
+      flash[:notice] = "User account has already been activated!"
+    else
+      user.resend_activation
+      flash[:success] = "Activate account message has been resent!"
+    end
+    redirect_to root_url
   end
 
   private

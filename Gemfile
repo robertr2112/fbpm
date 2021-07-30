@@ -86,6 +86,8 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   gem 'webdrivers'
+  # Email support
+  gem 'email_spec'
   # Added gems
   gem 'database_cleaner'
   # Code coverage tool

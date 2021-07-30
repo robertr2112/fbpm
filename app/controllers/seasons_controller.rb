@@ -1,6 +1,6 @@
 class SeasonsController < ApplicationController
   before_action :logged_in_user
-  before_action :confirmed_user
+  before_action :activated_user
   before_action :admin_user
 
   def new

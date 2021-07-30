@@ -3,9 +3,10 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  activated              :boolean          default(FALSE)
+#  activated_at           :datetime
+#  activation_digest      :string
 #  admin                  :boolean          default(FALSE)
-#  confirmation_token     :string
-#  confirmed              :boolean          default(FALSE)
 #  email                  :string
 #  name                   :string
 #  password_digest        :string
@@ -29,7 +30,8 @@ FactoryBot.define  do
     sequence(:email)      { |n| "person-#{n}@example.com" }
     password              { "foobar" }
     password_confirmation { "foobar" }
-    confirmed             { true }
+    activated             { true }
+    activated_at          { Time.zone.now }
 
     factory :supervisor do
       supervisor { true }
@@ -40,8 +42,8 @@ FactoryBot.define  do
       admin { true }
     end
 
-    factory :unconfirmed_user do
-      confirmed { false }
+    factory :unactivated_user do
+      activated { false }
     end
   end
 end

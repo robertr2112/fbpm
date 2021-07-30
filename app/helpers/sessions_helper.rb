@@ -29,7 +29,7 @@ module SessionsHelper
       @current_user ||= User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id])
       user = User.find_by(id: user_id)
-      if user && user.authenticated?(cookies[:remember_token])
+      if user && user.authenticated?(:remember, cookies[:remember_token])
         log_in user
         @current_user = user
       end
@@ -67,9 +67,12 @@ module SessionsHelper
     end
   end
 
-  def confirmed_user
+  def activated_user
     if current_user
-      redirect_to current_user unless current_user.confirmed?
+      if !current_user.activated?
+        flash[:notice] = "You must activate account before using the site!"
+        redirect_to current_user
+      end
     end
   end
 

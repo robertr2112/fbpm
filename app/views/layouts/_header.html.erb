@@ -70,9 +70,9 @@
                   class:'dropdown-item' %>
             <%= link_to '<i class=" fa fa-cog fa-fw"></i>Settings'.html_safe,
                   edit_user_path(current_user), class:'dropdown-item'  %>
-            <% if !current_user.confirmed? %>
-              <%= link_to '<i class="fa fa-envelope fa-fw"></i>Resend Confirmation'.html_safe,
-                  resend_confirm_path(current_user), class:'dropdown-item' %>
+            <% if !current_user.activated? %>
+              <%= link_to '<i class="fa fa-envelope fa-fw"></i>Resend Activation Email'.html_safe,
+                  resend_activation_path(current_user), class:'dropdown-item' %>
             <% end %>
             <div class="dropdown-divider"></div>
             <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Log out'.html_safe,

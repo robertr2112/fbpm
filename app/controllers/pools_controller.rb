@@ -1,6 +1,6 @@
 class PoolsController < ApplicationController
   before_action :logged_in_user
-  before_action :confirmed_user
+  before_action :activated_user
   before_action :admin_user, only: [:pool_diagnostics, :pool_diag_chg ]
 
   def new

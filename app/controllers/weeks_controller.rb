@@ -1,6 +1,6 @@
 class WeeksController < ApplicationController
   before_action :logged_in_user
-  before_action :confirmed_user
+  before_action :activated_user
   before_action :admin_user, except: [:show, :index]
 
   def new

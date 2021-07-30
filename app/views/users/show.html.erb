@@ -10,12 +10,12 @@
     </h1>
   </div>
 </div>
-<% if !current_user.confirmed? %>
+<% if !current_user.activated? %>
   <div class="row">
     <div class="col-sm-8 offset-2 main">
-      <p>This user account needs to be confirmed before you can use this site.
-        Please look for the email with the subject <i>"Confirm Registration" </i>from
-        info@fbpm.com and click the Confirmation URL.
+      <p>This user account needs to be activated before you can use this site.
+        Please look for the email with the subject <i>"Account activation" </i>from
+        info@footballpoolmania.com and click the "Activate user account" link.
       </p>
     </div>
   </div>

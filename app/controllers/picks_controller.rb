@@ -1,6 +1,6 @@
 class PicksController < ApplicationController
   before_action :logged_in_user
-  before_action :confirmed_user
+  before_action :activated_user
 
   def new
     @entry = Entry.find_by_id(params[:entry_id])

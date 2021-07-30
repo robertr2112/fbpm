@@ -15,12 +15,12 @@ class UserMailer < ActionMailer::Base
     mail to: user.email, subject: "Password Reset"
   end
 
-  def confirm_registration(user)
+  def account_activation(user)
     @user = user
     attachments.inline['fbpm_logo.png'] = {
                    data: File.read(Rails.root + "app/assets/images/fbpm_logo.png"),
                    mime_type: "image/png"
                 }
-    mail to: user.email, subject: "Confirm Registration"
+    mail to: user.email, subject: "Account activation"
   end
 end

@@ -1,6 +1,6 @@
 class PoolMessagesController < ApplicationController
   before_action :logged_in_user
-  before_action :confirmed_user
+  before_action :activated_user
 
   def new
     @pool = Pool.find_by_id(params[:pool_id])

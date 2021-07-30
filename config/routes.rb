@@ -15,14 +15,13 @@ Rails.application.routes.draw do
   match '/help',              to: 'static_pages#help',            via: 'get'
   match '/about',             to: 'static_pages#about',           via: 'get'
   match '/contact',           to: 'static_pages#contact',         via: 'get'
-  match 'users/confirm/:confirmation_token', to: 'users#confirm',
-                       as: :confirm,  via: 'get'
-  match 'users/resend_confirm/:id',  to: 'users#resend_confirm',
-                       as: :resend_confirm,     via: 'get'
   match 'users/admin_add/:id', to: 'users#admin_add',
                        as: :admin_add,     via: 'get'
   match 'users/admin_del/:id', to: 'users#admin_del',
                        as: :admin_del,     via: 'get'
+  match 'users/resend_activation/:id', to: 'users#resend_activation',
+                       as: :resend_activation, via: 'get'
+
 
   # Diagnostics paths
   match 'pools/diagnostics/:id',   to: 'pools#pool_diagnostics',   as: :pool_diagnostics,    via: 'get'
@@ -58,8 +57,8 @@ Rails.application.routes.draw do
   end
 
   resources :weeks, only: [:edit, :update, :show, :destroy]
-
   resources :picks, only: [:edit, :update, :destroy]
+  resources :account_activations, only: [:edit]
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

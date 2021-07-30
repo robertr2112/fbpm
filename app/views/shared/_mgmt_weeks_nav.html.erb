@@ -1,8 +1,7 @@
 <div class="btn-toolbar weeks-nav" role="toolbar" aria-label="NFL Weeks Toolbar buttons">
   <div class="btn-group-sm role="group" aria-label="First group">
       <% if current_season(1) %>
-        <!-- % if current_user.admin? % -->
-        <% if 1 %>
+        <% if current_user.admin? %>
           <%= link_to "Season #{season.year}", season_path(season), :class => "btn btn-primary",
                            :role => "button" %>
           <% if season.weeks.count < season.number_of_weeks %>
@@ -27,7 +26,9 @@
           <% end %>
         <% end %>
       <% else %>
-        <%= link_to "Create new season", new_season_path %>
+        <% if current_user.admin? %>
+          <%= link_to "Create new season", new_season_path %>
+        <% end %>
       <% end %>
   </div>
 </div>

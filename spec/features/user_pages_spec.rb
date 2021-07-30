@@ -35,7 +35,9 @@ RSpec.feature "User pages", type: :feature do
     context "delete links" do
       let (:user2) { FactoryBot.create(:user) }
 
-      scenario { expect(page).not_to have_link('delete', href: user_path(user2)) }
+      scenario "Should not show 'delete' link for any user" do
+        expect(page).not_to have_link('delete', href: user_path(user2))
+      end
 
       context "as a supervisor user" do
         let(:supervisor) { FactoryBot.create(:supervisor) }
@@ -44,32 +46,17 @@ RSpec.feature "User pages", type: :feature do
           visit users_path
         end
 
-        scenario { expect(page).to have_link('delete', href: user_path(user)) }
+        scenario "Should show 'delete' link for other users" do
+          expect(page).to have_link('delete', href: user_path(user))
+        end
+        scenario "Should not show 'delete' link for current user" do
+          should_not have_link('delete', href: user_path(supervisor))
+        end
         scenario "should be able to delete another user" do
           expect do
             click_link('delete', match: :first)
           end.to change(User, :count).by(-1)
         end
-        scenario { should_not have_link('delete', href: user_path(supervisor)) }
-      end
-    end
-  end
-
-  feature "index" do
-    before do
-      sign_in FactoryBot.create(:user)
-      FactoryBot.create(:user, name: "Bob", email: "bob@example.com")
-      FactoryBot.create(:user, name: "Ben", email: "ben@example.com")
-      visit users_path
-    end
-
-    scenario {
-      should have_title('All users') }
-    scenario { should have_content('All users') }
-
-    scenario "should list each user" do
-      User.all.each do |user|
-        expect(page).to have_selector('td', text: user.name)
       end
     end
   end
@@ -81,8 +68,10 @@ RSpec.feature "User pages", type: :feature do
       visit user_path(user)
     end
 
-    scenario { should have_content(user.name) }
-    scenario { should have_title(user.name) }
+    scenario "should show Users name on page and title" do
+      should have_content(user.name)
+      should have_title(user.name)
+    end
   end
 
   feature "signup page" do
@@ -94,7 +83,9 @@ RSpec.feature "User pages", type: :feature do
 
   feature "signup" do
 
-    before { visit signup_path }
+    before do
+     visit signup_path
+    end
 
     let(:submit) { "Create my account" }
 
@@ -120,16 +111,63 @@ RSpec.feature "User pages", type: :feature do
         fill_in 'user_password_confirmation', with: "foobar"
       end
 
-      scenario "should create a user" do
+      scenario "should update user count by 1" do
         expect { click_button submit }.to change(User, :count).by(1)
       end
 
-      context "after saving the user" do
+      scenario "should send user account activation email" do
+        expect { click_button submit }.to change(ActionMailer::Base.deliveries, :size).by(1)
+      end
+
+      context "after creating the user" do
         before { click_button submit }
         let(:user) { User.find_by(email: 'user1@example.com') }
 
         scenario { should have_title(user.name) }
-        scenario { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        scenario "should show user as not activated and show notice to activate" do
+          should have_selector('div.alert.alert-info', text: 'Please')
+          should have_content("look for the email")
+          expect(user.activated?).to be false
+        end
+
+        context "and visiting any page before activation" do
+          scenario "should reroute to users path with flash message" do
+            visit pools_path
+            expect(page).to have_current_path(user_path(user))
+            expect(page).to have_selector('div.alert.alert-warning',
+                     text: 'You must activate account before using the site!')
+          end
+        end
+
+        scenario "clicking resend_activation button should resend email" do
+          ActionMailer::Base.deliveries.clear
+          page.find_link("#{user.name}").click
+          page.find_link("Resend Activation Email").click
+          page.find('div.alert.alert-success', text: 'Activate')
+          expect(ActionMailer::Base.deliveries.size).to eq 1
+          expect(page).to have_selector('div.alert.alert-success',
+                   text: 'Activate account message has been resent')
+        end
+
+        context "and the user is activated" do
+          before do
+            ActionMailer::Base.deliveries.clear
+            user.activated = true
+            user.save
+          end
+
+          scenario "resend_activation should show error message" do
+            activate_url = root_url + "users/resend_activation/" + "#{user.id}"
+            visit (activate_url)
+            expect(ActionMailer::Base.deliveries.size).to eq 0
+            expect(page).to have_selector('div.alert.alert-warning',
+                   text: 'User account has already been activated!')
+          end
+          scenario "should be able to visit other pages" do
+            visit pools_path
+            expect(page).to have_current_path(pools_path)
+          end
+        end
       end
     end
   end
