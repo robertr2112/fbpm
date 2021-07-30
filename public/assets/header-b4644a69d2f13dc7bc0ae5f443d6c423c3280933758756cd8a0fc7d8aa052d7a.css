@@ -1,0 +1,28 @@
+/*****************
+ * Header styles *
+/*****************/
+/* line 4, app/assets/stylesheets/header.scss */
+.header-brand {
+  font-size: inherit;
+}
+
+/*
+ * Make the header links a darker black and bold on hover
+.header-links li {
+  a {
+    color: #1a1a1a !important;
+    &:hover {
+      color: #0d0d0d !important;
+      font-weight: bold !important;
+    }
+  }
+}
+*/
+/*
+ * Make the active header link bold
+ */
+/* line 24, app/assets/stylesheets/header.scss */
+.header-links .header-link-nav-item > .header-nav-link.active {
+  color: #0d0d0d !important;
+  font-weight: bold !important;
+}

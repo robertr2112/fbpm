@@ -1,0 +1,17 @@
+/* line 2, app/assets/stylesheets/forms.scss */
+.form-check-label {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* line 5, app/assets/stylesheets/forms.scss */
+.form-check-label span {
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+/* line 11, app/assets/stylesheets/forms.scss */
+#session_remember_me {
+  width: auto;
+  margin-left: 0;
+}

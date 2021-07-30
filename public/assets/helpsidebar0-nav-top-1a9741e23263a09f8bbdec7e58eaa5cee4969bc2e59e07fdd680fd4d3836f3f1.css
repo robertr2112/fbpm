@@ -1,0 +1,12 @@
+/* line 2, app/assets/stylesheets/helpsidebar0-nav-top.scss */
+#help-navbar {
+  position: relative;
+  overflow-y: scroll;
+  height: 300px;
+}
+
+/* line 7, app/assets/stylesheets/helpsidebar0-nav-top.scss */
+.help-section {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}

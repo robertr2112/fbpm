@@ -1,0 +1,25 @@
+/* line 1, app/assets/stylesheets/helpsidebar0-bootstrap.scss */
+#Scrollspy {
+  position: relative;
+  overflow-y: scroll;
+  height: 300px;
+}
+
+/* line 7, app/assets/stylesheets/helpsidebar0-bootstrap.scss */
+.bd-example {
+  position: relative;
+  padding: 1rem;
+  margin: 1rem -15px 0px;
+  border-style: solid;
+  border-color: #f8f9fa;
+  -o-border-image: initial;
+     border-image: initial;
+  border-width: 0.2rem 0px 0px;
+}
+
+/* line 17, app/assets/stylesheets/helpsidebar0-bootstrap.scss */
+.scrollspy-example-2 {
+  position: relative;
+  height: 350px;
+  overflow: auto;
+}
