@@ -1,6 +1,12 @@
   <tr>
-    <td class="d-flex justify-content-between">
-      <%= image_tag(team.imagePath, size: "40x30") %>&nbsp;&nbsp;<%= link_to team.name, team %>
-      <%= link_to "Edit", edit_team_path(team), class: "btn btn-xs btn-primary ml-auto" %>
-    </td>
+    <% if current_user.admin? %>
+      <td class="d-flex justify-content-between">
+        <%= image_tag(team.imagePath, size: "40x30") %>&nbsp;&nbsp;<%= link_to team.name, team %>
+        <%= link_to "Edit", edit_team_path(team), class: "btn btn-xs btn-primary ml-auto" %>
+      </td>
+    <% else %>
+      <td class="d-flex justify-content-start">
+        <%= image_tag(team.imagePath, size: "40x30") %>&nbsp;&nbsp;<%= link_to team.name, team %>
+      </td>
+    <% end %>
   </tr>
