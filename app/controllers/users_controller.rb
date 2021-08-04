@@ -25,7 +25,11 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.where(activated: true).paginate(page: params[:page], per_page: 25)
+    if current_user.admin?
+      @users = User.paginate(page: params[:page], per_page: 25)
+    else
+      @users = User.where(activated: true).paginate(page: params[:page], per_page: 25)
+    end
   end
 
   def show

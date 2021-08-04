@@ -6,6 +6,9 @@
     <% if user.admin? %>
     *&nbsp;
     <% end %>
+    <% if !user.activated? %>
+    +&nbsp;
+    <% end %>
     <%= link_to user.name, user %>
     </td>
     <% if current_user.admin? %>
