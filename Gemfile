@@ -45,6 +45,9 @@ gem 'email_validator'
 # Database.  Using the same database for production/development
 gem 'pg',  '~> 0.20'
 
+# Watir: This is used to scrape data from the NFL.com site
+gem 'watir'
+
 #
 # Bootstrap support gems
 #

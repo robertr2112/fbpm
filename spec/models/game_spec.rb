@@ -8,6 +8,7 @@
 #  game_date     :datetime
 #  homeTeamIndex :integer
 #  homeTeamScore :integer          default(0)
+#  network       :string
 #  spread        :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

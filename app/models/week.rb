@@ -210,71 +210,134 @@ class Week < ApplicationRecord
     end
   end
 
-#  private
 
   # Parse the schedule for specified week from nfl.com. Returns
-  # an array of game information(:date, :time, :away_team, :home_team)
-  def self.get_nfl_sched(weekNum)
+  # an array of game information(:date, :time, :away_team, :home_team, :network)
+  # Scraper Data Points
+  #
+  # Group of games marker
+  #   nfl-o-matchup-group (section)
+  #   - Date
+  #     d3-o-section-title (h2)
+  #   - Game
+  #     nfl-c-matchup-strip (div)
+  #     -Team info
+  #       nfl-c-matchup-strip__team-name (p)
+  #       - Visiting team
+  #         nfl-c-matchup-strip__team--opponent (div)
+  #       - Home team
+  #         nfl-c-matchup-strip__team (div)
+  #         -Name
+  #           nfl-c-matchup-strip__team-fullname (span)
+  #     - Game info
+  #       nfl-c-matchup-strip__game-info(div)
+  #       -Time
+  #         nfl-c-matchup-strip__date-time (span)
+  #       -Network
+  #         nfl-c-matchup-strip__networks (p)
+  #
+# def self.get_nfl_sched(weekNum)
+  def get_nfl_sched(weekNum)
 
     # Open the schedule home page
+#   args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
+#           '--remote-debugging-port=9222']
+#   browser = Watir::Browser.new :chrome, headless: true, options: {args: args}
+    browser = Watir::Browser.new :chrome, headless: true
     url_path = "http://www.nfl.com/schedules/" + Season.getSeasonYear + "/REG" + weekNum.to_s
-    doc = Nokogiri::HTML(open(url_path))
+    browser.goto(url_path)
+#   js_doc = browser.div(class: "nfl-o-matchup-group").wait_until(&:present?)
+    js_doc = browser.main(id: "main-content").wait_until(&:present?)
+    doc = Nokogiri::HTML(js_doc.inner_html)
 
     # Get games information
     games = Array.new
+    gameNum = 1
+
+    # Get all games for each day and loop through them
+    doc.css('section.nfl-o-matchup-group').each do |game_group|
+      # Get the date for the games in this group
+      game_date = game_group.css('h2.d3-o-section-title').text
+      # Get details for each game for that day
+      game_group.css('div.nfl-c-matchup-strip').each do |game_details|
+
+        # Get Game time
+        game_time = game_details.css('span.nfl-c-matchup-strip__date-time').text
+        game_timezone = game_details.css('span.nfl-c-matchup-strip__date-timezone').text
+
+        # Get away team
+        away_team_marker = game_details.css('div.nfl-c-matchup-strip__team--opponent')
+        away_team = away_team_marker.css('span.nfl-c-matchup-strip__team-fullname').text
+
+        # Get home team
+        home_team_marker = game_details.css('p.nfl-c-matchup-strip__team-name')
+        home_team = home_team_marker.css('span.nfl-c-matchup-strip__team-fullname').text
+
+        # Get game Network
+        game_network = game_details.css('p.nfl-c-matchup-strip__networks').text
+
+byebug
+      end
+
+#     games[gameNum] = {:date => start_dates[gameNum], :time => start_times[gameNum],
+#                  :away_team => away_teams[gameNum], :home_team => home_teams[gameNum]}
+    end
+    return games
 
     # Find all start dates
-    start_dates_list = doc.search("//comment()[contains(.,'formattedDate')]")
-    start_dates = Array.new
-    start_dates_list.each do |strt_date|
-      start_dates << strt_date.text.sub( /^( formattedDate:)\s+/, '').strip
-    end
+#   start_dates_list = doc.search("//comment()[contains(.,'formattedDate')]")
+#   start_dates = Array.new
+#   start_dates_list.each do |strt_date|
+#     start_dates << strt_date.text.sub( /^( formattedDate:)\s+/, '').strip
+#   end
 
     # Find all start times
-    start_times_list = doc.search("//comment()[contains(.,'formattedTime')]")
-    start_times = Array.new
-    start_times_list.each do |strt_time|
-      start_times << strt_time.text.sub( /^( formattedTime:)\s+/, '').strip
-    end
+#   start_times_list = doc.search("//comment()[contains(.,'formattedTime')]")
+#   start_times = Array.new
+#   start_times_list.each do |strt_time|
+#     start_times << strt_time.text.sub( /^( formattedTime:)\s+/, '').strip
+#   end
 
     # Get home teams (gets duplicates and the first game is repeated twice)
-    away_team_names = doc.css('span.team-name.away')
-    home_team_names = doc.css('span.team-name.home')
+#   away_team_names = doc.css('span.team-name.away')
+#   home_team_names = doc.css('span.team-name.home')
 
     # strip off the everything but the team ID
-    away_teams = Array.new
-    away_team_names.count.times do |n|
-      away_teams << away_team_names[n].text
+#   away_teams = Array.new
+#   away_team_names.count.times do |n|
+#     away_teams << away_team_names[n].text
 
-    end
+#   end
 
-    home_teams = Array.new
-    home_team_names.count.times do |n|
-      home_teams << home_team_names[n].text
-    end
+#   home_teams = Array.new
+#   home_team_names.count.times do |n|
+#     home_teams << home_team_names[n].text
+#   end
 
     # Remove duplicate game from list (quirk of NFL.com)
     # NOTE: Some years the first game is listed twice and other
     #       years it isn't, so added a check to see if the first two games are the same.
     #       If they are then adjust the arrays to remove the first game.
-    if (away_teams[0] == away_teams[1]) &&
-       (home_teams[0] == home_teams[1])
+#   if (away_teams[0] == away_teams[1]) &&
+#      (home_teams[0] == home_teams[1])
 
-      start_dates.shift
-      start_times.shift
-      away_teams.shift
-      home_teams.shift
-    end
+#     start_dates.shift
+#     start_times.shift
+#     away_teams.shift
+#     home_teams.shift
+#   end
 
-    away_teams.count.times do |gameNum|
+#   away_teams.count.times do |gameNum|
       # Add the information to the games array
-      games[gameNum] = {:date => start_dates[gameNum], :time => start_times[gameNum],
-                   :away_team => away_teams[gameNum], :home_team => home_teams[gameNum]}
-    end
+#     games[gameNum] = {:date => start_dates[gameNum], :time => start_times[gameNum],
+#                  :away_team => away_teams[gameNum], :home_team => home_teams[gameNum]}
+#   end
 
-    return games
+#   return games
 
   end
+
+  private
 
   # Get the final scores for an NFL week
   def get_nfl_scores(weekNum)
