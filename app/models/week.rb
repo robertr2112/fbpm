@@ -85,13 +85,15 @@ class Week < ApplicationRecord
       away_team       = Team.where('name LIKE ?', away_team_name).first
       # Create the time string
       if nfl_game[:date] && nfl_game[:time]
-        game_date_time = DateTime.parse(nfl_game[:date] + " ," + Season.getSeasonYear + " " + nfl_game[:time] + " EDT")
+        game_date_time = DateTime.parse(nfl_game[:date] + " ," + Season.getSeasonYear \
+                         + " " + nfl_game[:time] + " " + nfl_game[:timezone])
       else
         game_date_time = nil
       end
       game = Game.create(week_id: self.id, awayTeamIndex: away_team.id,
                          homeTeamIndex: home_team.id,
-                         game_date: game_date_time)
+                         game_date: game_date_time,
+                         network: nfl_game[:network])
       self.games << game
 
       self.save
@@ -211,6 +213,8 @@ class Week < ApplicationRecord
   end
 
 
+  private
+
   # Parse the schedule for specified week from nfl.com. Returns
   # an array of game information(:date, :time, :away_team, :home_team, :network)
   # Scraper Data Points
@@ -252,92 +256,39 @@ class Week < ApplicationRecord
 
     # Get games information
     games = Array.new
-    gameNum = 1
+    gameNum = 0
 
     # Get all games for each day and loop through them
     doc.css('section.nfl-o-matchup-group').each do |game_group|
       # Get the date for the games in this group
       game_date = game_group.css('h2.d3-o-section-title').text
-      # Get details for each game for that day
+      # Get details for each game on that day
       game_group.css('div.nfl-c-matchup-strip').each do |game_details|
 
         # Get Game time
-        game_time = game_details.css('span.nfl-c-matchup-strip__date-time').text
-        game_timezone = game_details.css('span.nfl-c-matchup-strip__date-timezone').text
+        game_time = game_details.css('span.nfl-c-matchup-strip__date-time').text.strip
+        game_timezone = game_details.css('span.nfl-c-matchup-strip__date-timezone').text.strip
 
+        # Get team names
+        teams_marker = game_details.css('p.nfl-c-matchup-strip__team-name')
+        teams = teams_marker.css('span.nfl-c-matchup-strip__team-fullname').text.strip.split(/\W+/)
         # Get away team
-        away_team_marker = game_details.css('div.nfl-c-matchup-strip__team--opponent')
-        away_team = away_team_marker.css('span.nfl-c-matchup-strip__team-fullname').text
-
+        away_team = teams[0]
         # Get home team
-        home_team_marker = game_details.css('p.nfl-c-matchup-strip__team-name')
-        home_team = home_team_marker.css('span.nfl-c-matchup-strip__team-fullname').text
+        home_team = teams[1]
 
         # Get game Network
-        game_network = game_details.css('p.nfl-c-matchup-strip__networks').text
+        game_network = game_details.css('p.nfl-c-matchup-strip__networks').text.strip
 
-byebug
+        games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
+                   :away_team => away_team, :home_team => home_team, :network => game_network }
+        gameNum += 1
       end
 
-#     games[gameNum] = {:date => start_dates[gameNum], :time => start_times[gameNum],
-#                  :away_team => away_teams[gameNum], :home_team => home_teams[gameNum]}
     end
+
     return games
-
-    # Find all start dates
-#   start_dates_list = doc.search("//comment()[contains(.,'formattedDate')]")
-#   start_dates = Array.new
-#   start_dates_list.each do |strt_date|
-#     start_dates << strt_date.text.sub( /^( formattedDate:)\s+/, '').strip
-#   end
-
-    # Find all start times
-#   start_times_list = doc.search("//comment()[contains(.,'formattedTime')]")
-#   start_times = Array.new
-#   start_times_list.each do |strt_time|
-#     start_times << strt_time.text.sub( /^( formattedTime:)\s+/, '').strip
-#   end
-
-    # Get home teams (gets duplicates and the first game is repeated twice)
-#   away_team_names = doc.css('span.team-name.away')
-#   home_team_names = doc.css('span.team-name.home')
-
-    # strip off the everything but the team ID
-#   away_teams = Array.new
-#   away_team_names.count.times do |n|
-#     away_teams << away_team_names[n].text
-
-#   end
-
-#   home_teams = Array.new
-#   home_team_names.count.times do |n|
-#     home_teams << home_team_names[n].text
-#   end
-
-    # Remove duplicate game from list (quirk of NFL.com)
-    # NOTE: Some years the first game is listed twice and other
-    #       years it isn't, so added a check to see if the first two games are the same.
-    #       If they are then adjust the arrays to remove the first game.
-#   if (away_teams[0] == away_teams[1]) &&
-#      (home_teams[0] == home_teams[1])
-
-#     start_dates.shift
-#     start_times.shift
-#     away_teams.shift
-#     home_teams.shift
-#   end
-
-#   away_teams.count.times do |gameNum|
-      # Add the information to the games array
-#     games[gameNum] = {:date => start_dates[gameNum], :time => start_times[gameNum],
-#                  :away_team => away_teams[gameNum], :home_team => home_teams[gameNum]}
-#   end
-
-#   return games
-
   end
-
-  private
 
   # Get the final scores for an NFL week
   def get_nfl_scores(weekNum)
