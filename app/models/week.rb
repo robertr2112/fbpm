@@ -244,10 +244,13 @@ class Week < ApplicationRecord
   def get_nfl_sched(weekNum)
 
     # Open the schedule home page
-#   args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-#           '--remote-debugging-port=9222']
-#   browser = Watir::Browser.new :chrome, headless: true, options: {args: args}
-    browser = Watir::Browser.new :chrome, headless: true
+    if Rails.env.production?
+      args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
+              '--remote-debugging-port=9222']
+      browser = Watir::Browser.new :chrome, headless: true, options: {args: args}
+    else
+      browser = Watir::Browser.new :chrome, headless: true
+    end
     url_path = "http://www.nfl.com/schedules/" + Season.getSeasonYear + "/REG" + weekNum.to_s
     browser.goto(url_path)
 #   js_doc = browser.div(class: "nfl-o-matchup-group").wait_until(&:present?)
