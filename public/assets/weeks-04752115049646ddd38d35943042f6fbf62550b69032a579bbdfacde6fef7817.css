@@ -1,0 +1,115 @@
+/* line 2, app/assets/stylesheets/weeks.scss */
+.awayTeamWon {
+  width: "35%";
+  text-align: right;
+  font-size: 14px;
+}
+
+/* line 8, app/assets/stylesheets/weeks.scss */
+.awayScoreWon {
+  width: "10%";
+  text-align: right;
+  font-size: 14px;
+}
+
+/* line 14, app/assets/stylesheets/weeks.scss */
+.awayTeamLost {
+  width: "35%";
+  text-align: right;
+  font-size: 14px;
+}
+
+/* line 20, app/assets/stylesheets/weeks.scss */
+.awayScoreLost {
+  width: "10%";
+  text-align: right;
+  font-size: 14px;
+}
+
+/* line 26, app/assets/stylesheets/weeks.scss */
+.homeTeamWon {
+  width: "35%";
+  text-align: left;
+  font-size: 14px;
+}
+
+/* line 32, app/assets/stylesheets/weeks.scss */
+.homeScoreWon {
+  width: "10%";
+  text-align: left;
+  font-size: 14px;
+}
+
+/* line 38, app/assets/stylesheets/weeks.scss */
+.homeTeamLost {
+  width: "35%";
+  text-align: left;
+  font-size: 14px;
+}
+
+/* line 44, app/assets/stylesheets/weeks.scss */
+.homeScoreLost {
+  width: "10%";
+  text-align: left;
+  font-size: 14px;
+}
+
+/* line 50, app/assets/stylesheets/weeks.scss */
+.gameDescriptor {
+  width: "20%";
+  text-align: center;
+  font-size: 8px;
+}
+
+/* line 56, app/assets/stylesheets/weeks.scss */
+.gameDate {
+  width: "5%";
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* line 63, app/assets/stylesheets/weeks.scss */
+.gameTime {
+  width: "5%";
+  text-align: left;
+  font-size: 12px;
+}
+
+/* Game time/timezone/network styles */
+/* line 70, app/assets/stylesheets/weeks.scss */
+.game_time_info {
+  line-height: .4;
+}
+
+/* line 73, app/assets/stylesheets/weeks.scss */
+.time_info {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* line 77, app/assets/stylesheets/weeks.scss */
+.timezone_info {
+  font-size: 10px;
+  color: #757575;
+  margin-left: 4px;
+}
+
+/* line 83, app/assets/stylesheets/weeks.scss */
+.network_info {
+  font-size: 12px;
+  color: #757575;
+}
+
+/* line 87, app/assets/stylesheets/weeks.scss */
+div.game_time_info p {
+  display: block;
+  -webkit-margin-before: 1em;
+          margin-block-start: 1em;
+  -webkit-margin-after: 1em;
+          margin-block-end: 1em;
+  -webkit-margin-start: 0px;
+          margin-inline-start: 0px;
+  -webkit-margin-end: 0px;
+          margin-inline-end: 0px;
+}
