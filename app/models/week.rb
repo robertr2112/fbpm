@@ -85,6 +85,7 @@ class Week < ApplicationRecord
       away_team       = Team.where('name LIKE ?', away_team_name).first
       # Create the time string
       if nfl_game[:date] && nfl_game[:time]
+        Rails.logger.info("#{nfl_game[:date]} #{Season.getSeasonYear} #{nfl_game[:time]} #{nfl_game[:timezone]}")
         game_date_time = DateTime.parse(nfl_game[:date] + " ," + Season.getSeasonYear \
                          + " " + nfl_game[:time] + " " + nfl_game[:timezone])
       else
