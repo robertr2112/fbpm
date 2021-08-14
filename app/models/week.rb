@@ -285,7 +285,7 @@ class Week < ApplicationRecord
         # Get game Network
         game_network = game_details.css('p.nfl-c-matchup-strip__networks').text.strip
 
-        Rails.logger.info("get_nfl_sched: timezone - #{game_timezone]}")
+        Rails.logger.info("get_nfl_sched: timezone - #{game_timezone}")
         games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
                    :away_team => away_team, :home_team => home_team, :network => game_network }
         gameNum += 1
