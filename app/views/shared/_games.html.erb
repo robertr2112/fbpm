@@ -4,11 +4,13 @@
     <% games.order(:game_date).each do |game| %>
       <% if game.game_date %>
         <% game_datetime = game.game_date.in_time_zone('Central Time (US & Canada)') %>
+        <% if prev_game %>
+          <% prev_game_datetime = prev_game.game_date.in_time_zone('Central Time (US & Canada)') %>
+        <% end %>
         <% gameDate = game_datetime.strftime("%A, %B %d") %>
         <% gameTime = game_datetime.strftime("%l:%M %p") %>
         <% gameTimezone = game_datetime.strftime("%Z") %>
-        <% if (!prev_game || (game_datetime.strftime("%A, %b %d")
-               != prev_game.game_date.strftime("%A, %b %d").in_time_zone('Central Time (US & Canada)'))) %>
+        <% if (!prev_game || (game_datetime.strftime("%A, %b %d") != prev_game_datetime.strftime("%A, %b %d"))) %>
           <!-- Show Game date "ie. Thursday, September 12"-->
           <tr> <td class="gameDate"><%= gameDate %> </td> </tr>
         <% end %>
