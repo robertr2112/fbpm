@@ -7,7 +7,8 @@
         <% gameDate = game_datetime.strftime("%A, %B %d") %>
         <% gameTime = game_datetime.strftime("%l:%M %p") %>
         <% gameTimezone = game_datetime.strftime("%Z") %>
-        <% if (!prev_game || (game.game_date.strftime("%A, %b %d") != prev_game.game_date.strftime("%A, %b %d"))) %>
+        <% if (!prev_game || (game_datetime.strftime("%A, %b %d")
+               != prev_game.game_date.strftime("%A, %b %d").in_time_zone('Central Time (US & Canada)'))) %>
           <!-- Show Game date "ie. Thursday, September 12"-->
           <tr> <td class="gameDate"><%= gameDate %> </td> </tr>
         <% end %>

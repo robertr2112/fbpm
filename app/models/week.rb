@@ -85,10 +85,6 @@ class Week < ApplicationRecord
       away_team       = Team.where('name LIKE ?', away_team_name).first
       # Create the time string
       if nfl_game[:date] && nfl_game[:time]
-        Rails.logger.info("create_nfl_week: Date: #{nfl_game[:date]} #{Season.getSeasonYear} #{nfl_game[:time]} #{nfl_game[:timezone]}")
-        Rails.logger.info("create_nfl_week: Year: #{Season.getSeasonYear} #{nfl_game[:time]} #{nfl_game[:timezone]}")
-        Rails.logger.info("create_nfl_week: Time: #{nfl_game[:time]} #{nfl_game[:timezone]}")
-        Rails.logger.info("create_nfl_week: Timezone: #{nfl_game[:timezone]}")
         game_date_time = DateTime.parse(nfl_game[:date] + Season.getSeasonYear \
                          + " " + nfl_game[:time] + " " + nfl_game[:timezone])
       else
@@ -287,7 +283,6 @@ class Week < ApplicationRecord
         # Get game Network
         game_network = game_details.css('p.nfl-c-matchup-strip__networks').text.strip
 
-        Rails.logger.info("get_nfl_sched: timezone - #{game_timezone}")
         games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
                    :away_team => away_team, :home_team => home_team, :network => game_network }
         gameNum += 1
