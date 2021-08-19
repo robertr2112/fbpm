@@ -38,15 +38,7 @@
               <%= link_to "#{season.year}", week_path(week),
                          class: "dropdown-item active" %>
             <% else %>
-              <% if !week %>
-                <% Rails.logger.info "@season: #{@season} @season_id: #{@season.id} @season.year: #{@season.year}" %>
-                <% Rails.logger.info "season: #{season} season_id: #{season.id} season.year: #{season.year}" %>
-                <% Rails.logger.info "@week: #{@week} @week.week_number: #{@week.week_number}" %>
-                <% Rails.logger.info "week: #{week}" %>
-                <% exit %>
-              <% else %>
-                <%= link_to "#{season.year}", week_path(week), class: "dropdown-item" %>
-              <% end %>
+                <%= link_to "#{season.year}", week_path(week), class: "dropdown-item"  unless !week %>
             <% end %>
           <% end %>
         </div>

@@ -15,7 +15,7 @@
 class Season < ApplicationRecord
 
   before_create do
-    self.year = Time.now.strftime("%Y")
+    self.year = Time.now.strftime("%Y") unless self.year
     self.current_week = 1
     self.state = Season::STATES[:Pend]
   end
