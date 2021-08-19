@@ -8,6 +8,9 @@
     <!-- Show admin week management buttons -->
     <div class="d-flex flex-row adminWeekMgmt">
       <% if current_user.admin? %>
+        <% if @week.checkStatePend %>
+          <div class="weekAdminItem"><%= link_to "Create week?", new_season_week_path(@season) %> </div>
+        <% end %>
         <% if !@week.checkStateFinal %>
           <div class="weekAdminItem"> <%= link_to "Edit week?", edit_week_path(@week) %> </div>
         <% end %>

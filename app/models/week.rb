@@ -253,7 +253,6 @@ class Week < ApplicationRecord
     end
     url_path = "http://www.nfl.com/schedules/" + Season.getSeasonYear + "/REG" + weekNum.to_s
     browser.goto(url_path)
-#   js_doc = browser.div(class: "nfl-o-matchup-group").wait_until(&:present?)
     js_doc = browser.main(id: "main-content").wait_until(&:present?)
     doc = Nokogiri::HTML(js_doc.inner_html)
 
@@ -297,20 +296,40 @@ class Week < ApplicationRecord
   def get_nfl_scores(weekNum)
 
     # Open the schedule home page
+    if Rails.env.production?
+      args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
+              '--remote-debugging-port=9222']
+      browser = Watir::Browser.new :chrome, headless: true, options: {args: args}
+    else
+      browser = Watir::Browser.new :chrome, headless: true
+    end
     url_path = "http://www.nfl.com/schedules/" + Season.getSeasonYear + "/REG" + weekNum.to_s
-    doc = Nokogiri::HTML(open(url_path))
+    browser.goto(url_path)
+    js_doc = browser.main(id: "main-content").wait_until(&:present?)
+    doc = Nokogiri::HTML(js_doc.inner_html)
+
+    # Get games information
+    games = Array.new
+    gameNum = 0
 
     # Get games information
     games = Array.new
 
     gameNum = 0
-    events = doc.css("li.schedules-list-matchup").map do |eventnode|
-      away_team  = eventnode.at_css("span.team-name.away").text.strip
-      home_team  = eventnode.at_css("span.team-name.home").text.strip
-      game_final = eventnode.at_css("span.time").text.strip
+    # get games
+    games = doc.css('div.nfl-c-matchup-strip--post-game').each do |game|
+      # Get Teams in games
+      teams = games.css('span.nfl-c-matchup-strip__team-fullname')
+      away_team = teams[0].text.strip
+      home_team = teams[1].text.strip
+
+      # Check if its final
+      game_final = game.css('p.nfl-c-matchup-strip__period').text.strip
       if game_final == "FINAL"
-        away_score = eventnode.at_css("span.team-score.away").text.strip.to_i
-        home_score = eventnode.at_css("span.team-score.home").text.strip.to_i
+        # Get add_scores
+        scores = games[0].css('div.nfl-c-matchup-strip__team-score')
+        away_score = scores[0].text.strip
+        home_score = scores[1].text.strip
       else
         game_final = nil
         away_score = nil
@@ -321,7 +340,7 @@ class Week < ApplicationRecord
                         :home_team => home_team, :home_score => home_score,
                         :final => game_final}
 
-      gameNum = gameNum + 1
+      gameNum += 1
 
     end
 
