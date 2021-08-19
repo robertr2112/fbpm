@@ -1,10 +1,24 @@
+.weekMgmtGroup {
+  margin: 15px 0 15px 0;
+  padding: 0 0 15px 5px;
+  border: 1px;
+  background-color: #fff;
+}
+
 .adminWeekMgmt {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
+.weekButton {
+  padding-right: 10px;
+}
+
 .gameRow {
+  background-color: #fff;
+  margin: 5px 0 5px 0;
   line-height: 1;
+  align-items: center;
 }
 
 .awayTeamWon {

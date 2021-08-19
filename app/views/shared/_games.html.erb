@@ -54,7 +54,7 @@
       </div>
     <% end %>
 
-    <% if !showScores %>
+    <!--% if !showScores %-->
       <div class="col-1">
         <p class="gameDescriptor"> @ </p>
       </div>
@@ -71,7 +71,7 @@
           </use>
         </svg>
       </small> -->
-    <% end %>
+    <!--% end %-->
 
     <% team = Team.find(game.homeTeamIndex) %>
     <% if game.homeTeamIndex == 32 %>

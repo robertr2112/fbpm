@@ -1,27 +1,65 @@
 <% provide(:title, "Week #{@week.week_number} Games") %>
 
-<div class="container offset-1">
-  <!-- Render the navigation bars -->
-  <%= render 'shared/mgmt_weeks_nav', season: @season, week_number: @week.week_number %>
+<div class="container pageContent ">
 
-  <!-- Now the main page -->
-  <h1><%= "Season: #{@season.year}  Week: #{@week.week_number}" %></h1>
-  <div class="adminWeekMgmt">
-    <% if current_user.admin? %>
-      <% if !@week.checkStateFinal %>
-        <%= link_to "Edit week?", edit_week_path(@week) %>
-      <% end %>
-      <% if @week.checkStatePend %>
-        <% if @week.deleteSafe?(@season) %>
-          <%= link_to "Delete week?", @week, method: :delete,
-                      data: {confirm: "Are you sure?"},
-                      title: "Delete week #{@week.week_number}" %>
+  <div class="d-flex flex-column weekMgmtGroup">
+    <h1 class="d-flex flex-row"><%= "Season: #{@season.year}  Week: #{@week.week_number}" %></h1>
+
+    <!-- Show admin week management buttons -->
+    <div class="d-flex flex-row adminWeekMgmt">
+      <% if current_user.admin? %>
+        <% if !@week.checkStateFinal %>
+          <div class="weekAdminItem"> <%= link_to "Edit week?", edit_week_path(@week) %> </div>
+        <% end %>
+        <% if @week.checkStatePend %>
+          <% if @week.deleteSafe?(@season) %>
+            <div class="weekAdminItem"> <%= link_to "Delete week?", @week, method: :delete,
+                        data: {confirm: "Are you sure?"},
+                        title: "Delete week #{@week.week_number}" %> </div>
+          <% end %>
+        <% end %>
+        <% if @week.checkStateClosed %>
+          <div class="weekAdminItem"> <%= link_to "  Update scores?", add_scores_path(@week) %> </div>
         <% end %>
       <% end %>
-      <% if @week.checkStateClosed %>
-        <%= link_to "  Update scores?", add_scores_path(@week) %>
-      <% end %>
-    <% end %>
+    </div>
+
+    <!-- Show dropdowns to change season and weeks -->
+    <div class="d-flex flex-row weekButtonGroup">
+      <div class="dropdown weekButton">
+        <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= @season.year %>
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <% Season.all.each do |season| %>
+            <% week = season.weeks.find_by_week_number(@week.week_number) %>
+            <% if @season == season %>
+              <%= link_to "#{season.year}", week_path(week),
+                         class: "dropdown-item active" %>
+            <% else %>
+              <%= link_to "#{season.year}", week_path(week), class: "dropdown-item" %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <div class="dropdown weekButton">
+        <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= "Week #{ @week.week_number }" %>
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <% @season.weeks.each do |week| %>
+            <% if @week == week %>
+              <%= link_to "Week #{week.week_number}", week_path(week),
+                         class: "dropdown-item active" %>
+            <% else %>
+              <%= link_to "Week #{week.week_number}", week_path(week), class: "dropdown-item" %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
 
   <% if @week.checkStateClosed || @week.checkStateFinal %>
