@@ -300,7 +300,7 @@ DEPENDENCIES
   annotate
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.1.0)
-  bootstrap
+  bootstrap (= 4.6.0)
   byebug
   capybara (>= 2.15)
   childprocess

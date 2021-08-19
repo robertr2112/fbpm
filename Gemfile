@@ -51,7 +51,7 @@ gem 'watir'
 #
 # Bootstrap support gems
 #
-gem 'bootstrap'
+gem 'bootstrap', '4.6.0'
 gem 'jquery-rails'
 gem 'will_paginate-bootstrap4'
 # Fontawesome fonts
