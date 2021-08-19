@@ -1,90 +1,105 @@
-<table class = "table table-condensed">
-  <tbody>
-    <% prev_game = nil %>
-    <% games.order(:game_date).each do |game| %>
-      <% if game.game_date %>
-        <% game_datetime = game.game_date.in_time_zone('Central Time (US & Canada)') %>
-        <% if prev_game %>
-          <% prev_game_datetime = prev_game.game_date.in_time_zone('Central Time (US & Canada)') %>
-        <% end %>
-        <% gameDate = game_datetime.strftime("%A, %B %d") %>
-        <% gameTime = game_datetime.strftime("%l:%M %p") %>
-        <% gameTimezone = game_datetime.strftime("%Z") %>
-        <% if (!prev_game || (game_datetime.strftime("%A, %b %d") != prev_game_datetime.strftime("%A, %b %d"))) %>
-          <!-- Show Game date "ie. Thursday, September 12"-->
-          <tr> <td class="gameDate"><%= gameDate %> </td> </tr>
-        <% end %>
-      <% end %>
-      <!-- Show Teams and scores -->
-      <tr>
-        <!-- Show Game Time and Network -->
-        <td class="gameTime">
-          <div class="game_time_info">
-            <span class="time_info"> <%= gameTime %> </span>
-            <span class="timezone_info"> <%= gameTimezone %> </span>
-            <p class="network_info"> <%= game.network %> </p>
-          </div>
-        </td>
-        <% team = Team.find(game.awayTeamIndex) %>
-        <% awayTeamWon = game.wonGame?(game.awayTeamIndex) %>
-        <% if awayTeamWon && !(game.awayTeamScore == 0 && game.homeTeamScore == 0) %>
-          <!-- Show away team winning -->
-          <td class="awayTeamWon">
-            <b><%= team.name.split(' ').last.upcase %></b>
-            <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
-          </td>
-          <% if showScores %>
-            <td class="awayScoreWon"><b><%= game.awayTeamScore %></b></td>
-          <% end %>
-        <% else %>
-          <!-- Show away team losing -->
-          <td class="awayTeamLost">
-            <%= team.name.split(' ').last.upcase %>
-            <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
-          </td>
-          <% if showScores %>
-            <td class="awayScoreLost"><%= game.awayTeamScore %></td>
-          <% end %>
-        <% end %>
-        <% if !showScores %>
-          <!--td class="gameDescriptor"><small>AT</small></td -->
-          <td class="gameDescriptor">
-            <small>
-              <svg class="nfl-o-icon--nfl-at" viewBox="0 0 24 24" aria-hidden="true">
-                <use xlink:href="#nfl-at">
-                  <svg id="nfl-at">
-                    <desc id="nfl-atDesc">At</desc>
-                    <path d="M10.188,21h0C5.814,21,3.476,18.808,4.1,15.686L5.572,8.314C6.2,5.192,9.4,3,13.8,3s6.72,2.192,6.1,5.314l-1.547,7.722a1.686,1.686,0,0,1-1.8,1.461H15.139c-1.265,0-1.812-.326-2.035-.918A4.77,4.77,0,0,1,9.96,17.661c-3.048,0-3.477-2.261-3.137-3.922l.7-3.486a4.67,4.67,0,0,1,4.706-3.938A3.372,3.372,0,0,1,15,7.439l.62-.96h2.257l-1.879,9.358c-.058.315.051.461.368.461h.072A.536.536,0,0,0,17,15.844l1.486-7.43C18.971,6,17.246,4.237,13.566,4.237c-3.55,0-6.108,1.657-6.613,4.177L5.516,15.585C5.029,18,6.77,19.763,10.444,19.763a7.152,7.152,0,0,0,4.682-1.516l.7.918A8.656,8.656,0,0,1,10.188,21ZM11.2,15.406a2.9,2.9,0,0,0,1.925-.738L14.2,9.324a1.853,1.853,0,0,0-1.624-.754,1.821,1.821,0,0,0-1.832,1.717l-.682,3.4c-.231,1.192.22,1.718,1.143,1.718Z">
-                    </path>
-                  </svg>
-                </use>
-              </svg>
-            </small>
-          </td>
-        <% end %>
-          <% team = Team.find(game.homeTeamIndex) %>
-          <% homeTeamWon = game.wonGame?(game.homeTeamIndex) %>
-          <% if homeTeamWon && !(game.awayTeamScore == 0 && game.homeTeamScore == 0) %>
-            <!-- Show home team winning -->
-            <% if showScores %>
-              <td class="homeScoreWon"><b><%= game.homeTeamScore %></b></td>
-            <% end %>
-            <td class="homeTeamWon">
-              <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
-              <b><%= team.name.split(' ').last.upcase %></b>
-            </td>
-          <% else %>
-            <!-- Show home team losing -->
-            <% if showScores %>
-              <td class="homeScoreLost"><%= game.homeTeamScore %></td>
-            <% end %>
-            <td class="homeTeamLost">
-              <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
-              <%= team.name.split(' ').last.upcase %>
-            </td>
-          <% end %>
-      </tr>
-      <% prev_game = game %>
+<% prev_game = nil %>
+<% games.order(:game_date).each do |game| %>
+  <% if game.game_date %>
+    <% game_datetime = game.game_date.in_time_zone('Central Time (US & Canada)') %>
+    <% if prev_game %>
+      <% prev_game_datetime = prev_game.game_date.in_time_zone('Central Time (US & Canada)') %>
     <% end %>
-  </tbody>
-</table>
+    <% gameDate = game_datetime.strftime("%A, %B %d") %>
+    <% gameTime = game_datetime.strftime("%l:%M %p") %>
+    <% gameTimezone = game_datetime.strftime("%Z") %>
+    <% if (!prev_game || (game_datetime.strftime("%A, %b %d") != prev_game_datetime.strftime("%A, %b %d"))) %>
+      <!-- Show Game date "ie. Thursday, September 12"-->
+      <h2 class="gameDate"><%= gameDate %> </h2>
+    <% end %>
+  <% end %>
+  <div class="row gameRow">
+    <!-- Show Teams and scores -->
+    <!-- Show Game Time and Network -->
+    <div class="gameTime col-3">
+        <span class="time-info"> <%= gameTime %> </span>
+        <span class="timezone-info"> <%= gameTimezone %> </span>
+      <p class="network-info"> <%= game.network %> </p>
+    </div>
+    <!-- Show teams and scores(if available) -->
+    <% team = Team.find(game.awayTeamIndex) %>
+    <% if game.awayTeamIndex == 32 %>
+      <% teamNickname = team.name.split(' ').first %>
+    <% else %>
+      <% teamNickname = team.name.split(' ').last %>
+    <% end %>
+    <!-- Show away team information/score -->
+    <% awayTeamWon = game.wonGame?(game.awayTeamIndex) %>
+    <% if awayTeamWon && !(game.awayTeamScore == 0 && game.homeTeamScore == 0) %>
+      <!-- Show away team winning -->
+      <div class="awayTeamWon col-3">
+        <span class="team-name">
+          <b><%= teamNicknme.upcase %></b>
+        </span>
+        <span> <%= image_tag(asset_path(team.imagePath), size: "40x30") %> </span>
+        <% if showScores %>
+          <span class="awayScoreWon"><b><%= game.awayTeamScore %></b></span>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Show away team losing -->
+      <div class="awayTeamLost col-3">
+        <span class="team-name">
+          <%= teamNickname.upcase %>
+        </span>
+        <span> <%= image_tag(asset_path(team.imagePath), size: "40x30") %> </span>
+        <% if showScores %>
+          <span class="awayScoreLost"><%= game.awayTeamScore %></span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if !showScores %>
+      <div class="col-1">
+        <p class="gameDescriptor"> @ </p>
+      </div>
+
+      <!--
+      <small>
+        <svg class="nfl-o-icon--nfl-at" viewBox="0 0 24 24" aria-hidden="true">
+          <use xlink:href="#nfl-at">
+            <svg id="nfl-at">
+              <desc id="nfl-atDesc">At</desc>
+              <path d="M10.188,21h0C5.814,21,3.476,18.808,4.1,15.686L5.572,8.314C6.2,5.192,9.4,3,13.8,3s6.72,2.192,6.1,5.314l-1.547,7.722a1.686,1.686,0,0,1-1.8,1.461H15.139c-1.265,0-1.812-.326-2.035-.918A4.77,4.77,0,0,1,9.96,17.661c-3.048,0-3.477-2.261-3.137-3.922l.7-3.486a4.67,4.67,0,0,1,4.706-3.938A3.372,3.372,0,0,1,15,7.439l.62-.96h2.257l-1.879,9.358c-.058.315.051.461.368.461h.072A.536.536,0,0,0,17,15.844l1.486-7.43C18.971,6,17.246,4.237,13.566,4.237c-3.55,0-6.108,1.657-6.613,4.177L5.516,15.585C5.029,18,6.77,19.763,10.444,19.763a7.152,7.152,0,0,0,4.682-1.516l.7.918A8.656,8.656,0,0,1,10.188,21ZM11.2,15.406a2.9,2.9,0,0,0,1.925-.738L14.2,9.324a1.853,1.853,0,0,0-1.624-.754,1.821,1.821,0,0,0-1.832,1.717l-.682,3.4c-.231,1.192.22,1.718,1.143,1.718Z">
+              </path>
+            </svg>
+          </use>
+        </svg>
+      </small> -->
+    <% end %>
+
+    <% team = Team.find(game.homeTeamIndex) %>
+    <% if game.homeTeamIndex == 32 %>
+      <% teamNickname = team.name.split(' ').first %>
+    <% else %>
+      <% teamNickname = team.name.split(' ').last %>
+    <% end %>
+    <!-- Show home team informaion/score -->
+    <% homeTeamWon = game.wonGame?(game.homeTeamIndex) %>
+    <% if homeTeamWon && !(game.awayTeamScore == 0 && game.homeTeamScore == 0) %>
+      <!-- Show home team winning -->
+      <div class="homeTeamWon col-3">
+        <% if showScores %>
+          <span class="homeScoreWon"><b><%= game.homeTeamScore %></b></span>
+        <% end %>
+        <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
+        <b class="team-name"><%= teamNickname.upcase %></b>
+      </div>
+    <% else %>
+      <!-- Show home team losing -->
+      <div class="homeTeamLost col-3">
+        <% if showScores %>
+          <span class="homeScoreLost"><%= game.homeTeamScore %></span>
+        <% end %>
+        <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
+        <span class="team-name"><%= teamNickname.upcase %></span>
+      </div>
+    <% end %>
+    <% prev_game = game %>
+  </div>
+<% end %>

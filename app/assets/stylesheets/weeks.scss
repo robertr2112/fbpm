@@ -1,93 +1,89 @@
+.adminWeekMgmt {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.gameRow {
+  line-height: 1;
+}
 
 .awayTeamWon {
-  width: "35%";
   text-align: right;
   font-size: 14px;
 }
 
 .awayScoreWon {
-  width: "10%";
   text-align: right;
   font-size: 14px;
 }
 
 .awayTeamLost {
-  width: "35%";
   text-align: right;
   font-size: 14px;
 }
 
 .awayScoreLost {
-  width: "10%";
   text-align: right;
   font-size: 14px;
 }
 
 .homeTeamWon {
-  width: "35%";
   text-align: left;
   font-size: 14px;
 }
 
 .homeScoreWon {
-  width: "10%";
   text-align: left;
   font-size: 14px;
 }
 
 .homeTeamLost {
-  width: "35%";
   text-align: left;
   font-size: 14px;
 }
 
 .homeScoreLost {
-  width: "10%";
   text-align: left;
   font-size: 14px;
 }
 
 .gameDescriptor {
-  width: "20%";
+  font-size: 14px;
   text-align: center;
-  font-size: 8px;
 }
 
 .gameDate {
-  width: "5%";
-  text-align: left;
-  font-size: 14px;
-  font-weight: bold;
+  border-bottom: none;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
 .gameTime {
-  width: "5%";
   text-align: left;
-  font-size: 12px;
 }
 
 /* Game time/timezone/network styles */
-.game_time_info {
-  line-height: .4;
-}
-.time_info {
+.time-info {
   font-size: 12px;
   font-weight: 700;
 }
-.timezone_info {
+
+.timezone-info {
   font-size: 10px;
   color: #757575;
-  margin-left: 4px;
 }
 
-.network_info {
+.network-info {
   font-size: 12px;
   color: #757575;
 }
-div.game_time_info p {
- display: block;
- margin-block-start: 1em;
- margin-block-end: 1em;
- margin-inline-start: 0px;
- margin-inline-end: 0px;
+/* Settings for phones */
+@include media-breakpoint-down(sm) {
+  .team-name {
+    display: none;
+  }
+  .network-info {
+    display: none;
+  }
 }
