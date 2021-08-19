@@ -32,7 +32,7 @@
         </a>
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-          <% Season.all.each do |season| %>
+          <% Season.all.order("year DESC").each do |season| %>
             <% week = season.weeks.find_by_week_number(@week.week_number) %>
             <% if @season == season %>
               <%= link_to "#{season.year}", week_path(week),
@@ -54,7 +54,7 @@
         </a>
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-          <% @season.weeks.each do |week| %>
+          <% @season.weeks.order("week_number ASC").each do |week| %>
             <% if @week == week %>
               <%= link_to "Week #{week.week_number}", week_path(week),
                          class: "dropdown-item active" %>
