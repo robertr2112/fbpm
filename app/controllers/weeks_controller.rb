@@ -49,8 +49,11 @@ class WeeksController < ApplicationController
     end
   end
 
+  # This route passes in the season_id so you can create the week for the specified
+  # season.
   def auto_create
-    season = Season.find_by_year(Time.now.year)
+#    season = Season.find_by_year(Time.now.year)
+    season = Season.find_by_id(params[:id])
     if !season.nil?
       @week = season.weeks.create
       @week.setState(Week::STATES[:Pend])
@@ -70,7 +73,7 @@ class WeeksController < ApplicationController
     end
 
     @week.save
-    @week.create_nfl_week
+    @week.create_nfl_week(season)
     if @week.save
       # Handle a successful save
       flash[:success] =
@@ -81,11 +84,12 @@ class WeeksController < ApplicationController
     end
   end
 
+  # This route passes the id of the week to update scores
   def add_scores
     @week = Week.find_by_id(params[:id])
     season = Season.find_by_id(@week.season_id)
 
-    @week.add_scores_nfl_week
+    @week.add_scores_nfl_week(season)
 
     redirect_to @week
   end

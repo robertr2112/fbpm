@@ -76,8 +76,8 @@ class Week < ApplicationRecord
   end
 
   # Generate NFL schedule for a specified week
-  def create_nfl_week
-    nfl_games = get_nfl_sched(self.week_number)
+  def create_nfl_week(season)
+    nfl_games = get_nfl_sched(self.week_number, season.year)
     nfl_games.each do |nfl_game|
       home_team_name  = '%'+nfl_game[:home_team]+'%'
       home_team       = Team.where('name LIKE ?', home_team_name).first
@@ -102,10 +102,10 @@ class Week < ApplicationRecord
   end
 
   # Update the week with the nfl week final scores
-  def add_scores_nfl_week
+  def add_scores_nfl_week(season)
 
     # Get all of the games/scores from NFL.com
-    nfl_games = get_nfl_scores(self.week_number)
+    nfl_games = get_nfl_scores(self.week_number, season.year)
 
     #cycle through each game
     nfl_games.each do |nfl_game|
@@ -213,7 +213,7 @@ class Week < ApplicationRecord
   end
 
 
-  private
+#  private
 
   # Parse the schedule for specified week from nfl.com. Returns
   # an array of game information(:date, :time, :away_team, :home_team, :network)
@@ -240,8 +240,7 @@ class Week < ApplicationRecord
   #       -Network
   #         nfl-c-matchup-strip__networks (p)
   #
-# def self.get_nfl_sched(weekNum)
-  def get_nfl_sched(weekNum)
+  def get_nfl_sched(weekNum, year)
 
     # Open the schedule home page
     if Rails.env.production?
@@ -251,7 +250,7 @@ class Week < ApplicationRecord
     else
       browser = Watir::Browser.new :chrome, headless: true
     end
-    url_path = "http://www.nfl.com/schedules/" + Season.getSeasonYear + "/REG" + weekNum.to_s
+    url_path = "http://www.nfl.com/schedules/" + year + "/REG" + weekNum.to_s
     browser.goto(url_path)
     js_doc = browser.main(id: "main-content").wait_until(&:present?)
     doc = Nokogiri::HTML(js_doc.inner_html)
@@ -262,6 +261,7 @@ class Week < ApplicationRecord
 
     # Get all games for each day and loop through them
     doc.css('section.nfl-o-matchup-group').each do |game_group|
+
       # Get the date for the games in this group
       game_date = game_group.css('h2.d3-o-section-title').text
       # Get details for each game on that day
@@ -293,7 +293,7 @@ class Week < ApplicationRecord
   end
 
   # Get the final scores for an NFL week
-  def get_nfl_scores(weekNum)
+  def get_nfl_scores(weekNum, year)
 
     # Open the schedule home page
     if Rails.env.production?
@@ -303,7 +303,7 @@ class Week < ApplicationRecord
     else
       browser = Watir::Browser.new :chrome, headless: true
     end
-    url_path = "http://www.nfl.com/schedules/" + Season.getSeasonYear + "/REG" + weekNum.to_s
+    url_path = "http://www.nfl.com/schedules/" + year + "/REG" + weekNum.to_s
     browser.goto(url_path)
     js_doc = browser.main(id: "main-content").wait_until(&:present?)
     doc = Nokogiri::HTML(js_doc.inner_html)
@@ -317,19 +317,17 @@ class Week < ApplicationRecord
 
     gameNum = 0
     # get games
-    games = doc.css('div.nfl-c-matchup-strip--post-game').each do |game|
+    doc.css('div.nfl-c-matchup-strip--post-game').each do |game|
       # Get Teams in games
-      teams = games.css('span.nfl-c-matchup-strip__team-fullname')
-      away_team = teams[0].text.strip
-      home_team = teams[1].text.strip
+      away_team = game.css('span.nfl-c-matchup-strip__team-fullname')[0].text.strip
+      home_team = game.css('span.nfl-c-matchup-strip__team-fullname')[1].text.strip
 
       # Check if its final
       game_final = game.css('p.nfl-c-matchup-strip__period').text.strip
       if game_final == "FINAL"
         # Get add_scores
-        scores = games[0].css('div.nfl-c-matchup-strip__team-score')
-        away_score = scores[0].text.strip
-        home_score = scores[1].text.strip
+        away_score = game.css('div.nfl-c-matchup-strip__team-score')[0]['data-score']
+        home_score = game.css('div.nfl-c-matchup-strip__team-score')[1]['data-score']
       else
         game_final = nil
         away_score = nil
