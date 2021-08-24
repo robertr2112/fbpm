@@ -16,7 +16,7 @@
   <div class="row gameRow">
     <!-- Show Teams and scores -->
     <!-- Show Game Time and Network -->
-    <div class="gameTime col-3">
+    <div class="gameTime col-3 col-sm-auto">
         <span class="time-info"> <%= gameTime %> </span>
         <span class="timezone-info"> <%= gameTimezone %> </span>
       <p class="network-info"> <%= game.network %> </p>
@@ -32,7 +32,7 @@
     <% awayTeamWon = game.wonGame?(game.awayTeamIndex) %>
     <% if awayTeamWon && !(game.awayTeamScore == 0 && game.homeTeamScore == 0) %>
       <!-- Show away team winning -->
-      <div class="awayTeamWon col-3">
+      <div class="awayTeamWon col-4">
         <span class="team-name">
           <b><%= teamNickname.upcase %></b>
         </span>
@@ -43,7 +43,7 @@
       </div>
     <% else %>
       <!-- Show away team losing -->
-      <div class="awayTeamLost col-3">
+      <div class="awayTeamLost col-4">
         <span class="team-name">
           <%= teamNickname.upcase %>
         </span>
@@ -55,9 +55,9 @@
     <% end %>
 
     <!--% if !showScores %-->
-      <div class="col-1">
-        <p class="gameDescriptor"> @ </p>
-      </div>
+    <div class="gameDescriptor col-1 justify-content-center">
+      <div> @ </div>
+    </div>
 
       <!--
       <small>
@@ -83,7 +83,7 @@
     <% homeTeamWon = game.wonGame?(game.homeTeamIndex) %>
     <% if homeTeamWon && !(game.awayTeamScore == 0 && game.homeTeamScore == 0) %>
       <!-- Show home team winning -->
-      <div class="homeTeamWon col-3">
+      <div class="homeTeamWon col-4">
         <% if showScores %>
           <span class="homeScoreWon"><b><%= game.homeTeamScore %></b></span>
         <% end %>
@@ -92,7 +92,7 @@
       </div>
     <% else %>
       <!-- Show home team losing -->
-      <div class="homeTeamLost col-3">
+      <div class="homeTeamLost col-4">
         <% if showScores %>
           <span class="homeScoreLost"><%= game.homeTeamScore %></span>
         <% end %>

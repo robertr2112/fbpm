@@ -1,11 +1,12 @@
-<div class='nested-fields well'>
+<div class='nested-fields'>
   <fieldset>
-    <%= f.input :awayTeamScore,
-              label: Team.find(f.object.send(:awayTeamIndex)).name,
-              input_html: {id: "gamescore"}  %>
-    <%= f.input :homeTeamScore,
-              label: Team.find(f.object.send(:homeTeamIndex)).name,
-              input_html: {id: "gamescore"}  %>
+    <div class="row game-row">
+      <%= f.input :awayTeamScore,
+                label: Team.find(f.object.send(:awayTeamIndex)).name,
+                input_html: {class: "gamescore"}  %>
+      <%= f.input :homeTeamScore,
+                label: Team.find(f.object.send(:homeTeamIndex)).name,
+                input_html: {class: "gamescore"}  %>
+    </div>
   </fieldset>
 </div>
-
