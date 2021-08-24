@@ -289,6 +289,9 @@ class Week < ApplicationRecord
 
     end
 
+    # Close the browser session
+    browser.close
+
     return games
   end
 
@@ -341,6 +344,9 @@ class Week < ApplicationRecord
       gameNum += 1
 
     end
+
+    # Close the browser session
+    browser.close
 
     return games
 
