@@ -2,6 +2,11 @@
   width: $width;
 }
 
+.poolHeader {
+  margin: 20px 0 20px 20px;
+  @extend .bg-white;
+}
+
 .entry-header {
   @include table-entry-width(150px);
   font-weight: bold;
@@ -59,4 +64,3 @@ ul#pool-members {
   width: 100%;
   margin: 0;
 }
-

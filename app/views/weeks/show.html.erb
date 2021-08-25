@@ -3,12 +3,16 @@
 <div class="container pageContent ">
 
   <div class="d-flex flex-column weekMgmtGroup">
-    <h1 class="d-flex flex-row"><%= "Season: #{@season.year}  Week: #{@week.week_number}" %></h1>
+    <h1 class="d-flex flex-row">
+      <%= link_to "Season: #{@season.year}", season_path(@season) %>
+      <%= "Week: #{@week.week_number}" %>
+    </h1>
 
     <!-- Show admin week management buttons -->
     <div class="d-flex flex-row adminWeekMgmt">
       <% if current_user.admin? %>
-        <% if @week.checkStatePend %>
+        <% if !@season.isClosed? %>
+          <div class="weekAdminItem"><%= link_to "Edit season?", edit_season_path(@season) %> </div>
           <div class="weekAdminItem"><%= link_to "Create week?", new_season_week_path(@season) %> </div>
         <% end %>
         <% if !@week.checkStateFinal %>
