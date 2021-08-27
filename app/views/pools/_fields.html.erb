@@ -5,16 +5,11 @@
 
   <%= f.input :poolType, label: 'Pool Type', placeholder: 'Pool Type',
               collection: Pool::POOL_TYPES, selected: Pool::POOL_TYPES[:Survivor],
-              hint: 'At this time only Survivor pools are supported.',
-              disabled: true %>
-<% if nil %>
+              hint: 'At this time only Survivor pools are supported.' %>
+
   <%= f.input :allowMulti, label: 'Allow Multiple',
               hint: 'Allow multiple entries per user',
-              as: :boolean, boolean_style: :inline %>
-<% end %>
-  <%= f.input :allowMulti, label: 'Allow Multiple',
-              hint: 'Allow multiple entries per user',
-              as: :radio_buttons%>
+              as: :radio_buttons %>
 
   <%= f.input :starting_week, label: 'Starting Week', placeholder: 'Starting Week' %>
 

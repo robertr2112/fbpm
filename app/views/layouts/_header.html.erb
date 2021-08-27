@@ -18,41 +18,46 @@
              aria-expanded="false" class="nav-link dropdown-toggle">
              <i class="fa fa-trophy fa-fw"></i>Pool Management
           </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <%= link_to '<i class="fa fa-football-ball fa-fw"></i>Show all pools'.html_safe,
-               pools_path , class:'dropdown-item' %>
-            <%= link_to '<i class="fa fa-cog fa-fw"></i>Create new pool'.html_safe,
-               new_pool_path , class:'dropdown-item' %>
-            <% if @pool %>
-              <div class="dropdown-divider"></div>
-              <% if !@pool.isOwner?(current_user) %>
-                <% if @pool.isMember?(current_user) %>
-                  <%= link_to "Send Group Message", new_pool_pool_message_path(pool),
-                      class:'dropdown-item' %>
-                  <% if @pool.isOpen? %>
-                    <%= link_to "Leave Pool", leave_path(@pool.id), id: @pool.id,
-                          class:'dropdown-item' %>
-                  <% end %>
-                <% else %>
-                  <% if @pool.isOpen? %>
-                    <%= link_to "Join Pool", join_path(@pool.id), id: @pool.id,
-                          class:'dropdown-item' %>
-                  <% end %>
-                <% end %>
-              <% end %>
-              <% if @pool.isOwner?(current_user) %>
-                <%= link_to "Edit pool", edit_pool_path(@pool),
-                      class:'dropdown-item' %>
-                <%= link_to "Delete pool", @pool, method: :delete,
-                      data: {confirm: "Are you sure?"}, title: "Delete#{@pool.name}",
-                      class:'dropdown-item' %>
-                <%= link_to "Send Group Message", new_pool_pool_message_path(@pool),
-                      class:'dropdown-item' %>
-                <%= link_to "Invite people to join", invite_path(@pool.id),
-                      class:'dropdown-item' %>
-              <% end %>
-            <% end %>
-          </div>
+          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+            <li> <%= link_to '<i class="fa fa-football-ball fa-fw"></i>Show all pools'.html_safe,
+               pools_path , class:'dropdown-item' %> </li>
+            <li><%= link_to '<i class="fa fa-cog fa-fw"></i>Create new pool'.html_safe,
+               new_pool_path , class:'dropdown-item' %></li>
+            <!-- Show things you can do for each pool -->
+            <% if current_user %>
+              <% current_user.pools.where(season_id: current_season(1).id).each do |pool| %>
+                <div class="dropdown-divider"></div>
+                <!-- This is the per pool menu list -->
+                <li><a id="dropdownMenuPools" href="#" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false" class="dropdown-item dropdown-toggle">
+                       <%= pool.name %> </a>
+                  <ul class="submenu submenu-left dropdown-menu" aria-labelledby="dropdownMenuPools">
+                    <% if pool.isMember?(current_user) %>
+                      <% if pool.typeSurvivor? %>
+                        <%= render 'pools/entry_mgmt_menu', pool: pool, current_week: pool.getCurrentWeek %>
+                      <% end %>
+                      <% if pool.isOpen?  && !pool.isOwner?(current_user) %>
+                        <li><%= link_to "Leave Pool", leave_path(pool.id), id: pool.id,
+                            class:'dropdown-item' %></li>
+                      <% end %>
+                    <% end %>
+                    <% if pool.isOwner?(current_user) %>
+                      <div class="dropdown-divider"></div>
+                      <li><%= link_to "Edit pool", edit_pool_path(pool),
+                            class:'dropdown-item' %></li>
+                      <li><%= link_to "Delete pool", pool, method: :delete,
+                            data: {confirm: "Are you sure?"}, title: "Delete#{pool.name}",
+                            class:'dropdown-item' %></li>
+                      <li><%= link_to "Send Group Message", new_pool_pool_message_path(pool),
+                            class:'dropdown-item' %></li>
+                      <li><%= link_to "Invite people to join", invite_path(pool.id),
+                            class:'dropdown-item' %></li>
+                    <% end %>
+                  </ul>
+                </li> <!-- End of per pool menu list -->
+              <% end %> <!-- End of pools list -->
+            <% end %> <!-- End of if current_user is set -->
+          </ul>
         </li>
         <!-- End Level one -->
         <li class="nav-item">

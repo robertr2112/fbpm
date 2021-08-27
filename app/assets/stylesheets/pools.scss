@@ -2,9 +2,12 @@
   width: $width;
 }
 
+.poolNew {
+/*  @extend .bg-white; */
+}
 .poolHeader {
   margin: 20px 0 20px 20px;
-  @extend .bg-white;
+  padding: 10px 5px 10px 5px;
 }
 
 .entry-header {

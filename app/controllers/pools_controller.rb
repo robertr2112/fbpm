@@ -93,10 +93,6 @@ class PoolsController < ApplicationController
     end
   end
 
-  def my_pools
-    @pools = current_user.pools.paginate(page: params[:page])
-  end
-
   def index
     @pools = Pool.paginate(page: params[:page])
   end
