@@ -14,7 +14,7 @@
     <% if current_user.admin? %>
       <% if current_user.supervisor? && !current_user?(user) %>
         <td>
-          <%= link_to "delete", user, method: :delete,
+          <%= link_to "[delete]", user, method: :delete,
               data: { confirm: "Are you sure?" },
               :title => "Delete #{user.name}" %>
         </td>
@@ -22,13 +22,13 @@
       <% if !user.supervisor? && !current_user?(user) %>
         <% if user.admin? %>
           <td>
-            <%= link_to "Delete Admin status", admin_del_path(user.id),
+            <%= link_to "[Delete Admin status]", admin_del_path(user.id),
                 data: { confirm: "Are you sure?" },
                 title: "Delete #{user.name} admin status" %>
           </td>
         <% else %>
           <td>
-            <%= link_to "Add Admin status", admin_add_path(user.id),
+            <%= link_to "[Add Admin status]", admin_add_path(user.id),
                 data: { confirm: "Are you sure?" },
                 title: "Add #{user.name} admin status" %>
           </td>
@@ -37,7 +37,7 @@
     <% else %>
       <% if current_user?(user) %>
         <td>
-          <%= link_to "delete", user, method: :delete,
+          <%= link_to "[delete]", user, method: :delete,
               data: { confirm: "Are you sure?" },
               :title => "Delete #{user.name}" %>
         </td>

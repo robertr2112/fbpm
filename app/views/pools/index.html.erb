@@ -2,13 +2,10 @@
 <!-- Render the season navigation bar -->
 <%= render 'shared/mgmt_weeks_nav', season: current_season(1), week_number: 0 %>
 
-<h1>All Pools</h1>
 
-<div class="row">
+<div class="container pageContent">
+  <h1 class="pageHeader">All Pools</h1>
   <div class="col-sm-8">
-    <div class="panel panel-primary">
-      <div class="panel-header">List of All Pools</div>
-      <div class="panel-body">
         <% if current_season(1) %>
           <% pools_list = Pool.where(season_id: current_season(1).id) %>
         <% end %>

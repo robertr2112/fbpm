@@ -8,7 +8,7 @@
     <% end %>
     <% if !pool.isMember?(current_user) %>
       <% if pool.isOpen? %>
-        <td><%= link_to "Join", join_path(pool.id) %></td>
+        <td><%= link_to "[Join]", join_path(pool.id) %></td>
       <% else %>
         <td>Pool Closed<td>
       <% end %>
@@ -18,6 +18,6 @@
       <td>Member</td>
     <% end %>
     <% if current_user.admin? %>
-      <td><%= link_to "Diagnostics", pool_diagnostics_path(pool), id: pool.id %></td>
+      <td><%= link_to "[Diagnostics]", pool_diagnostics_path(pool), id: pool.id %></td>
     <% end %>
   </tr>

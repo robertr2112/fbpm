@@ -1,9 +1,16 @@
+/* Import the rest of our custom scss files */
+@import "forms";
+@import "help-page";
+@import "header";
+@import "weeks";
+@import "pools";
+@import "picks";
+@import "dropdowns";
+
 $grayMediumLight: #eaeaea;
 $gray-light: #f2f2f2;
 $gray: #b3b3b3;
 $gray-dark: #737373;
-
-@import "header";
 
 @mixin box_sizing {
   -moz-box-sizing: border-box;
@@ -53,13 +60,30 @@ textarea {
 }
 
 .pageContent {
+  background-color: white;
+  padding-bottom: 20px;
+}
 
+/* Make all links black and darker and bold when hover */
+a {
+  color: #1a1a1a;
+  &:hover {
+    text-decoration: none;
+    /* color: #0d0d0d; */
+    color: #666666;
+    font-weight: bold;
+  }
 }
 
 /* typography */
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 1;
+}
+
+.pageHeader {
+  margin: 20px 0 20px 20px;
+  padding: 10px 5px 10px 5px;
 }
 
 .main-sign-in {

@@ -2,8 +2,8 @@
 <!-- Render the season navigation bar -->
 <%= render 'shared/mgmt_weeks_nav', season: current_season(1), week_number: 0 %>
 
-<div class="container poolNew">
-  <h1 class="poolHeader">Create New Pool</h1>
+<div class="container pageContent">
+  <h1 class="pageHeader">Create New Pool</h1>
   <div class="col-sm-8">
     <%= simple_form_for @pool, html: { class: 'form-horizontal' },
           wrapper: :horizontal_form,

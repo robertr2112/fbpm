@@ -2,12 +2,31 @@
   width: $width;
 }
 
-.poolNew {
-/*  @extend .bg-white; */
+.user-myPools-header {
+  margin: 20px 0 15px 0;
 }
-.poolHeader {
-  margin: 20px 0 20px 20px;
-  padding: 10px 5px 10px 5px;
+
+.user-pool-header {
+  margin: 5px 0 5px 0;
+}
+
+.poolPageDataHeader {
+  font-weight: 900;
+  line-height: 1.5;
+  width: 7.5rem;
+}
+
+.poolPageData {
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.poolPageBoard {
+  margin-top: 15px;
+}
+
+.poolBoardHeader {
+  margin-top: 15px;
 }
 
 .entry-header {

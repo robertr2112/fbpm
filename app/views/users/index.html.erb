@@ -2,22 +2,15 @@
 <!-- Render the season navigation bar -->
 <%= render 'shared/mgmt_weeks_nav', season: current_season(1), week_number: 0 %>
 
-<h1>All users</h1>
-
-<div class="row">
-  <!-- Render the main navigation bar -->
+<div class="container pageContent">
+  <h1 class= "pageHeader">All users</h1>
   <div class="col-sm-8">
-    <div class="panel panel-primary">
-      <div class="panel-header">Create New Pool</div>
-      <div class="panel-body">
-        <%= will_paginate %>
-        <table class="table table-striped table-condensed table-hover">
-          <tbody>
-            <%= render @users %>
-          </tbody>
-        </table>
-        <%= will_paginate %>
-      </div>
-    </div>
+    <%= will_paginate %>
+    <table class="table table-striped table-condensed table-hover">
+      <tbody>
+        <%= render @users %>
+      </tbody>
+    </table>
+    <%= will_paginate %>
   </div>
 </div>

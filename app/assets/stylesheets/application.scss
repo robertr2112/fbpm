@@ -17,10 +17,5 @@ $enable-responsive-font-sizes: true;
 @import "select2";
 @import "select2-bootstrap";
 @import "font-awesome";
+/* Import the base scss file for the app */
 @import "custom";
-@import "forms";
-@import "help-page";
-@import "header";
-@import "weeks";
-@import "pools";
-@import "dropdowns";
