@@ -14,9 +14,9 @@
 //= require activestorage
 //= require turbolinks
 //= require jquery3
+//= require select2
 //= require popper
 //= require bootstrap-sprockets
-//= require select2
 //= require cocoon
 //= require forms
 //= require_tree .

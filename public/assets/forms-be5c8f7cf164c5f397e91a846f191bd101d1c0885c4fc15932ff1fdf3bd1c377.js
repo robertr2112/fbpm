@@ -46,4 +46,4 @@ function setSelect2Format() {
   });
 
 };
-*/
+*/;
