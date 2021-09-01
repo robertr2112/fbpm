@@ -13,7 +13,9 @@
       <% if current_user.admin? %>
         <% if !@season.isClosed? %>
           <div class="weekAdminItem"><%= link_to "Edit season?", edit_season_path(@season) %> </div>
-          <div class="weekAdminItem"><%= link_to "Create week?", new_season_week_path(@season) %> </div>
+          <% if @season.weeks.count < @season.number_of_weeks %>
+            <div class="weekAdminItem"><%= link_to "Create week?", new_season_week_path(@season) %> </div>
+          <% end %>
         <% end %>
         <% if !@week.checkStateFinal %>
           <div class="weekAdminItem"> <%= link_to "Edit week?", edit_week_path(@week) %> </div>

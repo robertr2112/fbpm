@@ -84,12 +84,13 @@ class SeasonsController < ApplicationController
   def open
     @season = Season.find_by_id(params[:id])
     if @season.weeks.empty?
-      flash[:warning] = 'You cannot set the state to open until you have created at least the first week!'
+      flash[:danger] = 'You cannot set the state to open until you have created at least the first week!'
       redirect_to @season
     elsif @season.weeks.count < @season.number_of_weeks
-      flash[:warning] = 'You cannot set the state to open until you have created all of the weeks'
+      flash[:danger] = 'You cannot set the state to open until you have created all of the weeks'
       redirect_to @season
     else
+      flash[:success] = 'Successfully set the state to open!'
       @season.setState(Season::STATES[:Open])
       redirect_to @season
     end
@@ -98,7 +99,7 @@ class SeasonsController < ApplicationController
   def closed
     @season = Season.find_by_id(params[:id])
     if !@season.canBeClosed?
-      flash[:warning] = 'You cannot set the state to closed until all weeks have been marked final!'
+      flash[:danger] = 'You cannot set the state to closed until all weeks have been marked final!'
       redirect_to @season
     else
       @season.setState(Season::STATES[:Closed])
@@ -109,7 +110,7 @@ class SeasonsController < ApplicationController
   def season_diagnostics
     @season = Season.find_by_id(params[:id])
     if @season.nil?
-      flash[:warning] = 'The season you tried to access does not exist'
+      flash[:danger] = 'The season you tried to access does not exist'
       redirect_to seasons_path
     end
   end
@@ -117,7 +118,7 @@ class SeasonsController < ApplicationController
   def season_diag_chg
     season = Season.find_by_id(params[:id])
     if season.nil?
-      flash[:warning] = 'The season you tried to access does not exist'
+      flash[:danger] = 'The season you tried to access does not exist'
       redirect_to seasons_path
     end
 
