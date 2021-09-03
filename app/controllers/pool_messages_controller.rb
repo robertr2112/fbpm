@@ -90,7 +90,6 @@ class PoolMessagesController < ApplicationController
   private
 
     def validate_email(emailAddr)
-
       EmailValidator.valid?(emailAddr)
     end
 end
