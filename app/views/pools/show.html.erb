@@ -18,6 +18,24 @@
       <% end %>
     </div>
   </div>
+  <div class="d-flex">
+    <div class="poolPageDataHeader">Member Status: </div>
+    <div class="poolPageData">
+      <% if !@pool.isMember?(current_user) %>
+        <% if @pool.isOpen? %>
+          <button type="button" class="btn btn-sm btn-outline-secondary">
+            <%= link_to "Join", join_path(@pool.id) %>
+          </button>
+        <% else %>
+          Pool Closed
+        <% end %>
+      <% elsif @pool.isOwner?(current_user) %>
+        Owner
+      <% else %>
+        Member
+      <% end %>
+    </div>
+  </div>
   <% if !@current_week.nil? %>
     <div class="d-flex">
       <div class="poolPageDataHeader"> Current Week: </div>
