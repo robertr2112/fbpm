@@ -91,6 +91,17 @@ class User < ApplicationRecord
     save
   end
 
+  def send_password_reset
+    self.update_attribute(:password_reset_token, create_token)
+    self.update_attribute(:password_reset_sent_at, Time.zone.now)
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  # !!! Use this until password reset is redone
+  def User.encrypt(token)
+    Digest::SHA1.hexdigest(token.to_s)
+  end
+
   private
 
     def downcase_email
@@ -100,6 +111,10 @@ class User < ApplicationRecord
     def create_activation_digest
       self.activation_token = User.new_token
       self.activation_digest = User.digest(activation_token)
+    end
+
+    def create_token
+      User.encrypt(User.new_token)
     end
 
 end
