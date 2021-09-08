@@ -4,7 +4,8 @@
 
   <div class="d-flex flex-column weekMgmtGroup">
     <h1 class="d-flex flex-row">
-      <%= link_to "Season: #{@season.year}", season_path(@season) %>
+      <%= link_to "Season: #{@season.year}", season_path(@season),
+              class: "weekMgmtGroupSeason" %>
       <%= "Week: #{@week.week_number}" %>
     </h1>
 

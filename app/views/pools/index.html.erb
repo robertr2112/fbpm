@@ -1,38 +1,51 @@
 <% provide(:title, 'Pool index') %>
-<!-- Render the season navigation bar -->
-<%= render 'shared/mgmt_weeks_nav', season: current_season(1), week_number: 0 %>
-
 
 <div class="container pageContent">
   <h1 class="pageHeader">All Pools</h1>
-  <div class="col-sm-8">
-        <% if current_season(1) %>
-          <% pools_list = Pool.where(season_id: current_season(1).id) %>
-        <% end %>
-        <% if pools_list && pools_list.any? %>
-          <%= will_paginate %>
-          <table class="table table-striped table-condensed table-hover">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Membership</th>
-                <% if current_user.admin? %>
-                  <th>Diagnostics</th>
-                <% end %>
-              </tr>
-            </thead>
-            <tbody>
-              <%= render @pools %>
-            </tbody>
-          </table>
-          <%= will_paginate %>
-        <% else %>
-          <p> There are no pools available!</p>
-          <%= link_to "Create a pool", new_pool_path %>
+  <!-- Show dropdowns to change season and weeks -->
+  <div class="d-flex flex-row">
+    <div class="dropdown seasonButton">
+      <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <%= @season.year %>
+      </a>
+
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <% Season.all.order("year DESC").each do |season| %>
+          <% if @season == season %>
+            <%= link_to "#{season.year}", pools_path(year: season.year),
+                       class: "dropdown-item active" %>
+          <% else %>
+              <%= link_to "#{season.year}", pools_path(year: season.year),
+                       class: "dropdown-item" %>
+          <% end %>
         <% end %>
       </div>
     </div>
+  </div>
+
+  <div class="col-sm-8">
+    <% if @pools && @pools.any? %>
+      <%= will_paginate %>
+      <table class="table table-striped table-responsive table-hover poolList">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Membership</th>
+            <% if current_user.admin? %>
+              <th>Diagnostics</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render @pools %>
+        </tbody>
+      </table>
+      <%= will_paginate %>
+    <% else %>
+      <p> There are no pools available!</p>
+      <%= link_to "Create a pool", new_pool_path %>
+    <% end %>
   </div>
 </div>

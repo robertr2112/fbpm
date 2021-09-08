@@ -94,7 +94,10 @@ class PoolsController < ApplicationController
   end
 
   def index
-    @pools = Pool.paginate(page: params[:page])
+    @season = Season.find_by_year(params[:year])
+    if @season
+    @pools = Pool.where(season_id: @season.id).paginate(page: params[:page])
+    end
   end
 
   def show

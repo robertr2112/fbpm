@@ -29,6 +29,16 @@
   margin-top: 15px;
 }
 
+.poolList {
+  overflow: auto;
+  width: 100%;
+  margin: 0;
+}
+
+.seasonButton {
+  margin-bottom: 15px; 
+}
+
 .entry-header {
   @include table-entry-width(150px);
   font-weight: bold;

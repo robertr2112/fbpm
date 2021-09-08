@@ -19,8 +19,9 @@
              <i class="fa fa-trophy fa-fw"></i>Pool Management
           </a>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+            <% season = current_season(1) %>
             <li> <%= link_to '<i class="fa fa-football-ball fa-fw"></i>Show all pools'.html_safe,
-               pools_path , class:'dropdown-item' %> </li>
+               pools_path(year: season.year), class:'dropdown-item' %> </li>
             <li><%= link_to '<i class="fa fa-cog fa-fw"></i>Create new pool'.html_safe,
                new_pool_path , class:'dropdown-item' %></li>
             <!-- Show things you can do for each pool -->
