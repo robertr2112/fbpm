@@ -94,9 +94,14 @@ class PoolsController < ApplicationController
   end
 
   def index
-    @season = Season.find_by_year(params[:year])
+    if params[:year]
+      @season = Season.find_by_year(params[:year])
+    else
+      year = Season.getSeasonYear
+      @season = Season.where(year: year, nfl_league: true).first
+    end
     if @season
-    @pools = Pool.where(season_id: @season.id).paginate(page: params[:page])
+      @pools = Pool.where(season_id: @season.id).paginate(page: params[:page])
     end
   end
 
