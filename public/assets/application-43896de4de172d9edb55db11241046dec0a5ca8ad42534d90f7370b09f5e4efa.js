@@ -24373,29 +24373,6 @@ function setSelect2Format() {
   });
 
 };
-// jquery ready start
-$(document).ready(function() {
-	// jQuery code
-
-	//////////////////////// Prevent closing from click inside dropdown
-    $(document).on('click', '.dropdown-menu', function (e) {
-      e.stopPropagation();
-    });
-
-    // make it as accordion for smaller screens
-    if ($(window).width() < 992) {
-	  	$('.dropdown-menu a').click(function(e){
-	  		e.preventDefault();
-	        if($(this).next('.submenu').length){
-	        	$(this).next('.submenu').toggle();
-	        }
-	        $('.dropdown').on('hide.bs.dropdown', function () {
-			   $(this).find('.submenu').hide();
-			})
-	  	});
-	}
-
-}); // jquery end;
 // Use select2 for picking teams
 //$(document).ready(function() { $("#gamePick").select2(); });
 // This is to get the weeks dropdown to not hide under the header when opened.
