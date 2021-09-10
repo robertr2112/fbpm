@@ -27,3 +27,20 @@
     display: block;
   }
 /* } */
+
+/* Weeks mgmt Nav Styling */
+.mgmtWeeksDropdown {
+  display: static;
+  max-height: 100px;
+  overflow-y: auto;
+}
+@media (min-width: 576px){
+  .mgmtWeeksDropdown {
+    max-height: 400px;
+  }
+}
+@media (max-width: 575.98px){
+  .mgmtWeeksDropdown {
+    max-height: 250px;
+  }
+}
