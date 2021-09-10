@@ -1,0 +1,112 @@
+/* line 5, app/assets/stylesheets/pools.scss */
+.user-myPools-header {
+  margin: 20px 0 15px 0;
+}
+
+/* line 9, app/assets/stylesheets/pools.scss */
+.user-pool-header {
+  margin: 5px 0 5px 0;
+}
+
+/* line 13, app/assets/stylesheets/pools.scss */
+.poolPageDataHeader {
+  font-weight: 900;
+  line-height: 1.5;
+  width: 8.5rem;
+}
+
+/* line 19, app/assets/stylesheets/pools.scss */
+.poolPageData {
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* line 24, app/assets/stylesheets/pools.scss */
+.poolPageBoard {
+  margin-top: 15px;
+}
+
+/* line 28, app/assets/stylesheets/pools.scss */
+.poolBoardHeader {
+  margin-top: 15px;
+}
+
+/* line 32, app/assets/stylesheets/pools.scss */
+.poolList {
+  overflow: auto;
+  width: 100%;
+  margin: 0;
+}
+
+/* line 38, app/assets/stylesheets/pools.scss */
+.seasonButton {
+  margin-bottom: 15px;
+}
+
+/* line 42, app/assets/stylesheets/pools.scss */
+.entry-header {
+  width: 150px;
+  font-weight: bold;
+}
+
+/* line 47, app/assets/stylesheets/pools.scss */
+.entry-blank {
+  width: 150px;
+}
+
+/* line 51, app/assets/stylesheets/pools.scss */
+.entry-name {
+  color: black;
+  width: 250px;
+}
+
+/* line 56, app/assets/stylesheets/pools.scss */
+.entry-name-out {
+  color: red;
+  width: 250px;
+}
+
+/* line 61, app/assets/stylesheets/pools.scss */
+.entry-out {
+  width: 150px;
+}
+
+/* line 65, app/assets/stylesheets/pools.scss */
+.entry-base {
+  width: 150px;
+}
+
+/* line 69, app/assets/stylesheets/pools.scss */
+.entry-success {
+  color: green;
+  width: 150px;
+}
+
+/* line 74, app/assets/stylesheets/pools.scss */
+.entry-error {
+  color: red;
+  width: 150px;
+}
+
+/* line 79, app/assets/stylesheets/pools.scss */
+.current-week {
+  color: #013ADF;
+}
+
+/* line 83, app/assets/stylesheets/pools.scss */
+ul#pool-members {
+  list-style-type: none;
+}
+
+/* line 88, app/assets/stylesheets/pools.scss */
+.games-table td {
+  align: center;
+}
+
+/* line 93, app/assets/stylesheets/pools.scss */
+.survivor-board-table {
+  overflow: auto;
+  /* max-height:400px; !!! uncomment this to add vertical scroll bar */
+  width: 100%;
+  margin: 0;
+}
