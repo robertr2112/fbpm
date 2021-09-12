@@ -5,6 +5,7 @@
 #  id            :bigint           not null, primary key
 #  awayTeamIndex :integer
 #  awayTeamScore :integer          default(0)
+#  final         :boolean          default(FALSE)
 #  game_date     :datetime
 #  homeTeamIndex :integer
 #  homeTeamScore :integer          default(0)

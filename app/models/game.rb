@@ -5,6 +5,7 @@
 #  id            :bigint           not null, primary key
 #  awayTeamIndex :integer
 #  awayTeamScore :integer          default(0)
+#  final         :boolean          default(FALSE)
 #  game_date     :datetime
 #  homeTeamIndex :integer
 #  homeTeamScore :integer          default(0)
@@ -20,12 +21,22 @@ class Game < ApplicationRecord
     self.homeTeamScore = 0
     self.awayTeamScore = 0
     self.spread = 0
+    self.final = false
   end
 
   belongs_to :week
 
   validates :homeTeamIndex, inclusion: { :in => 0..100 }
   validates :awayTeamIndex, inclusion: { :in => 0..100 }
+
+  # determine if <teamIndex> was the winner of the game
+  def gamePicked?(teamIndex)
+    if teamIndex == self.awayTeamIndex || teamIndex == self.homeTeamIndex
+      return true
+    else
+      return false
+    end
+  end
 
   # determine if <teamIndex> was the winner of the game
   def wonGame?(teamIndex)
@@ -49,7 +60,7 @@ class Game < ApplicationRecord
   end
 
   # Determine if the game has already started
-  def game_started?
+  def gameStarted?
     cur_time = Time.zone.now
     if cur_time.dst?
       game_date = self.game_date
@@ -62,5 +73,14 @@ class Game < ApplicationRecord
     end
 
     return false
+  end
+
+  # Determine if the game has ended
+  def gameFinal?
+    if self.final == true
+      return true
+    else
+      return false
+    end
   end
 end

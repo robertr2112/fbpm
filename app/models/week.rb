@@ -130,6 +130,7 @@ class Week < ApplicationRecord
             # Update the scores
             game.awayTeamScore = nfl_game[:away_score]
             game.homeTeamScore = nfl_game[:home_score]
+            game.final = true
 
             game.save
 
