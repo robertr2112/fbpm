@@ -17183,23 +17183,28 @@ h3 {
   background-color: #fff;
 }
 
-/* line 8, app/assets/stylesheets/weeks.scss */
+/* line 7, app/assets/stylesheets/weeks.scss */
+.weekMgmtGroupSeason {
+  margin-right: 10px;
+}
+
+/* line 11, app/assets/stylesheets/weeks.scss */
 .adminWeekMgmt {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-/* line 13, app/assets/stylesheets/weeks.scss */
+/* line 16, app/assets/stylesheets/weeks.scss */
 .weekAdminItem {
   margin-right: 8px;
 }
 
-/* line 17, app/assets/stylesheets/weeks.scss */
+/* line 20, app/assets/stylesheets/weeks.scss */
 .weekButton {
   padding-right: 10px;
 }
 
-/* line 21, app/assets/stylesheets/weeks.scss */
+/* line 24, app/assets/stylesheets/weeks.scss */
 .gameRow {
   background-color: #fff;
   margin: 5px 0 5px 0;
@@ -17207,59 +17212,59 @@ h3 {
   align-items: center;
 }
 
-/* line 28, app/assets/stylesheets/weeks.scss */
+/* line 31, app/assets/stylesheets/weeks.scss */
 .awayTeamWon {
   text-align: right;
   font-size: 14px;
 }
 
-/* line 33, app/assets/stylesheets/weeks.scss */
+/* line 36, app/assets/stylesheets/weeks.scss */
 .awayScoreWon {
   text-align: right;
   font-size: 14px;
   padding-left: 5px;
 }
 
-/* line 39, app/assets/stylesheets/weeks.scss */
+/* line 42, app/assets/stylesheets/weeks.scss */
 .awayTeamLost {
   text-align: right;
   font-size: 14px;
 }
 
-/* line 44, app/assets/stylesheets/weeks.scss */
+/* line 47, app/assets/stylesheets/weeks.scss */
 .awayScoreLost {
   text-align: right;
   font-size: 14px;
   padding-left: 5px;
 }
 
-/* line 50, app/assets/stylesheets/weeks.scss */
+/* line 53, app/assets/stylesheets/weeks.scss */
 .homeTeamWon {
   text-align: left;
   font-size: 14px;
 }
 
-/* line 55, app/assets/stylesheets/weeks.scss */
+/* line 58, app/assets/stylesheets/weeks.scss */
 .homeScoreWon {
   text-align: left;
   font-size: 14px;
   padding-right: 5px;
 }
 
-/* line 61, app/assets/stylesheets/weeks.scss */
+/* line 64, app/assets/stylesheets/weeks.scss */
 .homeTeamLost {
   text-align: left;
   font-size: 14px;
 }
 
-/* line 66, app/assets/stylesheets/weeks.scss */
+/* line 69, app/assets/stylesheets/weeks.scss */
 .homeScoreLost {
   text-align: left;
   font-size: 14px;
   padding-right: 5px;
 }
 
-/* line 72, app/assets/stylesheets/weeks.scss */
+/* line 75, app/assets/stylesheets/weeks.scss */
 .gameDescriptor {
   /*  font-size: 14px; */
   text-align: center;
@@ -17267,14 +17272,14 @@ h3 {
   /*  margin-right: 8px; */
 }
 
-/* line 79, app/assets/stylesheets/weeks.scss */
+/* line 82, app/assets/stylesheets/weeks.scss */
 .gameDate {
   /*  width: "20%";
   text-align: center; */
   font-size: 2px;
 }
 
-/* line 85, app/assets/stylesheets/weeks.scss */
+/* line 88, app/assets/stylesheets/weeks.scss */
 .gameDate {
   border-bottom: none;
   font-size: 16px;
@@ -17282,25 +17287,25 @@ h3 {
   margin-bottom: 8px;
 }
 
-/* line 92, app/assets/stylesheets/weeks.scss */
+/* line 95, app/assets/stylesheets/weeks.scss */
 .gameTime {
   text-align: left;
 }
 
 /* Game time/timezone/network styles */
-/* line 97, app/assets/stylesheets/weeks.scss */
+/* line 100, app/assets/stylesheets/weeks.scss */
 .time-info {
   font-size: 12px;
   font-weight: 700;
 }
 
-/* line 102, app/assets/stylesheets/weeks.scss */
+/* line 105, app/assets/stylesheets/weeks.scss */
 .timezone-info {
   font-size: 10px;
   color: #757575;
 }
 
-/* line 107, app/assets/stylesheets/weeks.scss */
+/* line 110, app/assets/stylesheets/weeks.scss */
 .network-info {
   font-size: 12px;
   color: #757575;
@@ -17308,11 +17313,11 @@ h3 {
 
 /* Settings for phones */
 @media (max-width: 575.98px) {
-  /* line 113, app/assets/stylesheets/weeks.scss */
+  /* line 116, app/assets/stylesheets/weeks.scss */
   .team-name {
     display: none;
   }
-  /* line 116, app/assets/stylesheets/weeks.scss */
+  /* line 119, app/assets/stylesheets/weeks.scss */
   .network-info {
     display: none;
   }
@@ -17332,7 +17337,7 @@ h3 {
 .poolPageDataHeader {
   font-weight: 900;
   line-height: 1.5;
-  width: 7.5rem;
+  width: 8.5rem;
 }
 
 /* line 19, app/assets/stylesheets/pools.scss */
@@ -17352,66 +17357,78 @@ h3 {
 }
 
 /* line 32, app/assets/stylesheets/pools.scss */
+.poolList {
+  overflow: auto;
+  width: 100%;
+  margin: 0;
+}
+
+/* line 38, app/assets/stylesheets/pools.scss */
+.seasonButton {
+  margin-bottom: 15px;
+}
+
+/* line 42, app/assets/stylesheets/pools.scss */
 .entry-header {
   width: 150px;
   font-weight: bold;
 }
 
-/* line 37, app/assets/stylesheets/pools.scss */
+/* line 47, app/assets/stylesheets/pools.scss */
 .entry-blank {
   width: 150px;
 }
 
-/* line 41, app/assets/stylesheets/pools.scss */
+/* line 51, app/assets/stylesheets/pools.scss */
 .entry-name {
   color: black;
   width: 250px;
 }
 
-/* line 46, app/assets/stylesheets/pools.scss */
+/* line 56, app/assets/stylesheets/pools.scss */
 .entry-name-out {
   color: red;
   width: 250px;
 }
 
-/* line 51, app/assets/stylesheets/pools.scss */
+/* line 61, app/assets/stylesheets/pools.scss */
 .entry-out {
   width: 150px;
 }
 
-/* line 55, app/assets/stylesheets/pools.scss */
+/* line 65, app/assets/stylesheets/pools.scss */
 .entry-base {
   width: 150px;
 }
 
-/* line 59, app/assets/stylesheets/pools.scss */
+/* line 69, app/assets/stylesheets/pools.scss */
 .entry-success {
   color: green;
   width: 150px;
 }
 
-/* line 64, app/assets/stylesheets/pools.scss */
+/* line 74, app/assets/stylesheets/pools.scss */
 .entry-error {
   color: red;
   width: 150px;
 }
 
-/* line 69, app/assets/stylesheets/pools.scss */
+/* line 79, app/assets/stylesheets/pools.scss */
 .current-week {
   color: #013ADF;
 }
 
-/* line 73, app/assets/stylesheets/pools.scss */
+/* line 83, app/assets/stylesheets/pools.scss */
 ul#pool-members {
   list-style-type: none;
 }
 
-/* line 78, app/assets/stylesheets/pools.scss */
+/* line 88, app/assets/stylesheets/pools.scss */
 .games-table td {
   align: center;
 }
 
-/* line 83, app/assets/stylesheets/pools.scss */
+/* line 93, app/assets/stylesheets/pools.scss */
 .survivor-board-table {
   overflow: auto;
   /* max-height:400px; !!! uncomment this to add vertical scroll bar */
@@ -17469,6 +17486,28 @@ ul#pool-members {
 }
 
 /* } */
+/* Weeks mgmt Nav Styling */
+/* line 32, app/assets/stylesheets/dropdowns.scss */
+.mgmtWeeksDropdown {
+  display: static;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+@media (min-width: 576px) {
+  /* line 38, app/assets/stylesheets/dropdowns.scss */
+  .mgmtWeeksDropdown {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* line 43, app/assets/stylesheets/dropdowns.scss */
+  .mgmtWeeksDropdown {
+    max-height: 250px;
+  }
+}
+
 /* Font Awesome */
 @font-face {
   font-family: 'FontAwesome';
@@ -17591,8 +17630,14 @@ p {
   background-image: none;
 }
 
+/* Global site styling */
+/* line 126, app/assets/stylesheets/custom.scss */
+.appStateBtn {
+  margin: 5px 2.5px 5px 2.5px;
+}
+
 /* footer */
-/* line 127, app/assets/stylesheets/custom.scss */
+/* line 132, app/assets/stylesheets/custom.scss */
 footer {
   margin-top: 45px;
   padding-top: 5px;
@@ -17600,35 +17645,35 @@ footer {
   color: #b3b3b3;
 }
 
-/* line 132, app/assets/stylesheets/custom.scss */
+/* line 137, app/assets/stylesheets/custom.scss */
 footer a {
   color: #b3b3b3;
 }
 
-/* line 134, app/assets/stylesheets/custom.scss */
+/* line 139, app/assets/stylesheets/custom.scss */
 footer a:hover {
   color: #737373;
 }
 
-/* line 138, app/assets/stylesheets/custom.scss */
+/* line 143, app/assets/stylesheets/custom.scss */
 footer small {
   float: left;
 }
 
-/* line 141, app/assets/stylesheets/custom.scss */
+/* line 146, app/assets/stylesheets/custom.scss */
 footer ul {
   float: right;
   list-style: none;
 }
 
-/* line 144, app/assets/stylesheets/custom.scss */
+/* line 149, app/assets/stylesheets/custom.scss */
 footer ul li {
   float: left;
   margin-left: 10px;
 }
 
 /* miscellaneous */
-/* line 152, app/assets/stylesheets/custom.scss */
+/* line 157, app/assets/stylesheets/custom.scss */
 .debug_dump {
   clear: both;
   float: left;

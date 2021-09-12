@@ -38,7 +38,7 @@
                       aria-expanded="false">
                 Show Week
               </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-menu mgmtWeeksDropdown" aria-labelledby="dropdownMenuButton">
                 <% @season.weeks.order(:week_number).each do | week | %>
                   <%= link_to "#{week.week_number}", week_path(week), class: "dropdown-item" %>
                 <% end %>
@@ -47,7 +47,7 @@
           </li>
         </ul>
         <div class="btn-group">
-          <button type="button" class="btn btn-default btn-primary dropdown-toggle" data-toggle="dropdown">
+          <button type="button" class="btn btn-default btn-primary dropdown-toggle appStateBtn" data-toggle="dropdown">
             Set Season State
             <span class="caret"></span>
           </button>

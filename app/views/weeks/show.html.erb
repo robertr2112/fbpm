@@ -1,6 +1,6 @@
 <% provide(:title, "Week #{@week.week_number} Games") %>
 
-<div class="container pageContent ">
+<div class="container">
 
   <div class="d-flex flex-column weekMgmtGroup">
     <h1 class="d-flex flex-row">
@@ -53,12 +53,12 @@
           <% end %>
         </div>
       </div>
-      <div class="dropdown weekButton">
+      <div class="dropdown">
         <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <%= "Week #{ @week.week_number }" %>
         </a>
 
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <div class="dropdown-menu mgmtWeeksDropdown" aria-labelledby="dropdownMenuLink">
           <% @season.weeks.order("week_number ASC").each do |week| %>
             <% if @week == week %>
               <%= link_to "Week #{week.week_number}", week_path(week),

@@ -12,7 +12,7 @@
 .poolPageDataHeader {
   font-weight: 900;
   line-height: 1.5;
-  width: 7.5rem;
+  width: 8.5rem;
 }
 
 /* line 19, app/assets/stylesheets/pools.scss */
@@ -32,66 +32,78 @@
 }
 
 /* line 32, app/assets/stylesheets/pools.scss */
+.poolList {
+  overflow: auto;
+  width: 100%;
+  margin: 0;
+}
+
+/* line 38, app/assets/stylesheets/pools.scss */
+.seasonButton {
+  margin-bottom: 15px;
+}
+
+/* line 42, app/assets/stylesheets/pools.scss */
 .entry-header {
   width: 150px;
   font-weight: bold;
 }
 
-/* line 37, app/assets/stylesheets/pools.scss */
+/* line 47, app/assets/stylesheets/pools.scss */
 .entry-blank {
   width: 150px;
 }
 
-/* line 41, app/assets/stylesheets/pools.scss */
+/* line 51, app/assets/stylesheets/pools.scss */
 .entry-name {
   color: black;
   width: 250px;
 }
 
-/* line 46, app/assets/stylesheets/pools.scss */
+/* line 56, app/assets/stylesheets/pools.scss */
 .entry-name-out {
   color: red;
   width: 250px;
 }
 
-/* line 51, app/assets/stylesheets/pools.scss */
+/* line 61, app/assets/stylesheets/pools.scss */
 .entry-out {
   width: 150px;
 }
 
-/* line 55, app/assets/stylesheets/pools.scss */
+/* line 65, app/assets/stylesheets/pools.scss */
 .entry-base {
   width: 150px;
 }
 
-/* line 59, app/assets/stylesheets/pools.scss */
+/* line 69, app/assets/stylesheets/pools.scss */
 .entry-success {
   color: green;
   width: 150px;
 }
 
-/* line 64, app/assets/stylesheets/pools.scss */
+/* line 74, app/assets/stylesheets/pools.scss */
 .entry-error {
   color: red;
   width: 150px;
 }
 
-/* line 69, app/assets/stylesheets/pools.scss */
+/* line 79, app/assets/stylesheets/pools.scss */
 .current-week {
   color: #013ADF;
 }
 
-/* line 73, app/assets/stylesheets/pools.scss */
+/* line 83, app/assets/stylesheets/pools.scss */
 ul#pool-members {
   list-style-type: none;
 }
 
-/* line 78, app/assets/stylesheets/pools.scss */
+/* line 88, app/assets/stylesheets/pools.scss */
 .games-table td {
   align: center;
 }
 
-/* line 83, app/assets/stylesheets/pools.scss */
+/* line 93, app/assets/stylesheets/pools.scss */
 .survivor-board-table {
   overflow: auto;
   /* max-height:400px; !!! uncomment this to add vertical scroll bar */

@@ -43,3 +43,24 @@
 }
 
 /* } */
+/* Weeks mgmt Nav Styling */
+/* line 32, app/assets/stylesheets/dropdowns.scss */
+.mgmtWeeksDropdown {
+  display: static;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+@media (min-width: 576px) {
+  /* line 38, app/assets/stylesheets/dropdowns.scss */
+  .mgmtWeeksDropdown {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* line 43, app/assets/stylesheets/dropdowns.scss */
+  .mgmtWeeksDropdown {
+    max-height: 250px;
+  }
+}
