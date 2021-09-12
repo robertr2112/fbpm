@@ -59,11 +59,6 @@ textarea {
   }
 }
 
-.pageContent {
-  background-color: white;
-  padding-bottom: 20px;
-}
-
 /* Make all links black and darker and bold when hover */
 a {
   color: #1a1a1a;
@@ -81,9 +76,18 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1;
 }
 
+.pageContent {
+  background-color: white;
+  padding-bottom: 20px;
+}
+
 .pageHeader {
   margin: 20px 0 20px 20px;
   padding: 10px 5px 10px 5px;
+}
+
+.userEmail {
+  margin: -35px 0 35px 90px;
 }
 
 .main-sign-in {

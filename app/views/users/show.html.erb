@@ -7,6 +7,9 @@
     <%= gravatar_for @user %>
     <%= @user.name %> - My Pools
   </h1>
+  <% if current_user.admin? %>
+    <h5 class="userEmail">(<%= @user.email %>) </h5>
+  <% end %>
   <% if !current_user.activated? %>
     <div class="col-sm-8 offset-2 main">
       <p>This user account needs to be activated before you can use this site.
