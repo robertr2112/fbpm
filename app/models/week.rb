@@ -328,8 +328,9 @@ class Week < ApplicationRecord
 
       # Check if its final
       game_final = game.css('p.nfl-c-matchup-strip__period').text.strip
-      if game_final == "FINAL"
+      if game_final.include? "FINAL"
         # Get add_scores
+        game_final = "FINAL"
         away_score = game.css('div.nfl-c-matchup-strip__team-score')[0]['data-score']
         home_score = game.css('div.nfl-c-matchup-strip__team-score')[1]['data-score']
       else
