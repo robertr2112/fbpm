@@ -4,10 +4,9 @@
 
 <div class="container">
   <h1 class="pageHeader">Make picks for Week <%=@week.week_number%></h1>
-  <div class="col-sm-8">
+  <div class="col-sm-8 picks-selector">
     <% @teams = Team.all.where(nfl: true) %>
-    <%= render 'shared/games', week: @week, games: @week.games, nflTeams: true, showScores: false %>
-    <%= simple_form_for([@entry, @pick], html: { class: 'form-inline' }) do |f| %>
+    <%= simple_form_for([@entry, @pick], html: { class: 'form-inline'}) do |f| %>
       <%= f.error_notification %>
       <%= f.simple_fields_for :game_picks do |gp| %>
         <fieldset>
@@ -15,15 +14,18 @@
           <% @select_teams = @pick.buildSelectTeams(@week) %>
           <%= gp.input :chosenTeamIndex, label: "Pick Team:",
                 collection: @select_teams, value_method: :id,
-                label_method: :name,
-                placeholder: "Pick Team",
-                include_blank: true,
-                input_html: { id: "gamePick", class: "gamePick" } %>
+                label: "Pick Team",
+                input_html: { id: "gamePick", class: "gamePickSelect" },
+                label_html: { class: "gamePick" } %>
         </fieldset>
       <% end %>
-      <div>
-        <%= f.button :submit, label: "Submit Pick(s)", class: "btn btn-large btn-primary" %>
-      </div>
+      <%= f.button :submit, label: "Submit Pick(s)", class: "btn btn-md-large btn-secondary gamePickBtn" %>
     <% end %>
+  </div>
+  <div class="col-sm-8 picks-games">
+    <h3>Review games</h3>
+    <div class="picks-games-list">
+      <%= render 'shared/games', week: @week, games: @week.games, nflTeams: true, showScores: false %>
+    </div>
   </div>
 </div>

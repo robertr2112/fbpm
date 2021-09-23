@@ -5,8 +5,7 @@
   <h1 class="pageHeader">Edit picks for Week <%=@week.week_number%></h1>
   <div class="col-sm-8">
     <% @teams = Team.all.where(nfl: true) %>
-    <%= render 'shared/games', week: @week, games: @week.games, nflTeams: true, showScores: false %>
-    <%= simple_form_for(@pick, html: { class: 'form-inline' }) do |f| %>
+    <%= simple_form_for(@pick, html: { class: 'form-inline'}) do |f| %>
       <%= f.error_notification %>
       <%= f.simple_fields_for :game_picks do |gp| %>
         <fieldset>
@@ -14,12 +13,19 @@
           <%= gp.input :chosenTeamIndex, label: "Pick Team:",
               collection: @select_teams, value_method: :id,
               label_method: :name,
-              input_html: { id: "gamePick" } %>
+              input_html: { id: "gamePick" },
+              label_html: { class: "gamePick" } %>
         </fieldset>
       <% end %>
       <div>
-        <%= f.button :submit, label: "Submit Pick(s)", class: "btn btn-large btn-primary" %>
+        <%= f.button :submit, label: "Submit Pick(s)", class: "btn btn-large btn-secondary gamePickBtn" %>
       </div>
     <% end %>
+  </div>
+  <div class="col-sm-8 picks-games">
+    <h3>Review games</h3>
+    <div class="picks-games-list">
+      <%= render 'shared/games', week: @week, games: @week.games, nflTeams: true, showScores: false %>
+    </div>
   </div>
 </div>

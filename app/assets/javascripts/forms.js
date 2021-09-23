@@ -38,4 +38,9 @@ function setSelect2Format() {
     allowClear: true
   });
 
+  $(".gamePickSelect").select2({
+    placeholder: "Pick team",
+    allowClear: true
+  });
+
 };
