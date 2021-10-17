@@ -75,6 +75,17 @@ class Week < ApplicationRecord
     return nil
   end
 
+  # Get the bye teams for the week
+  def get_bye_teams
+    bye_teams = Array.new
+    1.upto(32) do |i|
+      if find_game(i) == nil
+        bye_teams << i
+      end
+    end
+    return bye_teams
+  end
+
   # Generate NFL schedule for a specified week
   def create_nfl_week(season)
     nfl_games = get_nfl_sched(self.week_number, season.year)

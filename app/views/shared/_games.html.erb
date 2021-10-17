@@ -1,3 +1,21 @@
+<% if !@bye_teams.empty? %>
+  <h2 class="byeTeamsHeader"> Bye Teams </h2>
+  <div class="row byeTeamsRow">
+    <% @bye_teams.each do |team_index| %>
+      <% team = Team.find(team_index) %>
+      <% if team_index == 32 %>
+        <% teamNickname = team.name.split(' ').first %>
+      <% else %>
+        <% teamNickname = team.name.split(' ').last %>
+      <% end %>
+      <span class="bye-team-image"> <%= image_tag(asset_path(team.imagePath), size: "40x30") %> </span>
+      <span class="bye-team-name team-name">
+        <%= teamNickname.upcase %>
+      </span>
+    <% end %>
+  </div>
+<% end %>
+
 <% prev_game = nil %>
 <% games.order(:game_date).each do |game| %>
   <% if game.game_date %>
