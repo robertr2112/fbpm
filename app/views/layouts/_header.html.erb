@@ -33,15 +33,6 @@
                        aria-expanded="false" class="dropdown-item dropdown-toggle">
                        <%= pool.name %> </a>
                   <ul class="submenu submenu-left dropdown-menu" aria-labelledby="dropdownMenuPools">
-                    <% if pool.isMember?(current_user) %>
-                      <% if pool.typeSurvivor? %>
-                        <%= render 'pools/entry_mgmt_menu', pool: pool, current_week: pool.getCurrentWeek %>
-                      <% end %>
-                      <% if pool.isOpen?  && !pool.isOwner?(current_user) %>
-                        <li><%= link_to "Leave Pool", leave_path(pool.id), id: pool.id,
-                            class:'dropdown-item' %></li>
-                      <% end %>
-                    <% end %>
                     <% if pool.isOwner?(current_user) %>
                       <div class="dropdown-divider"></div>
                       <li><%= link_to "Edit pool", edit_pool_path(pool),
@@ -53,6 +44,15 @@
                             class:'dropdown-item' %></li>
                       <li><%= link_to "Invite people to join", invite_path(pool.id),
                             class:'dropdown-item' %></li>
+                    <% end %>
+                    <% if pool.isMember?(current_user) %>
+                      <% if pool.typeSurvivor? %>
+                        <%= render 'pools/entry_mgmt_menu', pool: pool, current_week: pool.getCurrentWeek %>
+                      <% end %>
+                      <% if pool.isOpen?  && !pool.isOwner?(current_user) %>
+                        <li><%= link_to "Leave Pool", leave_path(pool.id), id: pool.id,
+                            class:'dropdown-item' %></li>
+                      <% end %>
                     <% end %>
                   </ul>
                 </li> <!-- End of per pool menu list -->

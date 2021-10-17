@@ -1,0 +1,33 @@
+/* line 2, app/assets/stylesheets/picks.scss */
+.gamePick {
+  margin-right: 8px;
+}
+
+/* line 6, app/assets/stylesheets/picks.scss */
+.gamePickBtn {
+  margin-left: 5px;
+}
+
+/* line 10, app/assets/stylesheets/picks.scss */
+.picks-games {
+  margin-top: 20px;
+}
+
+/* line 12, app/assets/stylesheets/picks.scss */
+.picks-games h2 {
+  margin-bottom: 10px;
+}
+
+/* line 17, app/assets/stylesheets/picks.scss */
+.picks-games-list {
+  width: 100%;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+@media (min-width: 576px) {
+  /* line 24, app/assets/stylesheets/picks.scss */
+  .picks-games-list {
+    max-height: 450px;
+  }
+}
