@@ -1,0 +1,76 @@
+@media (min-width: 576px) {
+  /* line 2, app/assets/stylesheets/dropdowns.scss */
+  .dropdown-menu .dropdown-toggle:after {
+    border-top: .3em solid transparent;
+    border-right: 0;
+    border-bottom: .3em solid transparent;
+    border-left: .3em solid;
+  }
+  /* line 9, app/assets/stylesheets/dropdowns.scss */
+  .dropdown-menu .dropdown-menu {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  /* line 13, app/assets/stylesheets/dropdowns.scss */
+  .dropdown-menu li {
+    position: relative;
+  }
+  /* line 16, app/assets/stylesheets/dropdowns.scss */
+  .nav-item .submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+  }
+  /* Drop down menus to the left  on tablets or bigger */
+}
+
+@media (min-width: 576px) and (min-width: 768px) {
+  /* line 24, app/assets/stylesheets/dropdowns.scss */
+  .nav-item .submenu-left {
+    right: 100%;
+    left: auto;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  /* line 30, app/assets/stylesheets/dropdowns.scss */
+  .nav-item .submenu-left {
+    right: 0px;
+    left: 0px;
+    background-color: #d9d9d9;
+  }
+}
+
+@media (min-width: 576px) {
+  /* line 37, app/assets/stylesheets/dropdowns.scss */
+  .dropdown-menu > li:hover {
+    background-color: #f1f1f1;
+  }
+  /* line 38, app/assets/stylesheets/dropdowns.scss */
+  .dropdown-menu > li:hover > .submenu {
+    display: block;
+  }
+}
+
+/* Weeks mgmt Nav Styling */
+/* line 44, app/assets/stylesheets/dropdowns.scss */
+.mgmtWeeksDropdown {
+  display: static;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+@media (min-width: 576px) {
+  /* line 50, app/assets/stylesheets/dropdowns.scss */
+  .mgmtWeeksDropdown {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* line 55, app/assets/stylesheets/dropdowns.scss */
+  .mgmtWeeksDropdown {
+    max-height: 250px;
+  }
+}
