@@ -25,6 +25,7 @@
   <div class="col-sm-8 picks-games">
     <h3>Review games</h3>
     <div class="picks-games-list">
+      <% @bye_teams = @week.get_bye_teams %>
       <%= render 'shared/games', week: @week, games: @week.games, nflTeams: true, showScores: false %>
     </div>
   </div>
