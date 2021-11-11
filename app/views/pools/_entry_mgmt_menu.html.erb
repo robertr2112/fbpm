@@ -1,13 +1,18 @@
+<!-- This is still a 2nd level dropdown item for header -->
 <% if pool.allowMulti %>
-  <li><%= link_to "Create entry", new_pool_entry_path(pool) %></li>
+  <li><%= link_to "Create entry", new_pool_entry_path(pool),
+         class:'dropdown-item' %></li>
 <% end %>
 <li class="divider"></li>
+<!-- Level Three dropdown - This is the per entry menu list -->
 <% entries = pool.entries.where(user_id: current_user.id) %>
 <% entries.each do |entry| %>
-  <li><a id="dropdownMenuEntries" href="#" data-toggle="dropdown" aria-haspopup="true"
-         aria-expanded="false" class="dropdown-item dropdown-toggle">
-         <%= entry.name %> </a>
-    <ul class="submenu submenu-left dropdown-menu" aria-labelledby="dropdownMenuEntries">
+  <li class="nav-item dropdown">
+    <a class="dropdown-item dropdown-toggle" id="dropdownMenuEntries" href="#"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <%= entry.name %>
+    </a>
+    <ul class="dropdown-menu left" aria-labelledby="dropdownMenuEntries">
       <li><%= link_to "Edit entry", edit_entry_path(entry),
                         class:'dropdown-item'  %></li>
       <li> <%= link_to "Delete entry", entry, method: :delete,
