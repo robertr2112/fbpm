@@ -102,6 +102,9 @@ class PoolsController < ApplicationController
     end
     if @season
       @pools = Pool.where(season_id: @season.id).paginate(page: params[:page])
+    else
+      flash[:danger] = "Cannot find a season to show pools!"
+      redirect_back(fallback_location: root_path)
     end
   end
 

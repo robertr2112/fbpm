@@ -66,6 +66,7 @@ RSpec.feature "Pool Management", type: :feature do
 
     def when_I_update_the_pool_name
       click_link "Pool Management"
+      click_link "#{@pool.name}"
       click_link "Edit pool"
       @pool.name = "Test Pool 2"
       fill_in 'pool_name',       with: @pool.name
@@ -74,6 +75,7 @@ RSpec.feature "Pool Management", type: :feature do
 
     def when_I_delete_a_pool
       click_link "Pool Management"
+      click_link "#{@pool.name}"
       click_link "Delete pool"
       page.driver.browser.switch_to.alert.accept
     end

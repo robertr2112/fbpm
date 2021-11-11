@@ -19,9 +19,12 @@ RSpec.describe "AccountActivations", type: :mailer do
     end
 
     it "should have the correct mail_from address" do
-      assert_equal ["info@footballpoolmania.com"], @mail.from
+#      assert_equal ["info@footballpoolmania.com"], @mail.from
+      # Because of limitations to using the free sendmail
+      # Need to look for this email instead
+      assert_equal ["fbpoolmania@gmail.com"], @mail.from
     end
-    
+
     it "should have the correct email contents" do
       assert_match @user.name,               @mail.body.encoded
       assert_match @user.activation_token,   @mail.body.encoded

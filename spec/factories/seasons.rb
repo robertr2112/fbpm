@@ -13,7 +13,7 @@
 #
 FactoryBot.define do
   factory :season do
-    year             { "2015" }
+    year             { Time.now.strftime("%Y") }
     state            { 0 }
     nfl_league       { 1 }
     current_week     { 1 }

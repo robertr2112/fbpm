@@ -13,20 +13,21 @@
                  root_path, class: 'nav-link'  %>
         </li>
         <!-- Level one dropdown for Pool Management -->
+        <% season = current_season(1) %>
+        <% if season %> <!-- Only show the pool menus if season has been created -->
         <li class="nav-item dropdown">
           <a  class="nav-link dropdown-toggle" id="dropdownMenu1" href="#"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
              <i class="fa fa-trophy fa-fw"></i>Pool Management
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <% season = current_season(1) %>
             <li> <%= link_to '<i class="fa fa-football-ball fa-fw"></i>Show all pools'.html_safe,
                pools_path(year: season.year), class:'dropdown-item' %> </li>
             <li><%= link_to '<i class="fa fa-cog fa-fw"></i>Create new pool'.html_safe,
                new_pool_path , class:'dropdown-item' %></li>
             <!-- Show things you can do for each pool -->
             <% if current_user %>
-              <% current_user.pools.where(season_id: current_season(1).id).each do |pool| %>
+              <% current_user.pools.where(season_id: season.id).each do |pool| %>
                 <div class="dropdown-divider"></div>
                 <!-- Level two dropdown - This is the per pool menu list -->
                 <li class="nav-item dropdown">
@@ -61,8 +62,8 @@
               <% end %> <!-- End of pools list -->
             <% end %> <!-- End of if current_user is set -->
           </ul>
-        </li>
-        <!-- End Level one -->
+        </li> <!-- End Level one -->
+        <% end %> <!-- End of if season has not been created -->
         <li class="nav-item">
           <%= link_to '<i class="fa fa-users fa-fw"></i>All Users'.html_safe,
           users_path, class: 'nav-link' %>

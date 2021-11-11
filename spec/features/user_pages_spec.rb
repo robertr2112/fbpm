@@ -164,8 +164,8 @@ RSpec.feature "User pages", type: :feature do
                    text: 'User account has already been activated!')
           end
           scenario "should be able to visit other pages" do
-            visit pools_path
-            expect(page).to have_current_path(pools_path)
+            visit users_path
+            expect(page).to have_current_path(users_path)
           end
         end
       end
@@ -182,7 +182,7 @@ RSpec.feature "User pages", type: :feature do
     context "page" do
       scenario { should have_content("Update your profile") }
       scenario { should have_title("Edit user") }
-      scenario { should have_link('change', href: 'http://gravatar.com/emails') }
+      scenario { should have_link('Change?', href: 'http://gravatar.com/emails') }
     end
 
     context "with invalid Name" do

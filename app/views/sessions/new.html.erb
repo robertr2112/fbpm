@@ -6,13 +6,13 @@
   <%= form_for(:session, url: login_path) do |f| %>
 
     <div class="form-group">
-      <%= f.email_field :email, class: 'form-control', id: 'signin_email',
-              placeholder: 'Email Address', class: "col-sm-4" %>
+      <%= f.email_field :email, class: 'form-control col-sm-4', id: 'signin_email',
+              placeholder: 'Email Address' %>
     </div>
 
     <div class="form-group">
-      <%= f.password_field :password, class: 'form-control', id: 'signin_password',
-              placeholder: 'Password', class: "col-sm-4" %>
+      <%= f.password_field :password, class: 'form-control col-sm-4', id: 'signin_password',
+              placeholder: 'Password' %>
     </div>
     <p>
       <small>Don't remember password?
