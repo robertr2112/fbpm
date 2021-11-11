@@ -380,63 +380,56 @@ ul#pool-members {
   }
 }
 
-@media (min-width: 576px) {
-  /* line 2, app/assets/stylesheets/dropdowns.scss */
-  .dropdown-menu .dropdown-toggle:after {
-    border-top: .3em solid transparent;
-    border-right: 0;
-    border-bottom: .3em solid transparent;
-    border-left: .3em solid;
-  }
-  /* line 9, app/assets/stylesheets/dropdowns.scss */
-  .dropdown-menu .dropdown-menu {
-    margin-left: 0;
-    margin-right: 0;
-  }
-  /* line 13, app/assets/stylesheets/dropdowns.scss */
-  .dropdown-menu li {
-    position: relative;
-  }
-  /* line 16, app/assets/stylesheets/dropdowns.scss */
-  .nav-item .submenu {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -7px;
-  }
-  /* Drop down menus to the left  on tablets or bigger */
+/* Styling for the header multi-level dropdowns */
+/* line 2, app/assets/stylesheets/dropdowns.scss */
+.dropdown-menu {
+  margin-top: 0;
 }
 
-@media (min-width: 576px) and (min-width: 768px) {
-  /* line 24, app/assets/stylesheets/dropdowns.scss */
-  .nav-item .submenu-left {
-    right: 100%;
-    left: auto;
-  }
+/* line 5, app/assets/stylesheets/dropdowns.scss */
+.dropdown-menu .dropdown-toggle::after {
+  vertical-align: middle;
+  border-left: 4px solid;
+  border-bottom: 4px solid transparent;
+  border-top: 4px solid transparent;
 }
 
-@media (min-width: 576px) and (max-width: 767.98px) {
-  /* line 30, app/assets/stylesheets/dropdowns.scss */
-  .nav-item .submenu-left {
-    right: 0px;
-    left: 0px;
-    background-color: #d9d9d9;
-  }
+/* line 11, app/assets/stylesheets/dropdowns.scss */
+.dropdown-menu .dropdown .dropdown-menu {
+  left: 100%;
+  top: 0%;
+  margin: 0 20px;
+  border-width: 0;
 }
 
-@media (min-width: 576px) {
-  /* line 37, app/assets/stylesheets/dropdowns.scss */
-  .dropdown-menu > li:hover {
-    background-color: #f1f1f1;
-  }
-  /* line 38, app/assets/stylesheets/dropdowns.scss */
-  .dropdown-menu > li:hover > .submenu {
-    display: block;
+/* line 17, app/assets/stylesheets/dropdowns.scss */
+.dropdown-menu .dropdown .dropdown-menu.left {
+  right: 100%;
+  left: auto;
+}
+
+/* line 22, app/assets/stylesheets/dropdowns.scss */
+.dropdown-menu > li a:hover,
+.dropdown-menu > li.show {
+  background: #007bff;
+  color: white;
+}
+
+/* line 27, app/assets/stylesheets/dropdowns.scss */
+.dropdown-menu > li.show > a {
+  color: white;
+}
+
+@media (min-width: 768px) {
+  /* line 32, app/assets/stylesheets/dropdowns.scss */
+  .dropdown-menu .dropdown .dropdown-menu {
+    margin: 0;
+    border-width: 1px;
   }
 }
 
-/* Weeks mgmt Nav Styling */
-/* line 44, app/assets/stylesheets/dropdowns.scss */
+/* Styling for Weeks mgmt dropdown/scroll bar*/
+/* line 39, app/assets/stylesheets/dropdowns.scss */
 .mgmtWeeksDropdown {
   display: static;
   max-height: 100px;
@@ -444,14 +437,14 @@ ul#pool-members {
 }
 
 @media (min-width: 576px) {
-  /* line 50, app/assets/stylesheets/dropdowns.scss */
+  /* line 45, app/assets/stylesheets/dropdowns.scss */
   .mgmtWeeksDropdown {
     max-height: 400px;
   }
 }
 
 @media (max-width: 575.98px) {
-  /* line 55, app/assets/stylesheets/dropdowns.scss */
+  /* line 50, app/assets/stylesheets/dropdowns.scss */
   .mgmtWeeksDropdown {
     max-height: 250px;
   }
