@@ -101,12 +101,23 @@ class Week < ApplicationRecord
       else
         game_date_time = nil
       end
-      game = Game.create(week_id: self.id, awayTeamIndex: away_team.id,
-                         homeTeamIndex: home_team.id,
-                         game_date: game_date_time,
-                         network: nfl_game[:network])
-      self.games << game
 
+      # If the week has been previously created and is being checked for updates to
+      # the date/time
+      if game = self.find_game(home_team.id)
+        game.game_date = game_date_time
+        game.network = nfl_game[:network]
+        game.save
+      else
+        # Game doesn't exist so lets create it.
+        game = Game.create(week_id: self.id, awayTeamIndex: away_team.id,
+                           homeTeamIndex: home_team.id,
+                           game_date: game_date_time,
+                           network: nfl_game[:network])
+        self.games << game
+      end
+
+      # Save changes to the week
       self.save
 
     end

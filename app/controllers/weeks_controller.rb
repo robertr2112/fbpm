@@ -52,7 +52,6 @@ class WeeksController < ApplicationController
   # This route passes in the season_id so you can create the week for the specified
   # season.
   def auto_create
-#    season = Season.find_by_year(Time.now.year)
     season = Season.find_by_id(params[:id])
     if !season.nil?
       @week = season.weeks.create
@@ -81,6 +80,27 @@ class WeeksController < ApplicationController
       redirect_to @week
     else
       render 'new'
+    end
+  end
+
+  # This updates the games of the week to fix schedule changes in NFL games
+  # (ie. flex scheduling)
+  def update_games
+    @week = Week.find_by_id(params[:id])
+    if @week
+      season = Season.find_by_id(@week.season_id)
+      @week.create_nfl_week(season)
+      if @week.save
+        # Handle a successful save
+        flash[:success] =
+              "The games for Week #{@week.week_number} were updated successfully!"
+        redirect_to @week
+      else
+        render 'new'
+      end
+    else
+      flash[:danger] = "Cannot update games for week #{@week.week_number}. It does not exist!"
+      redirect_to @week
     end
   end
 

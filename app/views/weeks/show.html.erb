@@ -20,6 +20,7 @@
         <% end %>
         <% if !@week.checkStateFinal %>
           <div class="weekAdminItem"> <%= link_to "Edit week?", edit_week_path(@week) %> </div>
+          <div class="weekAdminItem"> <%= link_to "Update games?", update_games_path(@week.id) %> </div>
         <% end %>
         <% if @week.checkStatePend %>
           <% if @week.deleteSafe?(@season) %>
