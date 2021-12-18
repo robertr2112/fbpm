@@ -303,6 +303,7 @@ class Week < ApplicationRecord
         home_team = teams[1]
 
         # Get game Network
+byebug
         game_network = game_details.css('p.nfl-c-matchup-strip__networks').first.text.strip
 
         games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,

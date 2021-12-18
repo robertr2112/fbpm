@@ -118,12 +118,8 @@ class WeeksController < ApplicationController
   def edit
     @week = Week.find_by_id(params[:id])
     @games = @week.games
-    if @week.checkStateOpen || @week.checkStateFinal
-      if @week.checkStateOpen
-        flash[:warning] = "Can't Edit the scores for the week until it is in the Closed state!"
-      else
-        flash[:warning] = "Can't Edit the week once it is in the Final state!"
-      end
+    if @week.checkStateFinal
+      flash[:warning] = "Can't Edit the week once it is in the Final state!"
       redirect_to @week
     end
   end
