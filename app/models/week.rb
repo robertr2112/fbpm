@@ -302,7 +302,6 @@ class Week < ApplicationRecord
         # Get home team
         home_team = teams[1]
 
-byebug
         # Check if its final, and if it's not then get the network
         game_final = game_details.css('p.nfl-c-matchup-strip__period').text.strip
         if !game_final.include? "FINAL"
