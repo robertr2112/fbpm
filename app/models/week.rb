@@ -302,13 +302,18 @@ class Week < ApplicationRecord
         # Get home team
         home_team = teams[1]
 
-        # Get game Network
 byebug
-        game_network = game_details.css('p.nfl-c-matchup-strip__networks').first.text.strip
+        # Check if its final, and if it's not then get the network
+        game_final = game_details.css('p.nfl-c-matchup-strip__period').text.strip
+        if !game_final.include? "FINAL"
 
-        games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
-                   :away_team => away_team, :home_team => home_team, :network => game_network }
-        gameNum += 1
+          # Get game Network
+          game_network = game_details.css('p.nfl-c-matchup-strip__networks').first.text.strip
+
+          games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
+                     :away_team => away_team, :home_team => home_team, :network => game_network }
+          gameNum += 1
+        end
       end
 
     end
