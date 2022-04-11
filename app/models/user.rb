@@ -7,11 +7,13 @@
 #  activated_at           :datetime
 #  activation_digest      :string
 #  admin                  :boolean          default(FALSE)
+#  contact                :integer          default(1)
 #  email                  :string
 #  name                   :string
 #  password_digest        :string
 #  password_reset_sent_at :datetime
 #  password_reset_token   :string
+#  phone                  :string
 #  remember_digest        :string
 #  supervisor             :boolean          default(FALSE)
 #  user_name              :string
@@ -31,6 +33,8 @@ class User < ApplicationRecord
   before_save   :downcase_email
   before_create :create_activation_digest
 
+  CONTACT_PREF = { Both: 1, Email: 2, Text: 3 }
+
   has_many :pool_memberships, dependent: :destroy
   has_many :pools, through: :pool_memberships, dependent: :destroy
   has_many :entries, dependent: :delete_all
@@ -38,9 +42,11 @@ class User < ApplicationRecord
   validates :name,  presence: true, length: { :maximum => 50 }
   validates :user_name,  presence: true, length: { :maximum => 15 },
                     uniqueness: { case_sensitive: false }
+  validates :phone, phone: { possible: true, allow_blank: true }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
+  validates :contact, inclusion:   { in: 1..3 }
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   default_scope -> { order(name: :asc) }
 

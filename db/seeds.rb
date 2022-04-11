@@ -17,6 +17,7 @@ admin = User.new do |u|
   u.email = "admin@fbpm.com"
   u.password = "p8ssw0rd"
   u.password_confirmation = "p8ssw0rd"
+  u.phone = "512-924-6139"
 end
 admin.save!
 

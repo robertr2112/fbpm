@@ -48,6 +48,10 @@ gem 'pg',  '~> 0.20'
 # Watir: This is used to scrape data from the NFL.com site
 gem 'watir'
 
+# Gems for adding SMS support
+gem 'phonelib'
+gem 'twilio-ruby'
+
 #
 # Bootstrap support gems
 #

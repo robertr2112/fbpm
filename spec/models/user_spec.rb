@@ -7,11 +7,13 @@
 #  activated_at           :datetime
 #  activation_digest      :string
 #  admin                  :boolean          default(FALSE)
+#  contact                :integer          default(1)
 #  email                  :string
 #  name                   :string
 #  password_digest        :string
 #  password_reset_sent_at :datetime
 #  password_reset_token   :string
+#  phone                  :string
 #  remember_digest        :string
 #  supervisor             :boolean          default(FALSE)
 #  user_name              :string
