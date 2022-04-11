@@ -4,7 +4,14 @@
 
   <%= f.input :user_name, placeholder: 'User Name' %>
 
+  <%= f.input :phone, placeholder: 'Phone',
+           hint: "Enter number in format 1234567890, (123) 456-7890, or 123-456-7890" %>
+
   <%= f.input :email, placeholder: 'Email' %>
+
+  <%= f.input :contact, placeholder: 'Contact Preference', as: :radio_buttons,
+           wrapper: :horizontal_collection_inline, collection: User::CONTACT_PREF,
+           hint: "Your contact preference" %>
 
   <%= f.input :password, placeholder: 'Password' %>
 
