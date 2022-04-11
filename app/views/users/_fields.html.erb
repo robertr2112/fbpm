@@ -9,9 +9,9 @@
 
   <%= f.input :email, placeholder: 'Email' %>
 
-  <%= f.input :contact, placeholder: 'Contact Preference', as: :radio_buttons,
-           wrapper: :horizontal_collection_inline, collection: User::CONTACT_PREF,
-           hint: "Your contact preference" %>
+  <%= f.input :contact, label: 'Contact Preference', placeholder: 'Contact Preference',
+              collection: User::CONTACT_PREF, selected: User::CONTACT_PREF[:Email],
+              hint: "Your contact preference (Email, Text, or Both)" %>
 
   <%= f.input :password, placeholder: 'Password' %>
 
