@@ -64,7 +64,9 @@ class Week < ApplicationRecord
     checkStateClosed
   end
 
+  #
   # Find the game for this week from the team index
+  #
   def find_game(chosenTeamIndex)
     self.games.each do |game|
       if game.homeTeamIndex == chosenTeamIndex ||
@@ -75,7 +77,9 @@ class Week < ApplicationRecord
     return nil
   end
 
+  #
   # Get the bye teams for the week
+  #
   def get_bye_teams
     bye_teams = Array.new
     1.upto(32) do |i|
@@ -86,7 +90,9 @@ class Week < ApplicationRecord
     return bye_teams
   end
 
+  #
   # Generate NFL schedule for a specified week
+  #
   def create_nfl_week(season)
     nfl_games = get_nfl_sched(self.week_number, season.year)
     nfl_games.each do |nfl_game|
@@ -96,7 +102,12 @@ class Week < ApplicationRecord
       away_team       = Team.where('name LIKE ?', away_team_name).first
       # Create the time string
       if nfl_game[:date] && nfl_game[:time]
-        game_date_time = DateTime.parse(nfl_game[:date] + Season.getSeasonYear \
+        if nfl_game[:date].include? "January"
+          year = Season.getSeasonYear.to_i + 1
+        else
+          year = Season.getSeasonYear.to_i
+        end
+        game_date_time = DateTime.parse(nfl_game[:date] + year.to_s \
                          + " " + nfl_game[:time] + " " + nfl_game[:timezone])
       else
         game_date_time = nil
@@ -123,7 +134,9 @@ class Week < ApplicationRecord
     end
   end
 
+  #
   # Update the week with the nfl week final scores
+  #
   def add_scores_nfl_week(season)
 
     # Get all of the games/scores from NFL.com
@@ -165,6 +178,9 @@ class Week < ApplicationRecord
 
   end
 
+  #
+  # Gets list of teams for the current week's games
+  #
   def buildSelectTeams
     select_teams = Array.new
     self.games.each do |game|
@@ -176,6 +192,9 @@ class Week < ApplicationRecord
     return select_teams
   end
 
+  #
+  # Get list of winning teams for the current week's games
+  #
   def getWinningTeams
     winning_teams = Array.new
     games = self.games
@@ -196,6 +215,9 @@ class Week < ApplicationRecord
     return winning_teams
   end
 
+  #
+  # Validates all of the games checking for duplicate teams
+  #
   def gamesValid?
     games_to_check = self.games
     ret_code = true
@@ -290,9 +312,7 @@ class Week < ApplicationRecord
       # Get details for each game on that day
       game_group.css('div.nfl-c-matchup-strip').each do |game_details|
 
-        # Get Game time
-        game_time = game_details.css('span.nfl-c-matchup-strip__date-time').text.strip
-        game_timezone = game_details.css('span.nfl-c-matchup-strip__date-timezone').text.strip
+        game_period = game_details.css('p.nfl-c-matchup-strip__period').text.strip
 
         # Get team names
         teams_marker = game_details.css('p.nfl-c-matchup-strip__team-name')
@@ -302,17 +322,30 @@ class Week < ApplicationRecord
         # Get home team
         home_team = teams[1]
 
-        # Check if its final, and if it's not then get the network
-        game_final = game_details.css('p.nfl-c-matchup-strip__period').text.strip
-        if !game_final.include? "FINAL"
+        # The NFL has certain games on some weeks marked as TBD because of flex
+        # scheduling for those weeks, and they won't be scheduled until later in the
+        # season.
+        if game_period.include? "TBD"
+          game_time = nil
+          game_timezone = nil
+          game_network = nil
+        else
+          # Get Game time
+          game_time = game_details.css('span.nfl-c-matchup-strip__date-time').text.strip
+          game_timezone = game_details.css('span.nfl-c-matchup-strip__date-timezone').text.strip
 
-          # Get game Network
-          game_network = game_details.css('p.nfl-c-matchup-strip__networks').first.text.strip
+          # Check if its final, and if it's not then get the network
+          if !game_period.include? "FINAL"
 
-          games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
-                     :away_team => away_team, :home_team => home_team, :network => game_network }
-          gameNum += 1
+            # Get game Network
+            game_network = game_details.css('p.nfl-c-matchup-strip__networks').first.text.strip
+          end
         end
+
+        games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
+                     :away_team => away_team, :home_team => home_team, :network => game_network }
+        gameNum += 1
+
       end
 
     end

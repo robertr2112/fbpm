@@ -17,6 +17,7 @@
 <% end %>
 
 <% prev_game = nil %>
+<% unscheduled_games = false %>
 <% games.order(:game_date).each do |game| %>
   <% if game.game_date %>
     <% game_datetime = game.game_date.in_time_zone('Central Time (US & Canada)') %>
@@ -30,14 +31,24 @@
       <!-- Show Game date "ie. Thursday, September 12"-->
       <h2 class="gameDate"><%= gameDate %> </h2>
     <% end %>
+  <% else %>
+    <% gameTime = nil %>
+    <% if (!prev_game || !unscheduled_games) %>
+      <% unscheduled_games = true %>
+      <h2 class="gameDate"> Games Not Scheduld Yet </h2>
+    <% end %>
   <% end %>
   <div class="row gameRow">
     <!-- Show Teams and scores -->
     <!-- Show Game Time and Network -->
     <div class="gameTime col-3 col-sm-auto">
+      <% if gameTime == nil %>
+        <p class="no-set-time"> TBD </p>
+      <% else %>
         <span class="time-info"> <%= gameTime %> </span>
         <span class="timezone-info"> <%= gameTimezone %> </span>
-      <p class="network-info"> <%= game.network %> </p>
+        <p class="network-info"> <%= game.network %> </p>
+      <% end %>
     </div>
     <!-- Show teams and scores(if available) -->
     <% team = Team.find(game.awayTeamIndex) %>
