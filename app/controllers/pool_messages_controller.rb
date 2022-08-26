@@ -110,7 +110,6 @@ class PoolMessagesController < ApplicationController
         phone_nmbrs << phoneNmbr
       end
     end
-byebug
     if email_addrs.empty? && phone_nmbrs.empty?
       @email_addr_errors << "You need to add email addresses to send this message!"
       @phone_errors << "You need to add phone numbers to send this message!"
@@ -128,7 +127,13 @@ byebug
       if !phone_nmbrs.empty?
         phone_nmbrs.each do |phoneNmbr|
           # Send the message to all phone numbers
-          message_sent = TwilioClient.new.send_text(phoneNmbr, invite_message)
+          if Rails.env.development?
+            logger.info phoneNmbr
+            logger.info invite_message
+            message_sent = true
+          else
+            message_sent = TwilioClient.new.send_text(phoneNmbr, invite_message)
+          end
         end
       end
       if message_sent
