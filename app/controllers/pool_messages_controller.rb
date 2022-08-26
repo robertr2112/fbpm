@@ -65,24 +65,29 @@ class PoolMessagesController < ApplicationController
 
     # Build list of phone numbers and email addresses
     @phone_errors = Array.new
-    phone_addrs = Array.new
+    phone_nmbrs = Array.new
     @email_addr_errors = Array.new
     email_addrs = Array.new
     if !params[:PoolList].blank?
-      poolList = Pool.find_by_id(params[:emailPoolList])
+      poolList = Pool.find_by_id(params[:PoolList])
     end
     if poolList
       poolList.users.each do |user|
         # Only add email to list if that user wants to be sent email
-        if user.contact == User::CONTACT_PREF[:Both] || User::CONTACT_PREF[:Email]
+        if (user.contact == User::CONTACT_PREF[:Both]) ||
+            (user.contact == User::CONTACT_PREF[:Email])
+
           email_addrs << user.email
         end
-        if user.contact == User::CONTACT_PREF[:Both] || User::CONTACT_PREF[:Text]
-          phone_addrs << user.phone
+        if (user.contact == User::CONTACT_PREF[:Both]) ||
+            (user.contact == User::CONTACT_PREF[:Text])
+
+          phone_nmbrs << user.phone
         end
       end
     end
-    # Parse through list of comma seperated emails addresses
+
+    # Parse through list of comma seperated email addresses
     emailList = params[:emailListAddrs].split(",")
     emailList.each do |emailAddr|
       emailAddr = emailAddr.strip
@@ -94,22 +99,23 @@ class PoolMessagesController < ApplicationController
     end
 
     # Parse through list of comma seperated phone numbers
+    invite_message = Pool::POOL_INVITE_MSG + " <" + pool_url(@pool) + ">\n "
+    invite_message += params[:msg]
     phoneList = params[:phoneListNmbrs].split(",")
     phoneList.each do |phoneNmbr|
-      phoneNmbr = emailAddr.strip
+      phoneNmbr = phoneNmbr.strip
       if !Phonelib.valid?(phoneNmbr)
         @phone_errors << "There is an error with phone number: #{phoneNmbr}"
       else
         phone_nmbrs << phoneNmbr
       end
     end
-
-    if email_addrs.empty?
+byebug
+    if email_addrs.empty? && phone_nmbrs.empty?
       @email_addr_errors << "You need to add email addresses to send this message!"
-    end
-    if phone_nmbrs.empty?
       @phone_errors << "You need to add phone numbers to send this message!"
     end
+
     if @email_addr_errors.empty? && @phone_errors.empty?
       # Send message to users who have selected email as a contact preference
       if !email_addrs.empty?
@@ -120,11 +126,9 @@ class PoolMessagesController < ApplicationController
         end
       end
       if !phone_nmbrs.empty?
-        phoneNmbrs.each do phoneNmbr
-          # Build the invite text message
-          
+        phone_nmbrs.each do |phoneNmbr|
           # Send the message to all phone numbers
-          TwilioClient.new.send_text(phoneNmbr, params[:msg])
+          message_sent = TwilioClient.new.send_text(phoneNmbr, invite_message)
         end
       end
       if message_sent

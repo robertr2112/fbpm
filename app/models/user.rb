@@ -42,7 +42,8 @@ class User < ApplicationRecord
   validates :name,  presence: true, length: { :maximum => 50 }
   validates :user_name,  presence: true, length: { :maximum => 15 },
                     uniqueness: { case_sensitive: false }
-  validates :phone, phone: { possible: true, allow_blank: true }
+  validates :phone, phone: { possible: true, allow_blank: true },
+                   presence: true, if: :phone_required?
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
@@ -106,6 +107,15 @@ class User < ApplicationRecord
   # !!! Use this until password reset is redone
   def User.encrypt(token)
     Digest::SHA1.hexdigest(token.to_s)
+  end
+
+  def phone_required?
+    if self.contact == User::CONTACT_PREF[:Both] ||
+        self.contact == User::CONTACT_PREF[:Text]
+      return true
+    else
+      return false
+    end
   end
 
   private

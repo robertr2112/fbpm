@@ -44,6 +44,8 @@ end
   validates :allowMulti, inclusion: { in: [true, false] }
   validates :isPublic, inclusion:   { in: [true, false] }
 
+  POOL_INVITE_MSG = "From Football Pool Mania: You're invited to join a survivor pool! \
+              Click the attached link (login or create a new account) to join the pool!"
   #
   # The following routines check the poolType. There is both a Class and
   # an Instance version of each routine.
@@ -102,6 +104,17 @@ end
       return true
     end
     return false
+  end
+
+  #
+  # Build Pool invite message
+  #
+  def buildPoolInviteMsg
+    if self.typeSurvivor?
+      message = Pool::POOL_INVITE_MSG
+    end
+
+    return message
   end
 
   #
