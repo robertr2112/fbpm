@@ -33,7 +33,7 @@ class User < ApplicationRecord
   before_save   :downcase_email
   before_create :create_activation_digest
 
-  CONTACT_PREF = { Both: 1, Email: 2, Text: 3 }
+  CONTACT_PREF = { Email: 1, Both: 2, Text: 3 }
 
   has_many :pool_memberships, dependent: :destroy
   has_many :pools, through: :pool_memberships, dependent: :destroy
