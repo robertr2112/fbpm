@@ -31,6 +31,8 @@ test:
   username: robertr
   password: m0ntes
 
-#production:
-#  <<: *default
-#  database: db/production.sqlite3
+# Setup production db for AWS
+production:
+  url: <%= ENV['DATABASE_URL'] %>
+  username: robertr2112
+  password: M0ntes15
