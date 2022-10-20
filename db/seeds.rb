@@ -22,66 +22,66 @@ end
 admin.save!
 
 Team.create name: "Arizona Cardinals", nfl: 1,
-                                  imagePath: "nfl_teams/nfcw/ari.jpg"
+                                  imagePath: "nfl_teams/nfcw/ari.svg"
 Team.create name: "Atlanta Falcons", nfl: 1,
-                                  imagePath: "nfl_teams/nfcs/atl.jpg"
+                                  imagePath: "nfl_teams/nfcs/atl.svg"
 Team.create name: "Baltimore Ravens", nfl: 1,
-                                  imagePath: "nfl_teams/afcn/bal.jpg"
+                                  imagePath: "nfl_teams/afcn/bal.svg"
 Team.create name: "Buffalo Bills", nfl: 1,
-                                  imagePath: "nfl_teams/afce/buf.jpg"
+                                  imagePath: "nfl_teams/afce/buf.svg"
 Team.create name: "Carolina Panthers", nfl: 1,
-                                  imagePath: "nfl_teams/nfcs/car.jpg"
+                                  imagePath: "nfl_teams/nfcs/car.svg"
 Team.create name: "Chicago Bears", nfl: 1,
-                                  imagePath: "nfl_teams/nfcn/chi.jpg"
+                                  imagePath: "nfl_teams/nfcn/chi.svg"
 Team.create name: "Cincinnati Bengals", nfl: 1,
-                                  imagePath: "nfl_teams/afcn/cin.jpg"
+                                  imagePath: "nfl_teams/afcn/cin.svg"
 Team.create name: "Cleveland Browns", nfl: 1,
-                                  imagePath: "nfl_teams/afcn/cle.jpg"
+                                  imagePath: "nfl_teams/afcn/cle.svg"
 Team.create name: "Dallas Cowboys", nfl: 1,
-                                  imagePath: "nfl_teams/nfce/dal.jpg"
+                                  imagePath: "nfl_teams/nfce/dal.svg"
 Team.create name: "Denver Broncos", nfl: 1,
-                                  imagePath: "nfl_teams/afcw/den.jpg"
+                                  imagePath: "nfl_teams/afcw/den.svg"
 Team.create name: "Detroit Lions", nfl: 1,
-                                  imagePath: "nfl_teams/nfcn/det.jpg"
+                                  imagePath: "nfl_teams/nfcn/det.svg"
 Team.create name: "Green Bay Packers", nfl: 1,
-                                  imagePath: "nfl_teams/nfcn/gb.jpg"
+                                  imagePath: "nfl_teams/nfcn/gb.svg"
 Team.create name: "Houston Texans", nfl: 1,
-                                  imagePath: "nfl_teams/afcs/hou.jpg"
+                                  imagePath: "nfl_teams/afcs/hou.svg"
 Team.create name: "Indianapolis Colts", nfl: 1,
-                                  imagePath: "nfl_teams/afcs/ind.jpg"
+                                  imagePath: "nfl_teams/afcs/ind.svg"
 Team.create name: "Jacksonville Jaguars", nfl: 1,
-                                  imagePath: "nfl_teams/afcs/jac.jpg"
+                                  imagePath: "nfl_teams/afcs/jac.svg"
 Team.create name: "Kansas City Chiefs", nfl: 1,
-                                  imagePath: "nfl_teams/afcw/kc.jpg"
+                                  imagePath: "nfl_teams/afcw/kc.svg"
 Team.create name: "Los Angeles Chargers", nfl: 1,
-                                  imagePath: "nfl_teams/afcw/lac.jpg"
+                                  imagePath: "nfl_teams/afcw/lac.svg"
 Team.create name: "Los Angeles Rams", nfl: 1,
-                                  imagePath: "nfl_teams/nfcw/lar.jpg"
+                                  imagePath: "nfl_teams/nfcw/lar.svg"
 Team.create name: "Minnesota Vikings", nfl: 1,
-                                   imagePath: "nfl_teams/nfcn/min.jpg"
+                                   imagePath: "nfl_teams/nfcn/min.svg"
 Team.create name: "Miami Dolphins", nfl: 1,
-                                  imagePath: "nfl_teams/afce/mia.jpg"
+                                  imagePath: "nfl_teams/afce/mia.svg"
 Team.create name: "New England Patriots", nfl: 1,
-                                  imagePath: "nfl_teams/afce/ne.jpg"
+                                  imagePath: "nfl_teams/afce/ne.svg"
 Team.create name: "New Orleans Saints", nfl: 1,
-                                  imagePath: "nfl_teams/nfcs/no.jpg"
+                                  imagePath: "nfl_teams/nfcs/no.svg"
 Team.create name: "New York Giants", nfl: 1,
-                                  imagePath: "nfl_teams/nfce/nyg.jpg"
+                                  imagePath: "nfl_teams/nfce/nyg.svg"
 Team.create name: "New York Jets", nfl: 1,
-                                  imagePath: "nfl_teams/afce/nyj.jpg"
-Team.create name: "Oakland Raiders", nfl: 1,
-                                  imagePath: "nfl_teams/afcw/oak.jpg"
+                                  imagePath: "nfl_teams/afce/nyj.svg"
+Team.create name: "Las Vegas Raiders", nfl: 1,
+                                  imagePath: "nfl_teams/afcw/oak.svg"
 Team.create name: "Philadelphia Eagles", nfl: 1,
-                                  imagePath: "nfl_teams/nfce/phi.jpg"
+                                  imagePath: "nfl_teams/nfce/phi.svg"
 Team.create name: "Pittsburgh Steelers", nfl: 1,
-                                  imagePath: "nfl_teams/afcn/pit.jpg"
+                                  imagePath: "nfl_teams/afcn/pit.svg"
 Team.create name: "San Francisco 49ers", nfl: 1,
-                                  imagePath: "nfl_teams/nfcw/sf.jpg"
+                                  imagePath: "nfl_teams/nfcw/sf.svg"
 Team.create name: "Seattle Seahawks", nfl: 1,
-                                  imagePath: "nfl_teams/nfcw/sea.jpg"
+                                  imagePath: "nfl_teams/nfcw/sea.svg"
 Team.create name: "Tampa Bay Buccaneers", nfl: 1,
-                                  imagePath: "nfl_teams/nfcs/tb.jpg"
+                                  imagePath: "nfl_teams/nfcs/tb.svg"
 Team.create name: "Tennessee Titans", nfl: 1,
-                                  imagePath: "nfl_teams/afcs/ten.jpg"
-Team.create name: "Washington Football Team", nfl: 1,
-                                  imagePath: "nfl_teams/nfce/was.jpg"
+                                  imagePath: "nfl_teams/afcs/ten.svg"
+Team.create name: "Washington Commanders", nfl: 1,
+                                  imagePath: "nfl_teams/nfce/was.svg"
