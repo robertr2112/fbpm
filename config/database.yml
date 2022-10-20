@@ -34,7 +34,7 @@ test:
 # Setup production db for AWS
 production:
   adapter: postgresql
-  encoding: utf8
+  encoding: unicode
   database: <%= ENV['RDS_DB_NAME'] %>
   username: <%= ENV['RDS_USERNAME'] %>
   password: <%= ENV['RDS_PASSWORD'] %>
