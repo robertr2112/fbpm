@@ -61,6 +61,7 @@ gem 'will_paginate-bootstrap4'
 # Fontawesome fonts
 gem 'font-awesome-rails'
 # Use SCSS for stylesheets
+gem 'sassc', '2.1.0'
 gem 'sassc-rails', '~>2.1.2'
 
 group :development, :test do
