@@ -27,7 +27,7 @@ class Season < ApplicationRecord
 
   accepts_nested_attributes_for :weeks, allow_destroy: true
 
-  validates :number_of_weeks, presence: true, inclusion:   { in: 1..18 }
+  validates :number_of_weeks, inclusion:   { in: 1..18 }
 
   def self.getSeasonYear
     year = Time.now.strftime("%Y").to_i

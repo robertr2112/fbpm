@@ -222,7 +222,6 @@ end
   def updateEntries(current_week)
     if self.typeSurvivor?
       if !self.pool_done
-
         # Update all entries survivorStatus
         updateSurvivor(current_week)
         # Check to see if their is a winner and mark pool done if there is a winner

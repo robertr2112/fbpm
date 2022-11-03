@@ -6,6 +6,7 @@
 #
 default: &default
   adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
@@ -31,12 +32,6 @@ test:
   username: robertr
   password: m0ntes
 
-# Setup production db for AWS
-production:
-  adapter: postgresql
-  encoding: unicode
-  database: <%= ENV['RDS_DB_NAME'] %>
-  username: <%= ENV['RDS_USERNAME'] %>
-  password: <%= ENV['RDS_PASSWORD'] %>
-  host: <%= ENV['RDS_HOSTNAME'] %>
-  port: <%= ENV['RDS_PORT'] %>
+#production:
+#  <<: *default
+#  database: db/production.sqlite3
