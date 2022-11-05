@@ -88,8 +88,7 @@ Rails.application.configure do
       authentication:       :plain,
       user_name:            'apikey',
       password:             ENV['SENDGRID_API_KEY'],
-      domain:               'heroku.com',
-      enable_starttls_auto: true
+      domain:               'heroku.com'
   }
 
   # Use a different logger for distributed setups.
