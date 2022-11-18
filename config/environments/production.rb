@@ -80,7 +80,7 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Setup mailer
-  config.action_mailer.default_url_options = { host: "fbpm.herokuapp.com" }
+  config.action_mailer.default_url_options = { host: "www.fbpm.club" }
   config.action_mailer.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
       address:              'smtp.sendgrid.net',
@@ -88,7 +88,7 @@ Rails.application.configure do
       authentication:       :plain,
       user_name:            'apikey',
       password:             ENV['SENDGRID_API_KEY'],
-      domain:               'heroku.com'
+      domain:               'fbpm.club'
   }
 
   # Use a different logger for distributed setups.
