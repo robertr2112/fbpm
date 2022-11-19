@@ -1,8 +1,23 @@
 <% provide(:title, @user.name) %>
 <!-- Render the navigation bars -->
 <%= render 'shared/mgmt_weeks_nav', season: current_season(1), week_number: 0 %>
+<!-- Add javascrip to show the phone modal message -->
+<script type="text/javascript">
+    window.onload = function () {
+        OpenBootstrapPopup();
+    };
+    function OpenBootstrapPopup() {
+        $("#simpleModal").modal('show');
+    }
+</script>
 
 <div class="container pageContent">
+  <!-- Show modal if phone number not added -->
+
+  <% if !@user.phone.present?   || current_user.contact ==  User::CONTACT_PREF[:Email] %>
+    <%= render 'phone_modal' %>
+  <% end %>
+
   <h1 class="pageHeader">
     <%= gravatar_for @user %>
     <%= @user.name %> - My Pools

@@ -10,7 +10,7 @@
   <%= f.input :email, placeholder: 'Email' %>
 
   <%= f.input :contact, label: 'Contact Preference', placeholder: 'Contact Preference',
-              collection: User::CONTACT_PREF, selected: User::CONTACT_PREF[:Email],
+              collection: User::CONTACT_PREF,
               hint: "Your contact preference (Email, Text, or Both)" %>
 
   <%= f.input :password, placeholder: 'Password' %>
