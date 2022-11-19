@@ -1,0 +1,23 @@
+<div id="simpleModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">SMS Support Added</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>SMS support has been added as an option for receving messages from the pool
+                   administrator.  If you would like to receive messages via SMS edit your
+                   <%= link_to '<i class=" fa fa-cog fa-fw"></i>Settings'.html_safe,
+                         edit_user_path(current_user), class:'dropdown-item'  %>
+                   and add your phone number and change the contact preference.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
