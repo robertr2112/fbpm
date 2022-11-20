@@ -12,21 +12,40 @@ class PoolMessagesController < ApplicationController
       redirect_to @pool, notice: "Email not sent. Could not find pool!"
     end
 
-    if params[:allMembers] == "true"
-      allMembers = true
+    # Get a list of users email addresses and phone numbers based on contact preferences
+    users = Array.new
+    @pool.users.each do |user|
+      if params[:allMembers] == "true"
+        entries = Entry.where(pool_id: @pool.id, user_id: user.id)
+      else
+        entries = Entry.where(pool_id: @pool.id, user_id: user.id, survivorStatusIn:true)
+      end
+      if entries.any?
+        users << user
+      end
+    end
+    sorted_users = getSortedContacts(users)
+    email_addrs = sorted_users[:email_addrs]
+    phone_nmbrs = sorted_users[:phone_nmbrs]
+
+    # Send message via email to all users who have email or both as a contact preference
+    if PoolMailer.send_pool_message(@pool, params[:subject],
+                                    params[:msg], email_addrs).deliver_now
+      message_sent = true
     else
-      allMembers = false
+      message_sent = false
     end
 
-    # Send message via SMS to all users who have SMS as a contact preference
+    # Send message via SMS to all users who have text or both as a contact preference
+    message_sent = send_SMS_messages(phone_nmbrs, params[:msg])
 
-
-    # Send message via email to all users who have email as a contact preference
-    if PoolMailer.send_pool_message(@pool, params[:subject], params[:msg], allMembers).deliver_now
-      redirect_to @pool, notice: "Email sent!"
+    # If email and text messages were sent ok
+    if message_sent
+        redirect_to @pool, notice: "Message sent!"
     else
-      redirect_to @pool, notice: "Email not sent. There was a problem with the mailer!"
-    end
+        redirect_to @pool,
+              notice: "Message not sent. There was a problem with sending the message!"
+      end
   end
 
   # Build an invite message
@@ -54,7 +73,13 @@ class PoolMessagesController < ApplicationController
       redirect_to @pool, notice: "Email not sent. Could not find pool!"
     end
 
+    @phone_errors = Array.new
+    @email_addr_errors = Array.new
+    email_addrs = Array.new
+    phone_nmbrs = Array.new
+
     # Build list of pools owned by current user to populate form for selection
+    # !!! Not sure if this is necessary or not
     @pool_list = Array.new
     current_user.pools.each do |pool|
       # Only add pool to list if the current user is the owner of the pool
@@ -63,28 +88,14 @@ class PoolMessagesController < ApplicationController
       end
     end
 
-    # Build list of phone numbers and email addresses
-    @phone_errors = Array.new
-    phone_nmbrs = Array.new
-    @email_addr_errors = Array.new
-    email_addrs = Array.new
+    # Get list of email addresses and phone numbers from selected pool
     if !params[:PoolList].blank?
       poolList = Pool.find_by_id(params[:PoolList])
     end
     if poolList
-      poolList.users.each do |user|
-        # Only add email to list if that user wants to be sent email
-        if (user.contact == User::CONTACT_PREF[:Both]) ||
-            (user.contact == User::CONTACT_PREF[:Email])
-
-          email_addrs << user.email
-        end
-        if (user.contact == User::CONTACT_PREF[:Both]) ||
-            (user.contact == User::CONTACT_PREF[:Text])
-
-          phone_nmbrs << user.phone
-        end
-      end
+      sorted_users = getSortedContacts(poolList.users)
+      email_addrs = sorted_users[:email_addrs]
+      phone_nmbrs = sorted_users[:phone_nmbrs]
     end
 
     # Parse through list of comma seperated email addresses
@@ -110,39 +121,41 @@ class PoolMessagesController < ApplicationController
         phone_nmbrs << phoneNmbr
       end
     end
-    if email_addrs.empty? && phone_nmbrs.empty?
-      @email_addr_errors << "You need to add email addresses to send this message!"
-      @phone_errors << "You need to add phone numbers to send this message!"
+
+    # Check for errors
+    if email_addrs.empty?
+      @email_addr_errors << "No email addresses specified!"
+    end
+    if phone_nmbrs.empty?
+      @phone_errors << "No phone numbers specified!"
     end
 
-    if @email_addr_errors.empty? && @phone_errors.empty?
-      # Send message to users who have selected email as a contact preference
+    if @email_addr_errors.empty? || @phone_errors.empty?
+
+      # Send message via email to all users who have email or both as a contact preference
       if !email_addrs.empty?
-        if PoolMailer.send_pool_invite(@pool, params[:subject], params[:msg], email_addrs).deliver_now
+        if PoolMailer.send_pool_invite(@pool, params[:subject],
+                                       params[:msg], email_addrs).deliver_now
           message_sent = true
         else
           message_sent = false
         end
       end
+
+      # Send message via SMS to all users who have text or both as a contact preference
       if !phone_nmbrs.empty?
-        phone_nmbrs.each do |phoneNmbr|
-          # Send the message to all phone numbers
-          if Rails.env.development?
-            logger.info phoneNmbr
-            logger.info invite_message
-            message_sent = true
-          else
-            message_sent = TwilioClient.new.send_text(phoneNmbr, invite_message)
-          end
-        end
+        message_sent = send_SMS_messages(phone_nmbrs, invite_message)
       end
+
       if message_sent
           redirect_to @pool, notice: "Message sent!"
       else
-          redirect_to @pool, notice: "Message not sent. There was a problem with sending the message!"
+          redirect_to @pool,
+               notice: "Message not sent. There was a problem with sending the message!"
       end
     else
-      flash[:danger] = "There were errors with the form!"
+      flash[:danger] = "There were errors with the form!" + " : " + @email_addr_errors[0] +
+                       " " + @phone_errors[0]
       render 'invite'
       return
     end
@@ -152,5 +165,47 @@ class PoolMessagesController < ApplicationController
 
     def validate_email(emailAddr)
       EmailValidator.valid?(emailAddr)
+    end
+
+    # This module returns a sorted list of phone numbers and
+    # email address based on the users contact preferences
+    def getSortedContacts(users)
+
+      sorted_users = {}
+      sorted_users[:email_addrs] = Array.new
+      sorted_users[:phone_nmbrs] = Array.new
+
+      users.each do |user|
+      if (user.contact == User::CONTACT_PREF[:Both]) ||
+            (user.contact == User::CONTACT_PREF[:Email])
+
+          sorted_users[:email_addrs] << user.email
+        end
+        if (user.contact == User::CONTACT_PREF[:Both]) ||
+              (user.contact == User::CONTACT_PREF[:Text])
+
+          sorted_users[:phone_nmbrs] << user.phone
+        end
+      end
+
+      return sorted_users
+
+    end
+
+    # Send messages to list of phone numbers
+    def send_SMS_messages(phone_nmbrs, msg)
+
+      message_sent = false
+      phone_nmbrs.each do |phoneNmbr|
+        # Send the message to all phone numbers
+        if Rails.env.development?
+          logger.info phoneNmbr
+          logger.info msg
+          message_sent = true
+        else
+          message_sent = TwilioClient.new.send_text(phoneNmbr, msg)
+        end
+      end
+      return message_sent
     end
 end

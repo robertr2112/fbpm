@@ -1,21 +1,12 @@
 class PoolMailer < ActionMailer::Base
-  
-  def send_pool_message(pool, subject, msg, allMembers)
+
+  def send_pool_message(pool, subject, msg, email_list)
+    # Setup variables used in mailer view
     @pool = pool
     @msg = msg
-    email_list = Array.new
-    @pool.users.each do |user|
-      if allMembers
-        entries = Entry.where(pool_id: @pool.id, user_id: user.id)
-      else
-        entries = Entry.where(pool_id: @pool.id, user_id: user.id, survivorStatusIn:true)
-      end
-      if entries.any?
-        email_list << "#{user.name} <#{user.email}>"
-      end
-    end
+
+    # Call mailer
     subject_text = pool.name + "- " + subject
-    user = pool.getOwner
     attachments.inline['fbpm_logo.png'] = {
                    data: File.read(Rails.root + "app/assets/images/fbpm_logo.png"),
                    mime_type: "image/png"
@@ -28,9 +19,12 @@ class PoolMailer < ActionMailer::Base
   end
 
   def send_pool_invite(pool, subject, msg, email_list)
+    # Setup variables used in mailer view
     @pool = pool
-    subject_text = pool.name + "- " + subject
     @msg = msg
+
+    # Call mailer
+    subject_text = pool.name + "- " + subject
     attachments.inline['fbpm_logo.png'] = {
                    data: File.read(Rails.root + "app/assets/images/fbpm_logo.png"),
                    mime_type: "image/png"
