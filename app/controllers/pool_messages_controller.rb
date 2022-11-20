@@ -37,7 +37,8 @@ class PoolMessagesController < ApplicationController
     end
 
     # Send message via SMS to all users who have text or both as a contact preference
-    message_sent = send_SMS_messages(phone_nmbrs, params[:msg])
+    msg = "Fbpm.club msg: " + @pool.name + "\n" + params[:msg]
+    message_sent = send_SMS_messages(phone_nmbrs, msg)
 
     # If email and text messages were sent ok
     if message_sent
