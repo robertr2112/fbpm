@@ -1,3 +1,4 @@
+require 'json'
 class WeeksController < ApplicationController
   before_action :logged_in_user
   before_action :activated_user
@@ -72,7 +73,9 @@ class WeeksController < ApplicationController
     end
 
     @week.save
-    @week.create_nfl_week(season)
+    nfl_games_json = `python lib/assets/python/nfl-scraper.py -y "#{season.year}" -n "#{@week.week_number}"`
+    nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+    @week.create_nfl_week(season, nfl_games["game"])
     if @week.save
       # Handle a successful save
       flash[:success] =
@@ -89,7 +92,10 @@ class WeeksController < ApplicationController
     @week = Week.find_by_id(params[:id])
     if @week
       season = Season.find_by_id(@week.season_id)
-      @week.create_nfl_week(season)
+      nfl_games_json =
+          `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number}`
+      nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+      @week.create_nfl_week(season, nfl_games["game"])
       if @week.save
         # Handle a successful save
         flash[:success] =
@@ -109,7 +115,10 @@ class WeeksController < ApplicationController
     @week = Week.find_by_id(params[:id])
     season = Season.find_by_id(@week.season_id)
 
-    @week.add_scores_nfl_week(season)
+    nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number}`
+    nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+    @week.add_scores_nfl_week(season, nfl_games["game"])
 
     redirect_to @week
   end
@@ -147,14 +156,14 @@ class WeeksController < ApplicationController
       if @week.deleteSafe?(@season)
         @week.destroy
         flash[:success] = "Successfully deleted Week '#{@week.week_number}'!"
-        redirect_to seasons_path
+        redirect_to @season
       else
         flash[:danger] = "Cannot delete Week '#{@week.week_number}' because it is not the last week!"
         redirect_to @week
       end
     else
       flash[:danger] = "Only an Admin user can delete weeks!"
-      redirect_to seasons_path
+      redirect_to @week
     end
   end
 

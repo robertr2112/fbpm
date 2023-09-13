@@ -93,24 +93,27 @@ class Week < ApplicationRecord
   #
   # Generate NFL schedule for a specified week
   #
-  def create_nfl_week(season)
-    nfl_games = get_nfl_sched(self.week_number, season.year)
+  def create_nfl_week(season, nfl_games)
     nfl_games.each do |nfl_game|
-      home_team_name  = '%'+nfl_game[:home_team]+'%'
+      home_team_name  = "%#{nfl_game[:home_team]}%"
       home_team       = Team.where('name LIKE ?', home_team_name).first
-      away_team_name  = '%'+nfl_game[:away_team]+'%'
+      away_team_name  = "%#{nfl_game[:away_team]}%"
       away_team       = Team.where('name LIKE ?', away_team_name).first
       # Create the time string
       if nfl_game[:date] && nfl_game[:time]
         if nfl_game[:date].include? "January"
-          year = Season.getSeasonYear.to_i + 1
+          year = season.year.to_i + 1
         else
-          year = Season.getSeasonYear.to_i
+          year = season.year.to_i
         end
         game_date_time = DateTime.parse(nfl_game[:date] + year.to_s \
                          + " " + nfl_game[:time] + " " + nfl_game[:timezone])
       else
-        game_date_time = nil
+        if nfl_game[:date] && !nfl_game[:date].include?("not yet scheduled")
+          game_date_time = DateTime.parse(nfl_game[:date] + season.year)
+        else
+          game_date_time = nil
+        end
       end
 
       # If the week has been previously created and is being checked for updates to
@@ -137,10 +140,7 @@ class Week < ApplicationRecord
   #
   # Update the week with the nfl week final scores
   #
-  def add_scores_nfl_week(season)
-
-    # Get all of the games/scores from NFL.com
-    nfl_games = get_nfl_scores(self.week_number, season.year)
+  def add_scores_nfl_week(season, nfl_games)
 
     #cycle through each game
     nfl_games.each do |nfl_game|
