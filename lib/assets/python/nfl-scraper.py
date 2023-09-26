@@ -138,7 +138,10 @@ arguments = parseArgs(sys.argv)
 year = arguments['year']
 week = arguments['weekNumber']
 
-driver = uc.Chrome(headless=True,use_subprocess=False)
+uc_options = uc.ChromeOptions()
+uc_options.add_argument("--headless")
+
+driver = uc.Chrome(options=uc_options)
 path = f"https://www.nfl.com/schedules/{year}/REG{week}"
 #print(path)
 driver.get(path)
