@@ -139,6 +139,7 @@ year = arguments['year']
 week = arguments['weekNumber']
 
 uc_options = uc.ChromeOptions()
+uc_options.headless = True
 uc_options.add_argument("--headless")
 
 driver = uc.Chrome(options=uc_options)
