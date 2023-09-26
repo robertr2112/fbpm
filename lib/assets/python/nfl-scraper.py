@@ -140,7 +140,7 @@ week = arguments['weekNumber']
 
 uc_options = uc.ChromeOptions()
 #uc_options.headless = True
-uc_options.add_argument('--headless=new')
+#uc_options.add_argument('--headless=new')
 driver = uc.Chrome(options=uc_options, use_subprocess=False)
 
 #driver = uc.Chrome(headless=True,use_subprocess=False)
