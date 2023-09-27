@@ -139,9 +139,9 @@ year = arguments['year']
 week = arguments['weekNumber']
 
 uc_options = uc.ChromeOptions()
-#uc_options.headless = True
+uc_options.headless = True
 #uc_options.add_argument('--headless=new')
-driver = uc.Chrome(options=uc_options, use_subprocess=False)
+driver = uc.Chrome(options=uc_options, use_subprocess=True)
 
 #driver = uc.Chrome(headless=True,use_subprocess=False)
 path = f"https://www.nfl.com/schedules/{year}/REG{week}"
