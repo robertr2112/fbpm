@@ -146,14 +146,22 @@ driver = uc.Chrome(options=uc_options, use_subprocess=False)
 
 #driver = uc.Chrome(headless=True,use_subprocess=False)
 path = f"https://www.nfl.com/schedules/{year}/REG{week}"
-driver.get(path)
+try:
+    driver.get(path)
+except:
+    e = repr(sys.exception())
+    print(f"Exception has been thrown: {e}")
+    driver.close()
+    sys.exit(2)
+
 
 ### Wait for the javascript content to load ###
 try:
     wait = WebDriverWait(driver, timeout=25)
     wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nfl-o-matchup-group')))
 except:
-    print("Exception has been thrown. ")
+    e = repr(sys.exception())
+    print(f"Exception has been thrown: {e}")
     driver.close()
     sys.exit(2)
 
