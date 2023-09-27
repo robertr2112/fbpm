@@ -63,27 +63,32 @@ class WeeksController < ApplicationController
         @week.week_number = season.weeks.order(:week_number).last.week_number + 1
       end
       if @week.week_number > season.number_of_weeks
-        flash[:danger] = "Cannot create week. This would exceed the number of weeks for this Season!"
+        flash[:danger] = "Cannot create week! This would exceed the number of weeks for this Season!"
         redirect_to season
       end
 
     else
-      flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
+      flash[:danger] = "Cannot create week! Season with id:#{params[:season_id]} does not exist!"
       redirect_to seasons_path
     end
 
-    @week.save
+    #@week.save
     nfl_games_json = `python lib/assets/python/nfl-scraper.py -y "#{season.year}" -n "#{@week.week_number}"`
-    nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-    @week.create_nfl_week(season, nfl_games["game"])
-    if @week.save
-      # Handle a successful save
-      flash[:success] =
-            "Week #{@week.week_number} for '#{season.year}' was created successfully!"
-      redirect_to @week
+    if nfl_games_json.include? "Exception"
+      flash[:danger] = "Cannot create week! There was a problem contacting the NFL website."
+      redirect_to seasons_path
     else
-      render 'new'
-    end
+      nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+      @week.create_nfl_week(season, nfl_games["game"])
+      if @week.save
+        # Handle a successful save
+        flash[:success] =
+              "Week #{@week.week_number} for '#{season.year}' was created successfully!"
+        redirect_to @week
+      else
+        render 'new'
+      end
+    end # if Exception
   end
 
   # This updates the games of the week to fix schedule changes in NFL games

@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 #============================================================================#
 # Parse command arguments
@@ -147,15 +149,14 @@ path = f"https://www.nfl.com/schedules/{year}/REG{week}"
 driver.get(path)
 
 ### Wait for the javascript content to load ###
-#revealed = driver.find_element(By.ID, "main-content")
-revealed = driver.find_element(By.CLASS_NAME, "nfl-o-matchup-group")
-wait = WebDriverWait(driver, timeout=10)
+try:
+    wait = WebDriverWait(driver, timeout=25)
+    wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nfl-o-matchup-group')))
+except:
+    print("Exception has been thrown. ")
+    driver.close()
+    sys.exit(2)
 
-#driver.find_element(By.ID, "main-content")
-driver.find_element(By.CLASS_NAME, "nfl-o-matchup-group")
-wait.until(lambda d : revealed.is_displayed())
-
-#doc = Nokogiri::HTML(driver.page_source)
 doc = BeautifulSoup(driver.page_source, 'html.parser')
 
 # Write out the html file
