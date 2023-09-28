@@ -143,6 +143,7 @@ week = arguments['weekNumber']
 uc_options = uc.ChromeOptions()
 uc_options.add_argument('--headless')
 uc_options.add_argument('--no-sandbox')
+uc_options.add_argument('--disable-dev-shm-usage')
 driver = uc.Chrome(options=uc_options, use_subprocess=False)
 
 #driver = uc.Chrome(headless=True,use_subprocess=False)
