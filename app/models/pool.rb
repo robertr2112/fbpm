@@ -107,7 +107,7 @@ end
   end
 
   #
-  # Build Pool invite message
+  # Build Pool invite email message
   #
   def buildPoolInviteMsg
     if self.typeSurvivor?
