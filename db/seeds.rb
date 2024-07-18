@@ -70,7 +70,7 @@ Team.create name: "New York Giants", nfl: 1,
 Team.create name: "New York Jets", nfl: 1,
                                   imagePath: "nfl_teams/afce/nyj.svg"
 Team.create name: "Las Vegas Raiders", nfl: 1,
-                                  imagePath: "nfl_teams/afcw/oak.svg"
+                                  imagePath: "nfl_teams/afcw/lv.svg"
 Team.create name: "Philadelphia Eagles", nfl: 1,
                                   imagePath: "nfl_teams/nfce/phi.svg"
 Team.create name: "Pittsburgh Steelers", nfl: 1,

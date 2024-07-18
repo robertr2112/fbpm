@@ -13,7 +13,7 @@ class TeamsController < ApplicationController
   def update
     @team = Team.find_by_id(params[:id])
     if @team
-      if @team.update_attributes(team_params)
+      if @team.update(team_params)
         flash[:success] = "Team Info updated"
         redirect_to @team
       else

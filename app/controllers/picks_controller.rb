@@ -60,7 +60,7 @@ class PicksController < ApplicationController
     @week = Week.find_by_id(@pick.week_id)
     @entry = Entry.find_by_id(@pick.entry_id)
     @pool = Pool.find_by_id(@entry.pool_id)
-    if @pick.update_attributes(pick_params)
+    if @pick.update(pick_params)
       # Handle a successful save
       flash[:success] = "Your pick(s) for Week '#{@week.week_number}' was changed!"
       redirect_to @pool
