@@ -258,7 +258,7 @@ fileOutput = arguments['fileOutput']
 # path for NFL site, if it works
 #path = f"https://www.nfl.com/schedules/{year}/REG{week}"
 path = f"https://www.espn.com/nfl/schedule/_/week/{week}/year/{year}/seasontype/2"
-print(f"path: {path}")
+#print(f"path: {path}")
 
 try:
     #
