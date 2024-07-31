@@ -1,3 +1,4 @@
 selenium==4.9
+webdriver-manager==4.0.2
 undetected-chromedriver==3.5.3
 bs4==0.0.1
