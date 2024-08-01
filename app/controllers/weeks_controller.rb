@@ -73,7 +73,13 @@ class WeeksController < ApplicationController
     end
 
     # Using -e flag scrapes the ESPN website for schedule
-    nfl_games_json = `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+    if Rails.env.production?
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+    else
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+    end
     if nfl_games_json.include? "Exception"
       flash[:danger] = "Cannot create week! There was a problem contacting the NFL website."
       redirect_to seasons_path

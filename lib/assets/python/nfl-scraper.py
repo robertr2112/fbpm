@@ -29,7 +29,8 @@ def printHelpMsg(name):
                 \n    -y Year\
                 \n    -n Week Number\
                 \n    -f file output\
-                \n    -e espn code"
+                \n    -e espn code\
+                \n    -P Production mode"
 
     print(arg_help)
 
@@ -42,9 +43,10 @@ def parseArgs(argv):
     arguments['weekNumber'] = " "
     arguments['fileOutput'] = ""
     arguments['espn'] = ""
+    arguments['prodMode'] = ""
 
     try:
-        opts, args = getopt.getopt(argv[1:], "y:n:fe", ["help"])
+        opts, args = getopt.getopt(argv[1:], "y:n:feP", ["help"])
     except:
         printHelpMsg('parseArgs')
         sys.exit(2)
@@ -61,6 +63,8 @@ def parseArgs(argv):
             arguments["fileOutput"] = True
         elif opt in ("-e"):
             arguments["espn"] = True
+        elif opt in ("-P"):
+            arguments['prodMode'] = True
 
     if arguments["year"] == " " or arguments["weekNumber"] == " ":
         printHelpMsg('parseArgs')
@@ -260,6 +264,7 @@ year = arguments['year']
 week = arguments['weekNumber']
 fileOutput = arguments['fileOutput']
 espn = arguments['espn']
+prodMode = arguments['prodMode']
 
 # path for NFL site, if it works
 if espn:
@@ -277,8 +282,10 @@ try:
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        #driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        driver = webdriver.Chrome(options=options)
+        if prodMode:
+            driver = webdriver.Chrome(options=options)
+        else:
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     else:
         #
         # Use undetected-chromedriver
