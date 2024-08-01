@@ -99,6 +99,16 @@
   font-weight: 700;
 }
 
+.time-info-sm { /* When time is only 3 numbers (ie. 3:00 PM) */
+  @extend .time-info;
+  margin-right: 5px;
+}
+
+.no-set-time {  /* When time is TBD */
+  @extend .time-info;
+  margin-right: 50px;
+}
+
 .timezone-info {
   font-size: 10px;
   color: #757575;

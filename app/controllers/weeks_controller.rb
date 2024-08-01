@@ -72,8 +72,8 @@ class WeeksController < ApplicationController
       redirect_to seasons_path
     end
 
-    #@week.save
-    nfl_games_json = `python lib/assets/python/nfl-scraper.py -y "#{season.year}" -n "#{@week.week_number}"`
+    # Using -e flag scrapes the ESPN website for schedule
+    nfl_games_json = `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
     if nfl_games_json.include? "Exception"
       flash[:danger] = "Cannot create week! There was a problem contacting the NFL website."
       redirect_to seasons_path

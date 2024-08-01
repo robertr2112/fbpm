@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 #
 # Use Undetected-chromedriver
 #
-#import undetected_chromedriver as uc
+import undetected_chromedriver as uc
 
 #
 # Use regular chromedriver
@@ -27,7 +27,9 @@ from selenium.webdriver.support import expected_conditions as EC
 def printHelpMsg(name):
     arg_help = "\n  {0} -v -y <year> -n <weekNumber> -f\
                 \n    -y Year\
-                \n    -n Week Number"
+                \n    -n Week Number\
+                \n    -f file output\
+                \n    -e espn code"
 
     print(arg_help)
 
@@ -39,9 +41,10 @@ def parseArgs(argv):
     arguments['year'] = " "
     arguments['weekNumber'] = " "
     arguments['fileOutput'] = ""
+    arguments['espn'] = ""
 
     try:
-        opts, args = getopt.getopt(argv[1:], "y:n:f", ["help"])
+        opts, args = getopt.getopt(argv[1:], "y:n:fe", ["help"])
     except:
         printHelpMsg('parseArgs')
         sys.exit(2)
@@ -56,6 +59,8 @@ def parseArgs(argv):
             arguments["weekNumber"] = arg
         elif opt in ("-f"):
             arguments["fileOutput"] = True
+        elif opt in ("-e"):
+            arguments["espn"] = True
 
     if arguments["year"] == " " or arguments["weekNumber"] == " ":
         printHelpMsg('parseArgs')
@@ -236,9 +241,9 @@ def getNFLGames_espn(doc):
             game = {}
             # -----HACK ALERT------
             # ESPN site doesn't put the timezone in the data.  They show the time in
-            # the local timezone. So, not sure how to get the local timezone in python
-            # so setting it to CST since will be mainly setting up games in Central time.
-            game = dict({"date": game_date, "time": game_time, "timezone": "CST",
+            # the local timezone. Leaving timezone blank and letting rails app
+            # set correctly
+            game = dict({"date": game_date, "time": game_time, "timezone": "",
                          "away_team": away_team, "away_score": away_score,
                          "home_team": home_team, "home_score": home_score,
                          "network": game_network, "final": game_final })
@@ -254,36 +259,42 @@ arguments = parseArgs(sys.argv)
 year = arguments['year']
 week = arguments['weekNumber']
 fileOutput = arguments['fileOutput']
+espn = arguments['espn']
 
 # path for NFL site, if it works
-#path = f"https://www.nfl.com/schedules/{year}/REG{week}"
-path = f"https://www.espn.com/nfl/schedule/_/week/{week}/year/{year}/seasontype/2"
+if espn:
+    path = f"https://www.espn.com/nfl/schedule/_/week/{week}/year/{year}/seasontype/2"
+else:
+    path = f"https://www.nfl.com/schedules/{year}/REG{week}"
 #print(f"path: {path}")
 
 try:
-    #
-    # Use undetected-chromedriver
-    #
-    #uc_options = uc.ChromeOptions()
-    #uc_options.add_argument('--headless')
-    #driver = uc.Chrome(options=uc_options, use_subprocess=False)
+    if espn:
+        #
+        # Use regular chromedriver
+        #
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    else:
+        #
+        # Use undetected-chromedriver
+        #
+        uc_options = uc.ChromeOptions()
+        uc_options.add_argument('--headless')
+        driver = uc.Chrome(options=uc_options, use_subprocess=False)
 
-    #
-    # Use regular chromedriver
-    #
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    #driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver = webdriver.Chrome(options=options)
 
     driver.get(path)
 
     wait = WebDriverWait(driver, timeout=25)
-    # NFL site
-    #wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nfl-o-matchup-group')))
-    wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'ScheduleTables--nfl')))
+    if espn:
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'ScheduleTables--nfl')))
+    else:
+        # NFL site
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nfl-o-matchup-group')))
 except:
     e = repr(sys.exception())
     print(f"Exception has been thrown: {e}")
@@ -292,10 +303,12 @@ except:
 
 doc = BeautifulSoup(driver.page_source, 'html.parser')
 
-# NFL site - requires undetected-chromedriver
-#games = getNFLGames_nfl(doc)
-# ESPN site - can use regular chromedriver
-games = getNFLGames_espn(doc)
+if espn:
+    # ESPN site - can use regular chromedriver
+    games = getNFLGames_espn(doc)
+else:
+    # NFL site - requires undetected-chromedriver
+    games = getNFLGames_nfl(doc)
 
 # Write out the games file
 if fileOutput:
