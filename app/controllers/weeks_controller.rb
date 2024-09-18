@@ -3,6 +3,7 @@ class WeeksController < ApplicationController
   before_action :logged_in_user
   before_action :activated_user
   before_action :admin_user, except: [:show, :index]
+  around_action :set_time_zone
 
   def new
     @season = Season.find_by_id(params[:season_id])
@@ -230,6 +231,10 @@ class WeeksController < ApplicationController
                                                      :awayTeamScore,
                                                      :game_date,
                                                      :_destroy] )
+    end
+
+    def set_time_zone
+      Time.use_zone('Central Time (US & Canada)') { yield }
     end
 
     def weekFinalReady(week)
