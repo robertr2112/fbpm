@@ -162,6 +162,39 @@ def getNFLGames_espn(doc):
     games = {}
     games["game"] = []
     game_network = ""
+    team_info = {'ARI': 'Cardinals', 
+                 'ATL': 'Falcons', 
+                 'BAL': 'Ravens', 
+                 'BUF': 'Bills', 
+                 'CAR': 'Panthers',
+                 'CHI': 'Bears',
+                 'CIN': 'Bengals',
+                 'CLE': 'Browns',
+                 'DAL': 'Cowboys',
+                 'DEN': 'Broncos',
+                 'DET': 'Lions',
+                 'GB':  'Packers',
+                 'HOU': 'Texans',
+                 'IND': 'Colts',
+                 'JAX': 'Jaguars',
+                 'KC':  'Chiefs',
+                 'LV':  'Raiders',
+                 'LAC': 'Chargers',
+                 'LAR': 'Rams',
+                 'MIA': 'Dolphins',
+                 'MIN': 'Vikings',
+                 'NE':  'Patriots',
+                 'NO':  'Saints',
+                 'NYG': 'Giants',
+                 'NYJ': 'Jets',
+                 'PHI': 'Eagles',
+                 'PIT': 'Steelers',
+                 'SF':  '49ers',
+                 'SEA': 'Seahawks',
+                 'TB':  'Buccaneers',
+                 'TEN': 'Titans',
+                 'WSH': 'Commanders'
+                } 
 
     # Get all games for each day and loop through them
     for game_group in doc.find_all("div", {"class": "ScheduleTables--nfl"}):
@@ -172,7 +205,8 @@ def getNFLGames_espn(doc):
 
         # Get details for each game on that day
         for game_details in game_group.find_all("tr", {"class": "Table__TR--sm"}):
-            #print(f"game_details: \n{game_details}\n")
+            #print(f"game_details: \n{game_details}\n\n")
+            
 
             game_final=""
 
@@ -185,18 +219,18 @@ def getNFLGames_espn(doc):
                 if len(teams["class"]) != 1:
                     # Get away team
                     away_team = team_name
-                    #print(f"away_team: {away_team}")
                 else:
                     # Get home team
                     home_team = team_name
-                    #print(f"home_team: {home_team}")
 
             # This is set if the date is TBD or the game is not final
             # It is not set if the game is final
             game_period_block = game_details.find("td", {"class": "date__col"})
             if game_period_block:
                 #print(f"game_period_block: {game_period_block}")
-                game_time = game_period_block.find("a", {"class": "AnchorLink"}).getText()
+                game_time = game_period_block.find("a", {"class": "AnchorLink"})
+                if game_time:
+                    game_time= game_time.getText()
                 #print(f"game_time: {game_time}")
 
                 #
@@ -233,14 +267,21 @@ def getNFLGames_espn(doc):
                 # and can get the scores.
                 #
                 game_row_tds = game_details.find_all("td", {"class": "Table__TD"})
-                #print(f"game_row_tds: {game_row_tds}")
+                #print(f"game_row_tds: {game_row_tds}\n")
                 game_scores = game_row_tds[2].find("a", {"class": "AnchorLink"}).getText()
                 game_scores = game_scores.replace(',', '').split()
-                #print(f"game_scores: {game_scores}")
-                home_score = game_scores[3]
-                away_score = game_scores[1]
+                winning_team_name = team_info[game_scores[0]]
+                losing_team_name = team_info[game_scores[2]]
+                away_mascot = away_team.split()[-1]
+                home_mascot = home_team.split()[-1]
 
-
+                # Winning team is always listed first
+                if winning_team_name == away_mascot:
+                    away_score = game_scores[1]
+                    home_score = game_scores[3]
+                else:
+                    home_score = game_scores[1]
+                    away_score = game_scores[3]
 
             game = {}
             # -----HACK ALERT------

@@ -20,6 +20,9 @@
 # Ignore Simplecov coverage files
 /coverage
 
+# Ignore python venv files
+/.venv
+
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep

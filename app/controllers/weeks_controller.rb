@@ -127,11 +127,16 @@ class WeeksController < ApplicationController
     season = Season.find_by_id(@week.season_id)
 
     nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number}`
-    nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-    @week.add_scores_nfl_week(season, nfl_games["game"])
+        `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number} -e`
+    if (nfl_games_json && nfl_games_json != "")
+      nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+      @week.add_scores_nfl_week(season, nfl_games["game"])
 
-    redirect_to @week
+      redirect_to @week
+    else
+      flash[:danger] = "Cannot update scores! There was a problem contacting the NFL website."
+      redirect_to @week
+    end
   end
 
 
