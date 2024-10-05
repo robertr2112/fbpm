@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 #
 # Use Undetected-chromedriver
 #
-import undetected_chromedriver as uc
+#import undetected_chromedriver as uc
 
 #
 # Use regular chromedriver
@@ -25,11 +25,11 @@ from selenium.webdriver.support import expected_conditions as EC
 # Parse command arguments
 #============================================================================#
 def printHelpMsg(name):
-    arg_help = "\n  {0} -v -y <year> -n <weekNumber> -f\
+    arg_help = "\n  {0} -v -y <year> -n <weekNumber> -e -f -P\
                 \n    -y Year\
                 \n    -n Week Number\
-                \n    -f file output\
                 \n    -e espn code\
+                \n    -f file output\
                 \n    -P Production mode"
 
     print(arg_help)

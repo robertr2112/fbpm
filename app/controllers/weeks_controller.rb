@@ -73,7 +73,8 @@ class WeeksController < ApplicationController
       redirect_to seasons_path
     end
 
-    # Using -e flag scrapes the ESPN website for schedule
+    # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
+    # in Production mode, not using Webdriver_manager.
     if Rails.env.production?
       nfl_games_json =
         `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
@@ -82,7 +83,7 @@ class WeeksController < ApplicationController
         `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
     end
     if nfl_games_json.include? "Exception"
-      flash[:danger] = "Cannot create week! There was a problem contacting the NFL website."
+      flash[:danger] = "Cannot create week! There was a problem contacting the website."
       redirect_to seasons_path
     else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
@@ -104,17 +105,30 @@ class WeeksController < ApplicationController
     @week = Week.find_by_id(params[:id])
     if @week
       season = Season.find_by_id(@week.season_id)
-      nfl_games_json =
-          `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number}`
-      nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-      @week.create_nfl_week(season, nfl_games["game"])
-      if @week.save
-        # Handle a successful save
-        flash[:success] =
-              "The games for Week #{@week.week_number} were updated successfully!"
-        redirect_to @week
+      # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
+      # in Production mode, not using Webdriver_manager.
+      if Rails.env.production?
+        nfl_games_json =
+          `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
       else
-        render 'new'
+        nfl_games_json =
+          `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+      end
+      if nfl_games_json.include? "Exception"
+        flash[:danger] = "Cannot update games for week #{@week.week_number}. There was a problem contacting the website!"
+        redirect_to @week  
+      else
+        nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+        @week.create_nfl_week(season, nfl_games["game"])
+        if @week.save
+          # Handle a successful save
+          flash[:success] =
+                "The games for Week #{@week.week_number} were updated successfully!"
+        else
+          flash[:danger] =
+                "The games for Week #{@week.week_number} were not updated!"
+        end
+        redirect_to @week
       end
     else
       flash[:danger] = "Cannot update games for week #{@week.week_number}. It does not exist!"
@@ -127,19 +141,26 @@ class WeeksController < ApplicationController
     @week = Week.find_by_id(params[:id])
     season = Season.find_by_id(@week.season_id)
 
-    nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number} -e`
-    Rails.logger.info "nfl_games_json: #{nfl_games_json}"
-    if (nfl_games_json && nfl_games_json != "")
+    # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
+    # in Production mode, not using Webdriver_manager.
+    if Rails.env.production?
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+    else
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+    end
+    # Rails.logger.info "nfl_games_json: #{nfl_games_json}"
+    if nfl_games_json.include? "Exception"
+      flash[:danger] = "Cannot update scores! There was a problem contacting the website."
+    else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
       @week.add_scores_nfl_week(season, nfl_games["game"])
-
-      redirect_to @week
-    else
-      flash[:danger] = "Cannot update scores! There was a problem contacting the NFL website."
-      redirect_to @week
+      flash[:success] =
+      "The scores for Week #{@week.week_number} were updated successfully!"
     end
-  end
+    redirect_to @week
+   end
 
 
   def edit
