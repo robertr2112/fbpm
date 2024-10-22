@@ -316,23 +316,32 @@ end
       season = Season.find(self.season_id)
       current_week = season.getCurrentWeek
       previous_week = Week.find_by_week_number(current_week.week_number - 1)
-      if !previous_week
+      if !previous_week # !!!! Need to fix this so that it works when pool starts on non-first week
         # If it's the first week then return all entries
         winners = self.entries
       else
-        # If it's not the first week then determine everyone who was left the previous
+        # If it's not the first week then determine everyone who picked correctly the previous
         # week and return those entries
         winners = Array.new
-        while winners.count == 0
+        winning_teams = previous_week.getWinningTeams
+#        while winners.count == 0
           self.entries.each do |entry|
             picks = entry.picks.where(week_number: previous_week.week_number)
-            if !picks.empty?
-              winners << entry
+            if picks
+              picks.each do |pick|
+                pick.game_picks.each do |game_pick|
+                  winning_teams.each do |team|
+                    if game_pick.chosenTeamIndex == team
+                      winners << entry
+                    end
+                  end
+                end
+              end
             end
           end
-          week_number = previous_week.week_number - 1
-          previous_week = Week.find_by_week_number(week_number)
-        end
+#          week_number = previous_week.week_number - 1
+#          previous_week = Week.find_by_week_number(week_number)
+#        end
       end
       # Now that we have determined the survivor winners let's mark the
       # SurvivorStatusIn back to true so getSurvivorWinner can return

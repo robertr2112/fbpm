@@ -233,7 +233,7 @@ class WeeksController < ApplicationController
         # Update the entries status/totals based on this weeks results
         @season = Season.find_by_id(@week.season_id)
         @season.updatePools
-        flash[:warning] = "Week #{@week.week_number} is final!"
+        flash[:success] = "Week #{@week.week_number} is final!"
         redirect_to @week
       else
         flash[:danger] = "Week #{@week.week_number} is not ready to be Final.  Please ensure all scores have been entered."

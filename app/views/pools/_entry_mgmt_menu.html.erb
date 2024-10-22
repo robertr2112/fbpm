@@ -22,7 +22,7 @@
         <% pick = entry.picks.where(week_id: current_week.id) %>
         <% if pick.empty? %>
           <% if entry.survivorStatusIn %>
-            <% if !pool.getSurvivorWinner %>
+            <% if !pool.pool_done%>
               <% if pool.getCurrentWeek.week_number >= pool.starting_week %>
                 <li><%= link_to "Make pick(s)", new_entry_pick_path(entry),
                         class:'dropdown-item'  %></li>

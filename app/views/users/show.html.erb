@@ -61,7 +61,7 @@
                     <td align="center">Out</td>
                   <% end %>
                   <% if @user == current_user %>
-                    <% if pool.haveSurvivorWinner? %>
+                    <% if pool.pool_done? %>
                       <td><%= link_to "Pool is done!", "#" %></td>
                     <% else %>
                       <% pick = Pick.where(entry_id: entry.id,

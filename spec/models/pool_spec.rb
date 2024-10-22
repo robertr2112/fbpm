@@ -311,6 +311,169 @@ RSpec.describe Pool, type: :model do
       end # after first week marked final
 
       #
+      # Middle week cases (updateEntries is called through season.updatePools, this allows the season to
+      #                  update the current_week properly. This is done instead of rebuilding all the mock
+      #                  data with different current weeks set in pool.) !!!! May change this later.
+      #
+      describe "after middle week marked final" do
+                #
+        # Picked wrong team cases
+        #
+        describe "shows x remaining entries where x = 5 entries_left - entries_who_picked_wrong_team" do
+          it "should show 4 remaining entries when entries_left = 5 and entries_who_picked_wrong_team = 1" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
+            # team
+
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 4, 0)
+
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 4
+
+          end
+          it "should show 3 remaining entries when entries_left = 5 and entries_who_picked_wrong_team = 2" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
+            # team
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 3, 0)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 3
+          end
+
+          it "should show 2 remaining entries when entries_left = 5 and entries_who_picked_wrong_team = 3" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
+            # team
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 2, 0)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 2
+          end
+
+          it "should show 1 remaining entries when entries_left = 5 and entries_who_picked_wrong_team = 4" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
+            # team
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 1, 0)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 1
+          end
+
+          it "should show 2 remaining entries if all picked wrong team and 2 were correct previous week" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
+            # team
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 2, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 0, 0)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 2
+          end
+          it "should show 5 remaining entries if all picked wrong team and 5 were correct previous week" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
+            # team
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 0, 0)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 5
+          end
+        end # Picked wrong team
+
+        #
+        # Forgot to pick cases (last week)
+        #
+        describe "shows x remaining entries where x = 5 entries_left - entries_who_forgot_to_pick" do
+          it "should show 4 remaining entries when entries_left = 5 and entries_who_forgot_to_pick = 1" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder forgot to
+            # pick
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+ 
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 4, 1)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 4
+          end
+
+          it "should show 3 remaining entries when entries_left = 5 and entries_who_forgot_to_pick = 2" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder forgot to
+            # pick
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            # week 3 (final)
+            pool_update_survivor_users(season, @pool, @users, 3, 2)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 3
+          end
+
+          it "should show 2 remaining entries when entries_left = 5 and entries_who_forgot_to_pick = 3" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder forgot to
+            # pick
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            # week 3 (final)
+            pool_update_survivor_users(season, @pool, @users, 2, 3)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 2
+          end
+
+          it "should show 1 remaining entries when entries_left = 5 and entries_who_forgot_to_pick = 4" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder forgot to
+            # pick
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 1, 4)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 1
+          end
+
+          it "should show 2 remaining entries when entries_left = 2 and entries_who_forgot_to_pick = 2" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder forgot to
+            # pick
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 2, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 0, 2)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 2
+          end
+
+          it "should show 5 remaining entries when entries_left = 5 and entries_who_forgot_to_pick = 5" do
+            # has <n> users pick homeTeam in first game which is always a winner, remainder forgot to
+            # pick
+
+            # week 1
+            pool_update_survivor_users(season, @pool, @users, 5, 0)
+
+            # week 2 (middle of 3)
+            pool_update_survivor_users(season, @pool, @users, 0, 5)
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 5
+          end
+        end # Forgot to pick
+ 
+      end # after middle week cases
+
+      #
       # Last week cases (updateEntries is called through season.updatePools, this allows the season to
       #                  update the current_week properly. This is done instead of rebuilding all the mock
       #                  data with different current weeks set in pool.) !!!! May change this later.
@@ -381,19 +544,18 @@ RSpec.describe Pool, type: :model do
             expect(numberRemainingSurvivorEntries(@pool)).to eq 1
           end
 
-          it "should show 5 remaining entries if all picked wrong team" do
+          it "should show 2 remaining entries if all picked wrong team and 2 were correct previous week" do
             # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
             # team
-
             # week 1
             pool_update_survivor_users(season, @pool, @users, 5, 0)
 
             # week 2
-            pool_update_survivor_users(season, @pool, @users, 5, 0)
+            pool_update_survivor_users(season, @pool, @users, 2, 0)
 
             # week 3 (final)
             pool_update_survivor_users(season, @pool, @users, 0, 0)
-            expect(numberRemainingSurvivorEntries(@pool)).to eq 5
+            expect(numberRemainingSurvivorEntries(@pool)).to eq 2
           end
         end # Picked wrong team
 

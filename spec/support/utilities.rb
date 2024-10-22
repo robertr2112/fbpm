@@ -74,16 +74,18 @@ module AuthenticationHelper
     user_count = 1
     users.each do |user|
       entry = pool.entries.where(user_id: user.id)[0]
-      if user_count <= num_users then
-        team_index = week.games[0].homeTeamIndex
-      else
-        team_index = week.games[0].awayTeamIndex
-      end
+      if entry.survivorStatusIn
+        if user_count <= num_users then
+          team_index = week.games[0].homeTeamIndex
+        else
+          team_index = week.games[0].awayTeamIndex
+        end
 
-      new_pick = entry.picks.build(week_id: week.id, week_number: week.week_number)
-      new_game_pick = new_pick.game_picks.build(chosenTeamIndex: team_index)
-      new_game_pick.save
-      new_pick.save
+        new_pick = entry.picks.build(week_id: week.id, week_number: week.week_number)
+        new_game_pick = new_pick.game_picks.build(chosenTeamIndex: team_index)
+        new_game_pick.save
+        new_pick.save
+      end
 
       user_count += 1
     end
