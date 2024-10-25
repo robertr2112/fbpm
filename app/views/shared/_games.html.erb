@@ -42,10 +42,14 @@
     <!-- Show Teams and scores -->
     <!-- Show Game Time and Network -->
     <div class="gameTime col-3 col-sm-auto">
-      <% if gameTime == nil %>
+      <% if gameTime == " 5:00 AM" %>
         <p class="no-set-time"> TBD </p>
       <% else %>
-        <span class="time-info"> <%= gameTime %> </span>
+        <% if gameTime == "12:00 PM" %>
+          <span class="time-info"> <%= gameTime %> </span>
+        <% else %>
+          <span class="time-info-sm"> <%= gameTime %> </span>
+        <% end %>
         <span class="timezone-info"> <%= gameTimezone %> </span>
         <p class="network-info"> <%= game.network %> </p>
       <% end %>

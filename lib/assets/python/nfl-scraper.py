@@ -2,20 +2,35 @@ import sys
 import time
 import json
 import getopt   # Parse command line arguments
+import string
 from bs4 import BeautifulSoup
-import undetected_chromedriver as uc
+#
+# Use Undetected-chromedriver
+#
+#import undetected_chromedriver as uc
+
+#
+# Use regular chromedriver
+#
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+#from webdriver_manager.chrome import ChromeDriverManager
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 
 #============================================================================#
 # Parse command arguments
 #============================================================================#
 def printHelpMsg(name):
-    arg_help = "\n  {0} -v -y <year> -n <weekNumber> \
+    arg_help = "\n  {0} -v -y <year> -n <weekNumber> -e -f -P\
                 \n    -y Year\
-                \n    -n Week Number"
+                \n    -n Week Number\
+                \n    -e espn code\
+                \n    -f file output\
+                \n    -P Production mode"
 
     print(arg_help)
 
@@ -26,9 +41,12 @@ def parseArgs(argv):
     arguments = {}
     arguments['year'] = " "
     arguments['weekNumber'] = " "
+    arguments['fileOutput'] = ""
+    arguments['espn'] = ""
+    arguments['prodMode'] = ""
 
     try:
-        opts, args = getopt.getopt(argv[1:], "y:n:", ["help"])
+        opts, args = getopt.getopt(argv[1:], "y:n:feP", ["help"])
     except:
         printHelpMsg('parseArgs')
         sys.exit(2)
@@ -41,6 +59,12 @@ def parseArgs(argv):
             arguments["year"] = arg
         elif opt in ("-n"):
             arguments["weekNumber"] = arg
+        elif opt in ("-f"):
+            arguments["fileOutput"] = True
+        elif opt in ("-e"):
+            arguments["espn"] = True
+        elif opt in ("-P"):
+            arguments['prodMode'] = True
 
     if arguments["year"] == " " or arguments["weekNumber"] == " ":
         printHelpMsg('parseArgs')
@@ -58,7 +82,7 @@ def testSetup():
 #testSetup()
 #sys.exit(2)
 
-def getNFLGames(doc):
+def getNFLGames_nfl(doc):
 
     # Get games information
     games = {}
@@ -132,6 +156,146 @@ def getNFLGames(doc):
 
     return games
 
+def getNFLGames_espn(doc):
+
+    # Get games information
+    games = {}
+    games["game"] = []
+    game_network = ""
+    team_info = {'ARI': 'Cardinals', 
+                 'ATL': 'Falcons', 
+                 'BAL': 'Ravens', 
+                 'BUF': 'Bills', 
+                 'CAR': 'Panthers',
+                 'CHI': 'Bears',
+                 'CIN': 'Bengals',
+                 'CLE': 'Browns',
+                 'DAL': 'Cowboys',
+                 'DEN': 'Broncos',
+                 'DET': 'Lions',
+                 'GB':  'Packers',
+                 'HOU': 'Texans',
+                 'IND': 'Colts',
+                 'JAX': 'Jaguars',
+                 'KC':  'Chiefs',
+                 'LV':  'Raiders',
+                 'LAC': 'Chargers',
+                 'LAR': 'Rams',
+                 'MIA': 'Dolphins',
+                 'MIN': 'Vikings',
+                 'NE':  'Patriots',
+                 'NO':  'Saints',
+                 'NYG': 'Giants',
+                 'NYJ': 'Jets',
+                 'PHI': 'Eagles',
+                 'PIT': 'Steelers',
+                 'SF':  '49ers',
+                 'SEA': 'Seahawks',
+                 'TB':  'Buccaneers',
+                 'TEN': 'Titans',
+                 'WSH': 'Commanders'
+                } 
+
+    # Get all games for each day and loop through them
+    for game_group in doc.find_all("div", {"class": "ScheduleTables--nfl"}):
+
+        # Get the date for the games in this group
+        game_date = game_group.find("div", {"class": "Table__Title"}).text
+        #print(f"game_date: {game_date}\n")
+
+        # Get details for each game on that day
+        for game_details in game_group.find_all("tr", {"class": "Table__TR--sm"}):
+            #print(f"game_details: \n{game_details}\n\n")
+            
+
+            game_final=""
+
+            # Get team names
+            for teams in game_details.find_all("span", {"class": "Table__Team"}):
+                children = teams.findChildren("a" , recursive=False)
+                href = children[0]['href'].split('/')
+                team_name = href[-1].replace('-', ' ')
+                team_name = string.capwords(team_name, sep = None)
+                if len(teams["class"]) != 1:
+                    # Get away team
+                    away_team = team_name
+                else:
+                    # Get home team
+                    home_team = team_name
+
+            # This is set if the date is TBD or the game is not final
+            # It is not set if the game is final
+            game_period_block = game_details.find("td", {"class": "date__col"})
+            if game_period_block:
+                #print(f"game_period_block: {game_period_block}")
+                game_time = game_period_block.find("a", {"class": "AnchorLink"})
+                if game_time:
+                    game_time= game_time.getText()
+                #print(f"game_time: {game_time}")
+
+                #
+                #  ESPN is odd, in that when the game is on ESPN or ABC they don't just
+                #  add it like the other networks.  They show it as an image, so....need
+                #  to look for those by checking for <figure> with class of network-espn or
+                #  network-abc
+                #
+                if game_time != "TBD":
+                    network_container = game_details.find("div", {"class": "network-container"})
+                    network = network_container.find("div", {"class": "network-name"})
+                    if network:
+                        game_network = network.getText()
+                    else:
+                        network = network_container.find("figure", {"class": "network-espn"})
+                        if network:
+                            game_network = "ESPN"
+                        network = network_container.find("figure", {"class": "network-abc"})
+                        if network:
+                            if game_network:
+                                game_network = game_network + " ABC"
+                            else:
+                                game_network = "ABC"
+                    #print(f"game_network: {game_network}")
+
+                home_score = None
+                away_score = None
+
+            else:
+                game_final="FINAL"
+                game_time = ""
+                #
+                # If there is no network-container element then the game is fINAL
+                # and can get the scores.
+                #
+                game_row_tds = game_details.find_all("td", {"class": "Table__TD"})
+                #print(f"game_row_tds: {game_row_tds}\n")
+                game_scores = game_row_tds[2].find("a", {"class": "AnchorLink"}).getText()
+                game_scores = game_scores.replace(',', '').split()
+                winning_team_name = team_info[game_scores[0]]
+                losing_team_name = team_info[game_scores[2]]
+                away_mascot = away_team.split()[-1]
+                home_mascot = home_team.split()[-1]
+
+                # Winning team is always listed first
+                if winning_team_name == away_mascot:
+                    away_score = game_scores[1]
+                    home_score = game_scores[3]
+                else:
+                    home_score = game_scores[1]
+                    away_score = game_scores[3]
+
+            game = {}
+            # -----HACK ALERT------
+            # ESPN site doesn't put the timezone in the data.  They show the time in
+            # the local timezone. Leaving timezone blank and letting rails app
+            # set correctly
+            game = dict({"date": game_date, "time": game_time, "timezone": "",
+                         "away_team": away_team, "away_score": away_score,
+                         "home_team": home_team, "home_score": home_score,
+                         "network": game_network, "final": game_final })
+            games["game"].append(game)
+
+
+    return games
 
 ################
 #  Main Code   #
@@ -139,50 +303,69 @@ def getNFLGames(doc):
 arguments = parseArgs(sys.argv)
 year = arguments['year']
 week = arguments['weekNumber']
+fileOutput = arguments['fileOutput']
+espn = arguments['espn']
+prodMode = arguments['prodMode']
 
-uc_options = uc.ChromeOptions()
-uc_options.add_argument('--headless')
-uc_options.add_argument('--no-sandbox')
-uc_options.add_argument('--disable-dev-shm-usage')
-driver = uc.Chrome(options=uc_options, use_subprocess=False)
+# path for NFL site, if it works
+if espn:
+    path = f"https://www.espn.com/nfl/schedule/_/week/{week}/year/{year}/seasontype/2"
+else:
+    path = f"https://www.nfl.com/schedules/{year}/REG{week}"
+#print(f"path: {path}")
 
-#driver = uc.Chrome(headless=True,use_subprocess=False)
-path = f"https://www.nfl.com/schedules/{year}/REG{week}"
 try:
+    if espn:
+        #
+        # Use regular chromedriver
+        #
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        if prodMode:
+            driver = webdriver.Chrome(options=options)
+        else:
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    else:
+        #
+        # Use undetected-chromedriver
+        #
+        uc_options = uc.ChromeOptions()
+        uc_options.add_argument('--headless')
+        driver = uc.Chrome(options=uc_options, use_subprocess=False)
+
+
     driver.get(path)
-except:
-    e = repr(sys.exception())
-    print(f"Exception has been thrown: {e}")
-    sys.exit(2)
 
-
-### Wait for the javascript content to load ###
-try:
     wait = WebDriverWait(driver, timeout=25)
-    wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nfl-o-matchup-group')))
+    if espn:
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'ScheduleTables--nfl')))
+    else:
+        # NFL site
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nfl-o-matchup-group')))
 except:
     e = repr(sys.exception())
     print(f"Exception has been thrown: {e}")
+    driver.close()
     sys.exit(2)
 
 doc = BeautifulSoup(driver.page_source, 'html.parser')
 
-# Write out the html file
-#filepath = f"week{week}.html"
-#file = open(filepath, "w")
-#file.write(str(doc.prettify()))
-#file.close()
-
-#print(doc)
-games = getNFLGames(doc)
+if espn:
+    # ESPN site - can use regular chromedriver
+    games = getNFLGames_espn(doc)
+else:
+    # NFL site - requires undetected-chromedriver
+    games = getNFLGames_nfl(doc)
 
 # Write out the games file
-#filepath = f"week{week}_games"
-#file = open(filepath, "w")
-#file.write(json.dumps(games, indent=2))
-#file.close()
-
-print(json.dumps(games))
-
-#driver.find_element("xpath","//*[@id='onetrust-accept-btn-handler']").click();
-#driver.save_screenshot('screenie.png')
+if fileOutput:
+    filepath = f"{year}-week{week}_games"
+    print("Printing to file...", filepath)
+    file = open(filepath, "w")
+    file.write(json.dumps(games, indent=2))
+    file.close()
+else:
+    if games:
+        print(json.dumps(games))

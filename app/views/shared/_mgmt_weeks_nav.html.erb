@@ -22,7 +22,7 @@
             <div class="dropdown-menu dropdown-menu-right mgmtWeeksDropdown" aria-labelledby="dropdownMenuButton">
               <% season.weeks.order(:week_number).each do |week| %>
                 <% if week.week_number == week_number %>
-                  <%= link_to "#{week.week_number}", "#", :class => "dropdown-item active" %>
+                  <%= link_to "#{week.week_number}", week_path(week), :class => "dropdown-item active" %>
                 <% else %>
                   <%= link_to "#{week.week_number}", week_path(week), :class => "dropdown-item" %>
                 <% end %>

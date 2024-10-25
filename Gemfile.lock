@@ -376,7 +376,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   twilio-ruby
-  tzinfo-data
   watir
   web-console (>= 3.3.0)
   webdrivers

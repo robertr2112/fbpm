@@ -3,6 +3,7 @@ class WeeksController < ApplicationController
   before_action :logged_in_user
   before_action :activated_user
   before_action :admin_user, except: [:show, :index]
+  around_action :set_time_zone
 
   def new
     @season = Season.find_by_id(params[:season_id])
@@ -72,10 +73,17 @@ class WeeksController < ApplicationController
       redirect_to seasons_path
     end
 
-    #@week.save
-    nfl_games_json = `python lib/assets/python/nfl-scraper.py -y "#{season.year}" -n "#{@week.week_number}"`
+    # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
+    # in Production mode, not using Webdriver_manager.
+    if Rails.env.production?
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+    else
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+    end
     if nfl_games_json.include? "Exception"
-      flash[:danger] = "Cannot create week! There was a problem contacting the NFL website."
+      flash[:danger] = "Cannot create week! There was a problem contacting the website."
       redirect_to seasons_path
     else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
@@ -97,17 +105,30 @@ class WeeksController < ApplicationController
     @week = Week.find_by_id(params[:id])
     if @week
       season = Season.find_by_id(@week.season_id)
-      nfl_games_json =
-          `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number}`
-      nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-      @week.create_nfl_week(season, nfl_games["game"])
-      if @week.save
-        # Handle a successful save
-        flash[:success] =
-              "The games for Week #{@week.week_number} were updated successfully!"
-        redirect_to @week
+      # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
+      # in Production mode, not using Webdriver_manager.
+      if Rails.env.production?
+        nfl_games_json =
+          `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
       else
-        render 'new'
+        nfl_games_json =
+          `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+      end
+      if nfl_games_json.include? "Exception"
+        flash[:danger] = "Cannot update games for week #{@week.week_number}. There was a problem contacting the website!"
+        redirect_to @week  
+      else
+        nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+        @week.create_nfl_week(season, nfl_games["game"])
+        if @week.save
+          # Handle a successful save
+          flash[:success] =
+                "The games for Week #{@week.week_number} were updated successfully!"
+        else
+          flash[:danger] =
+                "The games for Week #{@week.week_number} were not updated!"
+        end
+        redirect_to @week
       end
     else
       flash[:danger] = "Cannot update games for week #{@week.week_number}. It does not exist!"
@@ -120,12 +141,25 @@ class WeeksController < ApplicationController
     @week = Week.find_by_id(params[:id])
     season = Season.find_by_id(@week.season_id)
 
-    nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -y #{season.year} -n #{@week.week_number}`
-    nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-    @week.add_scores_nfl_week(season, nfl_games["game"])
-
-    redirect_to @week
+    # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
+    # in Production mode, not using Webdriver_manager.
+    if Rails.env.production?
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+    else
+      nfl_games_json =
+        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+    end
+    # Rails.logger.info "nfl_games_json: #{nfl_games_json}"
+    if nfl_games_json.include? "Exception"
+      flash[:danger] = "Cannot update scores! There was a problem contacting the website."
+    else
+      nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
+      @week.add_scores_nfl_week(season, nfl_games["game"])
+      flash[:success] =
+      "The scores for Week #{@week.week_number} were updated successfully!"
+    end
+    redirect_to @week    
   end
 
 
@@ -199,7 +233,7 @@ class WeeksController < ApplicationController
         # Update the entries status/totals based on this weeks results
         @season = Season.find_by_id(@week.season_id)
         @season.updatePools
-        flash[:warning] = "Week #{@week.week_number} is final!"
+        flash[:success] = "Week #{@week.week_number} is final!"
         redirect_to @week
       else
         flash[:danger] = "Week #{@week.week_number} is not ready to be Final.  Please ensure all scores have been entered."
@@ -219,6 +253,10 @@ class WeeksController < ApplicationController
                                                      :awayTeamScore,
                                                      :game_date,
                                                      :_destroy] )
+    end
+
+    def set_time_zone
+      Time.use_zone('Central Time (US & Canada)') { yield }
     end
 
     def weekFinalReady(week)

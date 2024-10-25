@@ -106,13 +106,28 @@ class Week < ApplicationRecord
         else
           year = season.year.to_i
         end
-        game_date_time = DateTime.parse(nfl_game[:date] + year.to_s \
-                         + " " + nfl_game[:time] + " " + nfl_game[:timezone])
-      else
-        if nfl_game[:date] && !nfl_game[:date].include?("not yet scheduled")
-          game_date_time = DateTime.parse(nfl_game[:date] + season.year)
+        # ***HACK*** Using ESPN website doesn't give the timezone in the protocol.
+        # Setting time zone based on week 9 (which is usually when the time changes)
+        if self.week_number == 9
+          if nfl_game[:date].include? "Thursday"
+            nfl_game[:timezone]="CDT"
+          else
+            nfl_game[:timezone]="CST"
+          end
+        elsif self.week_number > 9
+          nfl_game[:timezone]="CST"
         else
-          game_date_time = nil
+          nfl_game[:timezone]="CDT"
+        end
+
+        if nfl_game[:time].include?("TBD")
+          # Only do the date and add 05:00 AM to mark it as TBD
+          game_date_time = DateTime.parse(nfl_game[:date] \
+                         + " " + "05:00 am" + " " + nfl_game[:timezone])
+        else
+          # Do the date and time
+          game_date_time = DateTime.parse(nfl_game[:date] \
+                         + " " + nfl_game[:time] + " " + nfl_game[:timezone])
         end
       end
 

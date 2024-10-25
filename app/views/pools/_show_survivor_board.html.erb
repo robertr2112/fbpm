@@ -15,7 +15,7 @@
         <% end %>
       </div>
     <% else %>
-      <% if !pool.haveSurvivorWinner? %>
+      <% if !pool.pool_done %>
         <% if entry.survivorStatusIn %>
           <% if pool.getCurrentWeek.week_number < pool.starting_week %>
             <div class="poolPageData"> Pool has not started yet! </div>
@@ -34,7 +34,7 @@
   </div>
 <% end %>
 
-<% if pool.haveSurvivorWinner? %>
+<% if pool.pool_done %>
   <h3>Pool Winner(s)</h3>
   <% winners = pool.getSurvivorWinner %>
   <% if winners.count > 1 %>
