@@ -30,6 +30,8 @@ FactoryBot.define  do
     sequence(:name)       { |n| "Person #{n}" }
     sequence(:user_name)  { |n| "Nickname #{n}" }
     sequence(:email)      { |n| "person-#{n}@example.com" }
+    contact               { 2 }
+    phone                 { "555-123-4567" }
     password              { "foobar" }
     password_confirmation { "foobar" }
     activated             { true }

@@ -68,6 +68,14 @@ RSpec.configure do |config|
   config.include AuthenticationHelper
   config.include ApplicationHelper
 
+  config.before(:each, type: :system) do
+    driven_by :selenium_chrome_headless # rack_test by default, for performance
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :selenium_chrome_headless # selenium when we need javascript
+  end
+
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
     Rails.application.load_seed # loading seeds
