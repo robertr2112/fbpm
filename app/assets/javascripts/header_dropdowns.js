@@ -43,7 +43,9 @@
 })(jQuery);
 
 // jquery ready start
-$(document).ready(function() {
+//$(document).ready(function() {
+// This works on Rails 6 to autoload the navbar dropdown function
+$(document).on('turbolinks:load', function() {
 	// jQuery code
 	//////////////////////// Prevent closing from click inside dropdown
 // $(document).on('click', '.dropdown-menu', function (e) {
