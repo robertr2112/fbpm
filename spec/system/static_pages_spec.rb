@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "Static pages", type: :system do
 
+  before do
+    driven_by(:selenium_chrome_headless)
+  end
+
   subject { page }
 
   feature "when visiting the Home page and not signed in" do

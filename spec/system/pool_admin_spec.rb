@@ -1,7 +1,11 @@
 require 'rails_helper'
-
 RSpec.describe "Pool Management", type: :system do
-  context "Create" do
+
+  before do
+    driven_by(:selenium_chrome_headless)
+  end
+
+  feature "Create" do
     scenario "A user can create a new pool" do
       given_that_a_season_has_been_created
       and_I_am_a_logged_in_user
@@ -10,7 +14,7 @@ RSpec.describe "Pool Management", type: :system do
     end
   end
 
-  context "update" do
+  feature "update" do
     scenario "Can update a pool name", js: true do
       given_that_a_season_has_been_created
       and_I_am_a_logged_in_user
@@ -20,7 +24,7 @@ RSpec.describe "Pool Management", type: :system do
     end
   end
 
-  context "Delete" do
+  feature "Delete" do
     scenario "Deleting a pool", js: true do
       given_that_a_season_has_been_created
       and_I_am_a_logged_in_user

@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "Authentication", type: :system do
 
+  before do
+    driven_by(:selenium_chrome_headless)
+  end
+
   subject { page }
 
   context "signin page" do
