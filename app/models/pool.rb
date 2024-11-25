@@ -303,7 +303,7 @@ end
     def checkUpdateFields
       if !self.isOpen?
         if (self.changed & ["poolType", "allowMulti"]).any?
-          self.errors[:poolType] << "You cannot change the Pool attributes after the first week has completed!"
+          self.errors.add(:poolType, "You cannot change the Pool attributes after the first week has completed!")
         end
       end
     end

@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.0.6', '>= 6.0.6.1'
+gem 'rails', '~> 6.1.0'
 # Use sqlite3 as the database for Active Record
 #gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
@@ -17,12 +17,16 @@ gem 'sassc-rails', '~>2.1.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.7'
+gem 'jbuilder', '~> 2.11'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
 # !!!! Workaround !!!
+# This gem is added to work around a bundle load problem
 gem 'ffi', '<1.17'
+# This gem is added to work around some already initialized constant errors
+# with net/protocol
+gem 'net-http'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -33,14 +37,14 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'faker'
 # The following are for form help
 gem 'select2-rails'
-gem 'simple_form'
+gem 'simple_form', '~> 5.3', '>= 5.3.1'
 gem 'cocoon'
 
 # Mail support (validates email format)
 gem 'email_validator'
 
 # Database.  Using the same database for production/development
-gem 'pg',  '~> 0.20'
+gem 'pg',  '~> 1.5'
 
 # Watir: This is used to scrape data from the NFL.com site
 gem 'watir'

@@ -239,8 +239,8 @@ class Week < ApplicationRecord
     games_to_check.each do |current_game|
       # Check to make sure the current_game team isn't the same for both teams
       if current_game.homeTeamIndex == current_game.awayTeamIndex
-        errors[:base] << "Week #{self.week_number} has errors:"
-        current_game.errors[:homeTeamIndex] << "Home and Away Team can't be the same!"
+        errors.add(:base, "Week #{self.week_number} has errors:")
+        current_game.errors.add(:homeTeamIndex, "Home and Away Team can't be the same!")
         ret_code = false
       end
       games = games_to_check = self.games
@@ -248,13 +248,13 @@ class Week < ApplicationRecord
         # check that the current_game teams are not repeated in the other games
         if current_game != game
           if current_game.homeTeamIndex == game.homeTeamIndex || current_game.homeTeamIndex == game.awayTeamIndex
-            errors[:base] << "Week #{self.week_number} has errors:"
-            current_game.errors[:homeTeamIndex] << "Team names can't be repeated!"
+            errors.add(:base, "Week #{self.week_number} has errors:")
+            current_game.errors.add(:homeTeamIndex, "Team names can't be repeated!")
             ret_code = false
           end
           if current_game.awayTeamIndex == game.awayTeamIndex || current_game.awayTeamIndex == game.homeTeamIndex
-            errors[:base] << "Week #{self.week_number} has errors:"
-            current_game.errors[:awayTeamIndex] << "Team names can't be repeated!"
+            errors.add(:base, "Week #{self.week_number} has errors:")
+            current_game.errors.add(:awayTeamIndex, "Team names can't be repeated!")
             ret_code = false
           end
         end
