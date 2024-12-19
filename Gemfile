@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.0'
+gem 'rails', '~> 6.1.7', '>= 6.1.7.10'
 # Use sqlite3 as the database for Active Record
 #gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
@@ -90,7 +90,8 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '3.39.1'
-  gem 'selenium-webdriver'
+  gem 'capybara-email'
+  gem 'selenium-webdriver', '>= 4.0.0.rc1'
   gem 'webdrivers'
   # Email support
   gem 'email_spec'

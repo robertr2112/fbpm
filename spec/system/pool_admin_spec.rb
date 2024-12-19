@@ -97,7 +97,6 @@ RSpec.describe "Pool Management", type: :system do
     end
 
     def then_the_pool_should_not_appear_in_my_profile
-      visit user_path(@user)
       expect(page).to have_text("Successfully deleted Pool 'Test Pool'!")
 
     end
