@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "User pages", type: :system do
 
   before do
-    #driven_by(:selenium_chrome_headless)
-    driven_by(:selenium_chrome)
+    driven_by(:selenium_chrome_headless)
+    #driven_by(:selenium_chrome)
   end
 
   subject { page }
@@ -158,20 +158,35 @@ RSpec.describe "User pages", type: :system do
 
         context "and the user is activated" do
           before do
-            clear_emails
-            click_link(user.name)
-            page.find_link("Resend Activation Email").click
+            #ActionMailer::Base.deliveries.clear
+            #click_link(user.name)
+            #page.find_link("Resend Activation Email").click
             open_email(user.email) # Allows the current_email method
-            current_email.save_and_open
+            puts current_email
             #current_email.click_link 'Activate user account'
             #visit user_path(user)
           end
 
+          scenario "should show message 'Account activated'" do
+            expect(current_email).not_to be(nil)
+            expect(current_email).to have_content 'Activate user account'
+            #current_email.click_link 'Activate user account'
+            expect(page).to have_selector('div.alert.alert-success',
+                   text: 'Account activated!')
+          end
+
           scenario "resend_activation should show error message" do
+            #click_link(user.name)
+            #page.find_link("Resend Activation Email").click
+            #open_email(user.email) # Allows the current_email method
             #activate_url = root_url + "users/resend_activation/" + "#{user.id}"
             #visit (activate_url)
             #expect(page).to have_selector('div.alert.alert-warning',
             #       text: 'User account has already been activated!')
+            #click_link(user.name)
+            #page.find_link("Resend Activation Email").click
+            expect(ActionMailer::Base.deliveries.size).to eq 1
+            #expect(current_email).not_to be(nil)
           end
           scenario "should be able to visit other pages" do
             visit users_path

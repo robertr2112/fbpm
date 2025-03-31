@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.6'
+ruby '3.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'
@@ -25,7 +25,7 @@ gem 'bcrypt', '~> 3.1.7'
 # This gem is added to work around a bundle load problem
 gem 'ffi', '<1.17'
 # This gem is added to work around some already initialized constant errors
-# with net/protocol
+# with net/protocol in Ruby version
 gem 'net-http'
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -99,7 +99,7 @@ group :test do
   gem 'database_cleaner'
   # Code coverage tool
   gem 'simplecov', require: false, group: :test
-  #gem 'launchy'
+  gem 'launchy'
   #gem 'rubocop-rspec'
 end
 
