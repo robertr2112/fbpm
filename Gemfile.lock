@@ -387,6 +387,7 @@ DEPENDENCIES
   capybara-email
   childprocess
   cocoon
+  concurrent-ruby (= 1.3.5)
   database_cleaner
   email_spec
   email_validator
