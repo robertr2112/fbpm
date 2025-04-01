@@ -20,12 +20,15 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.11'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
-
 # !!!! Workaround !!!
 # This gem is added to work around a bundle load problem
 gem 'ffi', '<1.17'
-# !!!! Workaround until using Rails version 7.1 !!!
+# Load bigdecimal and mutex_m because they're no longer in ruby after ruby 3.4.0
+gem 'bigdecimal', '3.1.7'
+gem 'mutex_m'
+#  Use concurrent-ruby 1.3.4 until using Rails version 7.1 !!!
 gem 'concurrent-ruby', '1.3.4'
+# !!!! Workarounds over !!!
 
 # This gem is added to work around some already initialized constant errors
 # with net/protocol in Ruby version
