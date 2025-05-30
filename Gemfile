@@ -28,6 +28,8 @@ gem 'bigdecimal', '3.1.7'
 gem 'mutex_m'
 #  Use concurrent-ruby 1.3.4 until using Rails version 7.1 !!!
 gem 'concurrent-ruby', '1.3.4'
+# Load drb because they're no longer in ruby after ruby 3.4.0
+gem 'drb'
 # !!!! Workarounds over !!!
 
 # This gem is added to work around some already initialized constant errors
@@ -97,8 +99,8 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '3.39.1'
   gem 'capybara-email'
-  gem 'selenium-webdriver', '>= 4.0.0.rc1'
-  gem 'webdrivers'
+  gem 'selenium-webdriver'
+  #gem 'webdrivers'
   # Email support
   gem 'email_spec'
   # Added gems
