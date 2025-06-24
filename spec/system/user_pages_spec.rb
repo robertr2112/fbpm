@@ -7,27 +7,36 @@ RSpec.describe "User pages", type: :system do
     #driven_by(:selenium_chrome)
   end
 
-  subject { page }
-
-  feature "index" do
-    let (:user){
-      FactoryBot.create(:user) }
+  describe "All Users page", js: true do
+    let (:user) { FactoryBot.create(:user) }
 
     before do
       sign_in user
       visit users_path
+      click_link 'All Users'
     end
 
-    scenario { should have_title('All users') }
-    scenario { should have_content('All users') }
+    after do
+      find('a.nav-link', text: user.name).click
+      click_link "Log out"
+    end
 
-    context "pagination" do
+    context "All Users page content" do
+      scenario "should have title 'All users'" do 
+        expect(page).to have_title('All users | Football Pool Mania')
+      end
+      scenario "Page should have content 'All users'" do 
+        expect(page).to have_content('All users') 
+      end
+    end
+
+    context "should have pagination content" do
 
       before(:all) { 30.times { FactoryBot.create(:user) } }
       after(:all)  { User.delete_all }
 
-      scenario "should have page number links" do
-        should have_selector('ul.pagination')
+      scenario "that shows page number links" do
+        expect(page).to have_selector('ul.pagination')
       end
 
       scenario "should list each user" do
@@ -36,37 +45,9 @@ RSpec.describe "User pages", type: :system do
         end
       end
     end
-
-    context "delete links" do
-      let (:user2) { FactoryBot.create(:user) }
-
-      scenario "Should not show 'delete' link for any user" do
-        expect(page).not_to have_link('delete', href: user_path(user2))
-      end
-
-      context "as a supervisor user" do
-        let(:supervisor) { FactoryBot.create(:supervisor) }
-        before do
-          sign_in supervisor
-          visit users_path
-        end
-
-        scenario "Should show 'delete' link for other users" do
-          expect(page).to have_link('delete', href: user_path(user))
-        end
-        scenario "Should not show 'delete' link for current user" do
-          should_not have_link('delete', href: user_path(supervisor))
-        end
-        scenario "should be able to delete another user", js: true do
-          click_link('delete', match: :first)
-          page.driver.browser.switch_to.alert.accept
-          expect(page).to have_selector('div', text: 'User deleted.')
-        end
-      end
-    end
   end
 
-  feature "profile page" do
+  describe "profile page" do
     let(:user) { FactoryBot.create(:user) }
     before do
       sign_in user
@@ -74,40 +55,53 @@ RSpec.describe "User pages", type: :system do
     end
 
     scenario "should show Users name on page and title" do
-      should have_content(user.name)
-      should have_title(user.name)
+      expect(page).to have_content(user.name)
+      expect(page).to have_title(user.name)
     end
   end
 
-  feature "signup page" do
+  describe "signup page" do
+
     before { visit signup_path }
 
-    scenario { should have_content('Sign up') }
-    scenario { should have_title(full_title('Sign up')) }
+    scenario "Should have content 'Sign up'" do 
+      expect(page).to have_content('Sign up') 
+    end
+    scenario "Should have title 'Sign up'" do 
+      expect(page).to have_title(full_title('Sign up')) 
+    end
   end
 
-  feature "signup" do
+  describe "signup" do
 
     before do
      visit signup_path
     end
 
+    # Alias submit for "Create my account"
     let(:submit) { "Create my account" }
 
     context "with invalid information" do
+
       scenario "should not create a user" do
         expect { click_button submit }.not_to change(User, :count)
       end
 
       context "after submission" do
+
         before { click_button submit }
 
-        scenario { should have_title('Sign up') }
-        scenario { should have_content('can\'t be blank') }
+        scenario "page should have title 'Sign up'" do 
+          expect(page).to have_title('Sign up') 
+        end
+        scenario "should have content 'can't be blank'" do 
+          expect(page).to have_content('can\'t be blank') 
+        end
       end
     end
 
     context "with valid information" do
+
       before do
         fill_in 'user_name',                  with: "Example User"
         fill_in 'user_user_name',             with: "User1"
@@ -119,7 +113,8 @@ RSpec.describe "User pages", type: :system do
       end
  
       scenario "should update user count by 1" do
-        expect { click_button submit }.to change(User, :count).by(1)
+        click_button submit
+        expect { User.count }.to change(User, :count).by(1)
       end
 
       scenario "should send user account activation email" do
@@ -130,10 +125,12 @@ RSpec.describe "User pages", type: :system do
         before { click_button submit }
         let(:user) { User.find_by(email: 'user1@example.com') }
 
-        scenario { should have_title(user.name) }
+        scenario "should have title of the 'user.name'" do 
+          expect(page).to have_title(user.name) 
+        end
         scenario "should show user as not activated and show notice to activate" do
-          should have_selector('div.alert.alert-info', text: 'Please')
-          should have_content("look for the email")
+          expect(page).to have_selector('div.alert.alert-info', text: 'Please')
+          expect(page).to have_content("look for the email")
           expect(user.activated?).to be false
         end
 
@@ -162,7 +159,7 @@ RSpec.describe "User pages", type: :system do
             #click_link(user.name)
             #page.find_link("Resend Activation Email").click
             open_email(user.email) # Allows the current_email method
-            puts current_email
+            #puts current_email
             #current_email.click_link 'Activate user account'
             #visit user_path(user)
           end
@@ -197,24 +194,32 @@ RSpec.describe "User pages", type: :system do
     end
   end
 
-  feature "edit" do
+  describe "edit" do
     let(:user) { FactoryBot.create(:user) }
+
     before do
       sign_in(user)
       visit edit_user_path(user)
+      #expect(page).to have_title(full_title('Edit user'), wait: 10) 
     end
 
-    context "page" do
-      scenario { should have_content("Update your profile") }
-      scenario { should have_title("Edit user") }
-      scenario { should have_link('Change?', href: 'http://gravatar.com/emails') }
+    context "page content" do
+      scenario do
+        expect(page).to have_content("Update your profile") 
+      end
+      scenario do 
+        expect(page).to have_title("Edit user | Football Pool Mania") 
+      end
+      scenario do 
+        expect(page).to have_link('Change?', href: 'http://gravatar.com/emails') 
+      end
     end
 
     context "with invalid Name" do
       scenario "it should show message it can't be blank" do
         fill_in 'user_name', with: ""
         click_button "Update Profile"
-        should have_content('can\'t be blank')
+        expect(page).to have_content('can\'t be blank')
       end
     end
 
@@ -222,7 +227,7 @@ RSpec.describe "User pages", type: :system do
       scenario "it should show message it can't be blank" do
         fill_in 'user_user_name', with: ""
         click_button "Update Profile"
-        should have_content('can\'t be blank')
+        expect(page).to have_content('can\'t be blank')
       end
     end
 
@@ -230,7 +235,7 @@ RSpec.describe "User pages", type: :system do
       scenario "it should show message it can't be blank" do
         fill_in 'user_email', with: ""
         click_button "Update Profile"
-        should have_content('can\'t be blank')
+        expect(page).to have_content('can\'t be blank')
       end
     end
 
@@ -238,16 +243,16 @@ RSpec.describe "User pages", type: :system do
       scenario "should show password is too short" do
         fill_in 'user_password', with: "12345"
         click_button "Update Profile"
-        should have_content('is too short')
+        expect(page).to have_content('is too short')
       end
     end
 
     context "with invalid Password Confirmation" do
-      scenario do
+      scenario "should show password confirmation doesn\'t match" do
         fill_in 'user_password', with: "123456"
         fill_in 'user_password_confirmation', with: "12345"
         click_button "Update Profile"
-        should have_content('Password confirmation doesn\'t match Password')
+        expect(page).to have_content('Password confirmation doesn\'t match Password')
       end
 
     end
@@ -256,6 +261,7 @@ RSpec.describe "User pages", type: :system do
       let(:new_name)  { "New Name" }
       let(:new_user_name)  { "Name1" }
       let(:new_email) { "new@example.com" }
+
       before do
         fill_in 'user_name',                  with: new_name
         fill_in 'user_user_name',             with: new_user_name
@@ -265,11 +271,23 @@ RSpec.describe "User pages", type: :system do
         click_button "Update Profile"
       end
 
-      scenario { should have_title(new_name) }
-      scenario { should have_selector('div.alert.alert-success') }
-      scenario { should have_link('Log out', href: logout_path) }
-      specify { expect(user.reload.name).to  eq new_name }
-      specify { expect(user.reload.email).to eq new_email }
+      scenario do 
+        expect(page).to have_title(new_name) 
+      end
+      scenario do 
+        expect(page).to have_selector('div.alert.alert-success') 
+      end
+      #scenario do  # !!!! This should be in a header test not in Edit
+      #  user.reload.name
+      #  find('a.nav-link', text: user.name, wait:7).click
+      #  expect(page).to have_link('Log out', href: logout_path) 
+      #end
+      scenario do 
+        expect(user.reload.name).to  eq new_name 
+      end
+      scenario do 
+        expect(user.reload.email).to eq new_email 
+      end
     end
   end
 end

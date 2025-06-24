@@ -80,7 +80,7 @@ class WeeksController < ApplicationController
         `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
     else
       nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
     end
     if nfl_games_json.include? "Exception"
       flash[:danger] = "Cannot create week! There was a problem contacting the website."

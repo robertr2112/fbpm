@@ -21,15 +21,17 @@ gem 'jbuilder', '~> 2.11'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 # !!!! Workaround !!!
+# This gem is missing in Ruby 3.4.2
+gem 'irb'
 # This gem is added to work around a bundle load problem
 gem 'ffi', '<1.17'
 # Load bigdecimal and mutex_m because they're no longer in ruby after ruby 3.4.0
 gem 'bigdecimal', '3.1.7'
 gem 'mutex_m'
+# Load drb because it's no longer in ruby after ruby 3.4.0
+gem 'drb', '2.2.1'
 #  Use concurrent-ruby 1.3.4 until using Rails version 7.1 !!!
 gem 'concurrent-ruby', '1.3.4'
-# Load drb because they're no longer in ruby after ruby 3.4.0
-gem 'drb'
 # !!!! Workarounds over !!!
 
 # This gem is added to work around some already initialized constant errors
@@ -97,10 +99,10 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '3.39.1'
+  gem 'capybara', '3.40.0'
   gem 'capybara-email'
-  gem 'selenium-webdriver'
-  #gem 'webdrivers'
+  gem 'selenium-webdriver', '4.29.1'
+  #gem 'webdrivers' # Not needed with latest version of Selenium-webdriver and ruby 3+
   # Email support
   gem 'email_spec'
   # Added gems
