@@ -36,8 +36,8 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = Rails.root.join('spec/fixtures')
+  # Configure fixture paths...
+  config.fixture_paths = Rails.root.join('spec/fixtures')
 
   ## Include FactoryBot methods ##
   config.include FactoryBot::Syntax::Methods
