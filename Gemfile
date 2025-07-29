@@ -85,7 +85,16 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
 
   gem 'rspec-rails', '~> 6.1.0'
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '3.40.0'
+  gem 'capybara-email'
+  gem 'selenium-webdriver', '4.34.0'
+
+  # Add support to create test factories using FactoryBot
   gem 'factory_bot_rails'
+  gem 'pry'
+  gem 'pry-byebug' # Recommended for step-by-step debugging
+  gem 'pry-rails'
 end
 
 group :development do
@@ -99,14 +108,9 @@ group :development do
   gem 'annotate'
   gem 'letter_opener_web'
   gem 'childprocess'
-  gem 'pry-rails'
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '3.40.0'
-  gem 'capybara-email'
-  gem 'selenium-webdriver', '4.29.1'
   #gem 'webdrivers' # Not needed with latest version of Selenium-webdriver and ruby 3+
   # Email support
   gem 'email_spec'

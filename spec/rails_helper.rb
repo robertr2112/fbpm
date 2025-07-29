@@ -70,8 +70,25 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  # Include helper files
   config.include AuthenticationHelper
   config.include ApplicationHelper
+
+  # Configure system test files to use rack_test for non JS tests and Selenium for JS tests
+  config.before(:each, type: :system) do
+    driven_by :rack_test # rack_test by default, for performance
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :selenium_chrome_headless # selenium when we need javascript
+    host = Capybara.current_session.server.host
+    port = Capybara.current_session.server.port
+    ActionMailer::Base.default_url_options = { host: host, port: port }
+  end
+
+  config.after(:each, type: :system, js: true) do
+    ActionMailer::Base.default_url_options = {} # Reset to avoid affecting other tests
+  end
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)

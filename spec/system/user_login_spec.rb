@@ -2,10 +2,6 @@ require 'rails_helper'
 
 RSpec.describe "Static pages", type: :system do
 
-  before do
-    driven_by(:selenium_chrome_headless)
-  end
-
   subject { page }
 
   feature "When visiting the login page" do

@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "Edit page", type: :system do
 
   before do
-    driven_by(:selenium_chrome_headless)
-    #driven_by(:selenium_chrome)
+    #driven_by(:selenium_chrome_headless)
+    driven_by(:selenium_chrome)
   end
   describe "edit" do
     let(:user) { FactoryBot.create(:user) }
@@ -12,7 +12,6 @@ RSpec.describe "Edit page", type: :system do
     before do
       sign_in(user)
       visit edit_user_path(user)
-      #expect(page).to have_title(full_title('Edit user'), wait: 10) 
     end
 
     context "page content" do
@@ -89,11 +88,11 @@ RSpec.describe "Edit page", type: :system do
       scenario "expect page to have_selector 'div.alert.alert-success'" do 
         expect(page).to have_selector('div.alert.alert-success') 
       end
-      #scenario do  # !!!! This should be in a header test not in Edit
-      #  user.reload.name
-      #  find('a.nav-link', text: user.name, wait:7).click
-      #  expect(page).to have_link('Log out', href: logout_path) 
-      #end
+      scenario do  # !!!! This should be in a header test not in Edit
+        user.reload.name
+        find('a.user-name').hover
+        expect(page).to have_link('Log out', href: logout_path) 
+      end
       scenario "expect user name to be 'New Name'" do 
         expect(user.reload.name).to  eq new_name 
       end
