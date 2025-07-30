@@ -18,7 +18,7 @@ class PoolMessagesController < ApplicationController
       if params[:allMembers] == "true"
         entries = Entry.where(pool_id: @pool.id, user_id: user.id)
       else
-        entries = Entry.where(pool_id: @pool.id, user_id: user.id, survivorStatusIn:true)
+        entries = Entry.where(pool_id: @pool.id, user_id: user.id, survivorStatusIn: true)
       end
       if entries.any?
         users << user
@@ -39,14 +39,13 @@ class PoolMessagesController < ApplicationController
     # Send message via SMS to all users who have text or both as a contact preference
     msg = "Fbpm.club msg: " + @pool.name + "\n" + params[:msg]
     message_sent = send_SMS_messages(phone_nmbrs, msg)
-
     # If email and text messages were sent ok
     if message_sent
-        redirect_to @pool, notice: "Message sent!"
+      redirect_to @pool, notice: "Message sent!"
     else
-        redirect_to @pool,
+      redirect_to @pool,
               notice: "Message not sent. There was a problem with sending the message!"
-      end
+    end
   end
 
   # Build an invite message
@@ -68,7 +67,6 @@ class PoolMessagesController < ApplicationController
 
   # Send invite message after form
   def send_invite
-
     @pool = Pool.find_by_id(params[:id])
     if @pool.nil?
       redirect_to @pool, notice: "Email not sent. Could not find pool!"
@@ -157,8 +155,7 @@ class PoolMessagesController < ApplicationController
     else
       flash[:danger] = "There were errors with the form!" + " : " + @email_addr_errors[0] +
                        " " + @phone_errors[0]
-      render 'invite'
-      return
+      render "invite"
     end
   end
 
@@ -171,13 +168,12 @@ class PoolMessagesController < ApplicationController
     # This module returns a sorted list of phone numbers and
     # email address based on the users contact preferences
     def getSortedContacts(users)
-
       sorted_users = {}
       sorted_users[:email_addrs] = Array.new
       sorted_users[:phone_nmbrs] = Array.new
 
       users.each do |user|
-      if (user.contact == User::CONTACT_PREF[:Both]) ||
+        if (user.contact == User::CONTACT_PREF[:Both]) ||
             (user.contact == User::CONTACT_PREF[:Email])
 
           sorted_users[:email_addrs] << user.email
@@ -189,13 +185,11 @@ class PoolMessagesController < ApplicationController
         end
       end
 
-      return sorted_users
-
+      sorted_users
     end
 
     # Send messages to list of phone numbers
     def send_SMS_messages(phone_nmbrs, msg)
-
       message_sent = false
       phone_nmbrs.each do |phoneNmbr|
         # Send the message to all phone numbers
@@ -207,6 +201,6 @@ class PoolMessagesController < ApplicationController
           message_sent = TwilioClient.new.send_text(phoneNmbr, msg)
         end
       end
-      return message_sent
+      message_sent
     end
 end

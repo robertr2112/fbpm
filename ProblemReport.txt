@@ -1,0 +1,16 @@
+Problems
+--------
+1) Continue to fix rspec system tests timing issues
+2) Add system tests for password reset emails
+3) Add tests for pool email messages
+4) Add tests for pool text messages
+
+New Features
+------------
+1) Look into enable RAILS Progressive Web Application (PWA)
+2) Change asset management from sprockets to propshaft and importmaps for JS
+   - Make sure to uncomment "config.assets.compile = false"
+   - Make sure don't need "Rails.application.config.assets.paths << Rails.root.join("node_modules")" to add yarn modules in config/initializers/assets.rb
+   - Make sure don't need "Rails.application.config.assets.precompile += %w[ *.png *.jpg *.jpeg *.gif *.svg *.ico *.eot *.ttf]" in config/initializers/assets.rb
+
+

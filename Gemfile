@@ -3,15 +3,17 @@ source 'https://rubygems.org'
 ruby '3.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem "rails", "~> 7.1.5", ">= 7.1.5.1"
+gem "rails", "~> 7.2.2", ">= 7.2.2.1"
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 #gem "importmap-rails", ">= 0.3.4"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-#gem "turbo-rails", ">= 0.7.11"
+gem "turbo-rails", ">= 0.7.11"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-#gem "stimulus-rails", ">= 0.4.0"
+gem "stimulus-rails", ">= 0.4.0"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 #gem "jbuilder", "~> 2.7"
 
@@ -81,8 +83,14 @@ gem 'will_paginate-bootstrap4'
 gem 'font-awesome-rails'
 
 group :development, :test do
-  # Start debugger with binding.b [https://github.com/ruby/debug]
-  gem "debug", platforms: %i[ mri windows ]
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem "brakeman", require: false
+
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
 
   gem 'rspec-rails', '~> 6.1.0'
   # Adds support for Capybara system testing and selenium driver
