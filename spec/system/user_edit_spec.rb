@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Edit page", type: :system do
+RSpec.describe "Edit page", type: :system, js: true do
   before do
     # driven_by(:selenium_chrome_headless)
     driven_by(:selenium_chrome)
@@ -90,11 +90,14 @@ RSpec.describe "Edit page", type: :system do
         expect(page).to have_selector('div.alert.alert-success')
       end
 
-      scenario do  # !!!! This should be in a header test not in Edit
+       scenario do  # !!!! This should be in a header test not in Edit
         user.reload
-        find('a.user-name').hover
-        expect(page).to have_link('Log out', href: logout_path)
-      end
+        find("h1.pageHeader", text: "#{user.name} - My Pools")
+        Capybara.using_wait_time(5) do
+          find('a.user-name').hover
+          expect(page).to have_link('Log out', href: logout_path)
+        end
+       end
 
       scenario "expect user name to be 'New Name'" do
         user.reload
