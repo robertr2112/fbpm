@@ -13,12 +13,11 @@
 #
 #  index_weeks_on_season_id  (season_id)
 #
-require 'open-uri'
-require 'nokogiri'
-require 'pp'
+require "open-uri"
+require "nokogiri"
+require "pp"
 
 class Week < ApplicationRecord
-
   STATES = { Pend: 0, Open: 1, Closed: 2, Final: 3 }
 
   before_create do
@@ -32,7 +31,7 @@ class Week < ApplicationRecord
 
   validates :state, inclusion:   { in: 0..3 }
   validates :week_number, numericality: { only_integer: true, greater_than: 0,
-                                          less_than_or_equal_to: 18}
+                                          less_than_or_equal_to: 18 }
   validate :gamesValid?
 
   def setState(state)
@@ -74,7 +73,7 @@ class Week < ApplicationRecord
         return game
       end
     end
-    return nil
+    nil
   end
 
   #
@@ -87,7 +86,7 @@ class Week < ApplicationRecord
         bye_teams << i
       end
     end
-    return bye_teams
+    bye_teams
   end
 
   #
@@ -96,16 +95,29 @@ class Week < ApplicationRecord
   def create_nfl_week(season, nfl_games)
     nfl_games.each do |nfl_game|
       home_team_name  = "%#{nfl_game[:home_team]}%"
-      home_team       = Team.where('name LIKE ?', home_team_name).first
+      home_team       = Team.where("name LIKE ?", home_team_name).first
       away_team_name  = "%#{nfl_game[:away_team]}%"
-      away_team       = Team.where('name LIKE ?', away_team_name).first
-      # Create the time string
-      if nfl_game[:date] && nfl_game[:time]
-        if nfl_game[:date].include? "January"
-          year = season.year.to_i + 1
-        else
-          year = season.year.to_i
+      away_team       = Team.where("name LIKE ?", away_team_name).first
+
+      # If the date isn't set because of a flex week then create the nfl_date
+      # string from the previous weeks games and add 7 days. And add 1 to the year
+      # because the flex week is always (currently) in the next year.
+      # ESPN sets the date to "Date/Time TBD - Flex Games"
+      if nfl_game[:date] && nfl_game[:date].include?("TBD")
+        # Create datetime object with year 1900 and 0600 CDT
+        game_date_time = DateTime.new(1900, 10, 10, 5, 0, 0, "-06:00")
+      elsif
+        if nfl_game[:date]
+          # Need to update the year when we hit January
+          if nfl_game[:date].include? "January"
+            year = season.year.to_i + 1
+          else
+            year = season.year.to_i
+          end
         end
+        #
+        # Setup timezone
+        #
         # ***HACK*** Using ESPN website doesn't give the timezone in the protocol.
         # Setting time zone based on week 9 (which is usually when the time changes)
         if self.week_number == 9
@@ -120,14 +132,17 @@ class Week < ApplicationRecord
           nfl_game[:timezone]="CDT"
         end
 
-        if nfl_game[:time].include?("TBD")
-          # Only do the date and add 05:00 AM to mark it as TBD
-          game_date_time = DateTime.parse(nfl_game[:date] \
-                         + " " + "05:00 am" + " " + nfl_game[:timezone])
-        else
-          # Do the date and time
-          game_date_time = DateTime.parse(nfl_game[:date] \
-                         + " " + nfl_game[:time] + " " + nfl_game[:timezone])
+        # Set game time to 0500 CST else build the datetime from the JSON nfl_game info
+        if nfl_game[:time]
+          if nfl_game[:time].include?("TBD")
+            # Only do the date and add 05:00 AM to mark it as TBD
+            game_date_time = DateTime.parse(nfl_game[:date] \
+                            + " " + "05:00 am" + " " + "CST")
+          else
+            # Do the date and time
+            game_date_time = DateTime.parse(nfl_game[:date] \
+                            + " " + nfl_game[:time] + " " + nfl_game[:timezone])
+          end
         end
       end
 
@@ -148,7 +163,6 @@ class Week < ApplicationRecord
 
       # Save changes to the week
       self.save
-
     end
   end
 
@@ -156,15 +170,13 @@ class Week < ApplicationRecord
   # Update the week with the nfl week final scores
   #
   def add_scores_nfl_week(season, nfl_games)
-
-    #cycle through each game
+    # cycle through each game
     nfl_games.each do |nfl_game|
-
       # Get the Team records for this game
-      home_team_name  = '%'+nfl_game[:home_team]+'%'
-      home_team = Team.where('name LIKE ?', home_team_name).first
-      away_team_name  = '%'+nfl_game[:away_team]+'%'
-      away_team = Team.where('name LIKE ?', away_team_name).first
+      home_team_name  = "%"+nfl_game[:home_team]+"%"
+      home_team = Team.where("name LIKE ?", home_team_name).first
+      away_team_name  = "%"+nfl_game[:away_team]+"%"
+      away_team = Team.where("name LIKE ?", away_team_name).first
 
 
       # Check to make sure this NFL game is final
@@ -172,10 +184,9 @@ class Week < ApplicationRecord
 
         # sift through all of the games for the week
         self.games.each do |game|
-
           # Find the matching game
-          if ((game.awayTeamIndex == away_team.id) &&
-              (game.homeTeamIndex == home_team.id))
+          if (game.awayTeamIndex == away_team.id) &&
+              (game.homeTeamIndex == home_team.id)
 
             # Update the scores
             game.awayTeamScore = nfl_game[:away_score]
@@ -185,12 +196,11 @@ class Week < ApplicationRecord
             game.save
 
           end
-        end #self.games.each
+        end # self.games.each
       end # if FINAL
     end # nfl_games.each
 
     self.save
-
   end
 
   #
@@ -204,7 +214,7 @@ class Week < ApplicationRecord
       team = Team.find(game.homeTeamIndex)
       select_teams << team
     end
-    return select_teams
+    select_teams
   end
 
   #
@@ -216,18 +226,18 @@ class Week < ApplicationRecord
     games.each do |game|
       spread = game.awayTeamScore-game.homeTeamScore
       if spread != 0
-        if (spread > 0)
+        if spread > 0
           winning_teams << game.awayTeamIndex
         else
           winning_teams << game.homeTeamIndex
         end
       else
-        # in case of a tie add both teams to winning teams
+          # in case of a tie add both teams to winning teams
           winning_teams << game.awayTeamIndex
           winning_teams << game.homeTeamIndex
       end
     end
-    return winning_teams
+    winning_teams
   end
 
   #
@@ -260,20 +270,20 @@ class Week < ApplicationRecord
         end
       end
     end
-    return ret_code
+    ret_code
   end
 
   # !!!! Should this be moved to season model ??
   def deleteSafe?(season)
     if  self.checkStatePend  && (season.weeks.order(:week_number).last == self)
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
 
-#  private
+  #  private
 
   # Parse the schedule for specified week from nfl.com. Returns
   # an array of game information(:date, :time, :away_team, :home_team, :network)
@@ -301,12 +311,11 @@ class Week < ApplicationRecord
   #         nfl-c-matchup-strip__networks (p)
   #
   def get_nfl_sched(weekNum, year)
-
     # Open the schedule home page
     if Rails.env.production?
-      args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-              '--remote-debugging-port=9222']
-      browser = Watir::Browser.new :chrome, headless: true, options: {args: args}
+      args = [ "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu",
+              "--remote-debugging-port=9222" ]
+      browser = Watir::Browser.new :chrome, headless: true, options: { args: args }
     else
       browser = Watir::Browser.new :chrome, headless: true
     end
@@ -320,18 +329,16 @@ class Week < ApplicationRecord
     gameNum = 0
 
     # Get all games for each day and loop through them
-    doc.css('section.nfl-o-matchup-group').each do |game_group|
-
+    doc.css("section.nfl-o-matchup-group").each do |game_group|
       # Get the date for the games in this group
-      game_date = game_group.css('h2.d3-o-section-title').text
+      game_date = game_group.css("h2.d3-o-section-title").text
       # Get details for each game on that day
-      game_group.css('div.nfl-c-matchup-strip').each do |game_details|
-
-        game_period = game_details.css('p.nfl-c-matchup-strip__period').text.strip
+      game_group.css("div.nfl-c-matchup-strip").each do |game_details|
+        game_period = game_details.css("p.nfl-c-matchup-strip__period").text.strip
 
         # Get team names
-        teams_marker = game_details.css('p.nfl-c-matchup-strip__team-name')
-        teams = teams_marker.css('span.nfl-c-matchup-strip__team-fullname').text.strip.split(/\W+/)
+        teams_marker = game_details.css("p.nfl-c-matchup-strip__team-name")
+        teams = teams_marker.css("span.nfl-c-matchup-strip__team-fullname").text.strip.split(/\W+/)
         # Get away team
         away_team = teams[0]
         # Get home team
@@ -346,39 +353,36 @@ class Week < ApplicationRecord
           game_network = nil
         else
           # Get Game time
-          game_time = game_details.css('span.nfl-c-matchup-strip__date-time').text.strip
-          game_timezone = game_details.css('span.nfl-c-matchup-strip__date-timezone').text.strip
+          game_time = game_details.css("span.nfl-c-matchup-strip__date-time").text.strip
+          game_timezone = game_details.css("span.nfl-c-matchup-strip__date-timezone").text.strip
 
           # Check if its final, and if it's not then get the network
           if !game_period.include? "FINAL"
 
             # Get game Network
-            game_network = game_details.css('p.nfl-c-matchup-strip__networks').first.text.strip
+            game_network = game_details.css("p.nfl-c-matchup-strip__networks").first.text.strip
           end
         end
 
-        games[gameNum] = {:date => game_date, :time => game_time, :timezone => game_timezone,
-                     :away_team => away_team, :home_team => home_team, :network => game_network }
+        games[gameNum] = { date: game_date, time: game_time, timezone: game_timezone,
+                     away_team: away_team, home_team: home_team, network: game_network }
         gameNum += 1
-
       end
-
     end
 
     # Close the browser session
     browser.close
 
-    return games
+    games
   end
 
   # Get the final scores for an NFL week
   def get_nfl_scores(weekNum, year)
-
     # Open the schedule home page
     if Rails.env.production?
-      args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-              '--remote-debugging-port=9222']
-      browser = Watir::Browser.new :chrome, headless: true, options: {args: args}
+      args = [ "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu",
+              "--remote-debugging-port=9222" ]
+      browser = Watir::Browser.new :chrome, headless: true, options: { args: args }
     else
       browser = Watir::Browser.new :chrome, headless: true
     end
@@ -396,36 +400,34 @@ class Week < ApplicationRecord
 
     gameNum = 0
     # get games
-    doc.css('div.nfl-c-matchup-strip--post-game').each do |game|
+    doc.css("div.nfl-c-matchup-strip--post-game").each do |game|
       # Get Teams in games
-      away_team = game.css('span.nfl-c-matchup-strip__team-fullname')[0].text.strip
-      home_team = game.css('span.nfl-c-matchup-strip__team-fullname')[1].text.strip
+      away_team = game.css("span.nfl-c-matchup-strip__team-fullname")[0].text.strip
+      home_team = game.css("span.nfl-c-matchup-strip__team-fullname")[1].text.strip
 
       # Check if its final
-      game_final = game.css('p.nfl-c-matchup-strip__period').text.strip
+      game_final = game.css("p.nfl-c-matchup-strip__period").text.strip
       if game_final.include? "FINAL"
         # Get add_scores
         game_final = "FINAL"
-        away_score = game.css('div.nfl-c-matchup-strip__team-score')[0]['data-score']
-        home_score = game.css('div.nfl-c-matchup-strip__team-score')[1]['data-score']
+        away_score = game.css("div.nfl-c-matchup-strip__team-score")[0]["data-score"]
+        home_score = game.css("div.nfl-c-matchup-strip__team-score")[1]["data-score"]
       else
         game_final = nil
         away_score = nil
         home_score = nil
       end
 
-      games[gameNum] = {:away_team => away_team, :away_score => away_score,
-                        :home_team => home_team, :home_score => home_score,
-                        :final => game_final}
+      games[gameNum] = { away_team: away_team, away_score: away_score,
+                        home_team: home_team, home_score: home_score,
+                        final: game_final }
 
       gameNum += 1
-
     end
 
     # Close the browser session
     browser.close
 
-    return games
-
+    games
   end
 end
