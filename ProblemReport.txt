@@ -14,3 +14,97 @@ New Features
    - Make sure don't need "Rails.application.config.assets.precompile += %w[ *.png *.jpg *.jpeg *.gif *.svg *.ico *.eot *.ttf]" in config/initializers/assets.rb
 
 
+LINK TO VIDEO for RAILS 7 Implementation
+----------------------------------------
+https://gorails.com/series/build-a-url-shortener-with-rails-7
+
+Create a tiny url for links sent in email
+-----------------------------------------
+Creating a TinyURL-like functionality in a Rails application for sending involves building a URL shortener within your application. This can be achieved through the following steps:
+1. Database Model for Shortened URLs:
+  - Create an ActiveRecord model to store the original URL and its corresponding 
+    short code (slug).
+  - Include attributes for the original_url (string), slug (string), and potentially 
+    a click_count (integer) for tracking.
+  - Ensure the slug is unique and indexed for efficient lookups.
+
+MODEL
+-----
+    # app/models/shortened_url.rb
+    class ShortenedUrl < ApplicationRecord
+      validates :original_url, presence: true
+      validates :slug, presence: true, uniqueness: true
+
+      # Optional: Generate a random slug if not provided
+      before_validation :generate_slug, on: :create
+
+      private
+
+      def generate_slug
+        self.slug = SecureRandom.hex(3) if self.slug.nil? || self.slug.empty?
+      end
+    end
+
+2. Controller for Shortening and Redirection:
+  - Create a controller to handle the creation of new shortened URLs and the redirection 
+    from short URLs to their originals.
+  - Creation Action: Accept the original_url as a parameter, create a new ShortenedUrl 
+    record, and generate the slug. Return the shortened URL to the user.
+  - Redirection Action: Receive the slug from the URL, find the corresponding ShortenedUrl 
+    record, increment the click_count (optional), and redirect the user to the original_url. 
+    Handle cases where the slug is not found.
+
+Controller
+----------
+    # app/controllers/shortened_urls_controller.rb
+    class ShortenedUrlsController < ApplicationController
+      def create
+        @shortened_url = ShortenedUrl.new(shortened_url_params)
+        if @shortened_url.save
+          render json: { shortened_url: url_for(controller: 'shortened_urls', action: 'show', slug: @shortened_url.slug, only_path: false) }
+        else
+          render json: { errors: @shortened_url.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def show
+        @shortened_url = ShortenedUrl.find_by(slug: params[:slug])
+        if @shortened_url
+          @shortened_url.increment!(:click_count) # Optional
+          redirect_to @shortened_url.original_url, allow_other_host: true
+        else
+          render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+        end
+      end
+
+      private
+
+      def shortened_url_params
+        params.require(:shortened_url).permit(:original_url, :slug)
+      end
+    end
+
+3. Routing:
+  - Define routes to handle the creation of shortened URLs and the redirection from short URLs.
+  - A wildcard route can be used for redirection to catch all incoming short URLs.
+
+Route
+-----
+    # config/routes.rb
+    Rails.application.routes.draw do
+      resources :shortened_urls, only: [:create]
+      get '/:slug', to: 'shortened_urls#show', as: :short_url
+    end
+
+4. Using the Shortened URLs:
+  - When sending emails or other communications from your Rails app, you can now generate 
+    and use these shortened URLs.
+  - You would call the create action of your ShortenedUrlsController (or a service object 
+    that encapsulates this logic) with the long URL, and then use the returned shortened 
+    URL in your message.
+
+Note: For a more robust solution, consider using a gem like shortener or friendly_id to 
+      handle slug generation and management, and integrate with mailers or other sending 
+      mechanisms as needed. You might also want to implement custom slug generation logic 
+      (e.g., using Base62 encoding) for more compact and readable short URLs.
+
