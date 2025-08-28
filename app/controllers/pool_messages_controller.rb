@@ -109,7 +109,7 @@ class PoolMessagesController < ApplicationController
     end
 
     # Parse through list of comma seperated phone numbers
-    invite_message = Pool::POOL_INVITE_MSG + " <" + pool_url(@pool) + ">\n "
+    invite_message = Pool::POOL_INVITE_MSG + " <" + pool_url(@pool) + ">\n\n"
     invite_message += params[:msg]
     phoneList = params[:phoneListNmbrs].split(",")
     phoneList.each do |phoneNmbr|

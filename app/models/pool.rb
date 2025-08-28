@@ -20,7 +20,6 @@
 #
 
 class Pool < ApplicationRecord
-
   POOL_TYPES = { PickEm: 0, PickEmSpread: 1, Survivor: 2, SUP: 3 }
 
   has_many   :pool_memberships, dependent: :destroy
@@ -34,18 +33,20 @@ class Pool < ApplicationRecord
   attr_accessor :password
 
   validates :name,     presence:   true,
-                       length:      { :maximum => 30 },
-                       uniqueness:  { :case_sensitive => false }
+                       length:      { maximum: 30 },
+                       uniqueness:  { case_sensitive: false }
 if nil
   validates :poolType, inclusion:   { in: 0..3 }
 else
-  validates :poolType, exclusion:   { in: [0,1,3,4] }
+  validates :poolType, exclusion:   { in: [ 0, 1, 3, 4 ] }
 end
-  validates :allowMulti, inclusion: { in: [true, false] }
-  validates :isPublic, inclusion:   { in: [true, false] }
+  validates :allowMulti, inclusion: { in: [ true, false ] }
+  validates :isPublic, inclusion:   { in: [ true, false ] }
 
   POOL_INVITE_MSG = "From Football Pool Mania: You're invited to join a survivor pool! \
-              Click the attached link (login or create a new account) to join the pool!"
+  Click the attached link (login or create a new account) to join the pool! (If creating \
+  a new account you will need to click the link again after authenticating your account to join)"
+
   #
   # The following routines check the poolType. There is both a Class and
   # an Instance version of each routine.
@@ -54,56 +55,56 @@ end
     if type == POOL_TYPES[:SUP]
       return true
     end
-    return false
+    false
   end
 
   def self.typePickEm?(type)
     if type == POOL_TYPES[:PickEm]
       return true
     end
-    return false
+    false
   end
 
   def self.typePickEmSpread?(type)
     if type == POOL_TYPES[:PickEmSpread]
       return true
     end
-    return false
+    false
   end
 
   def self.typeSurvivor?(type)
     if type == POOL_TYPES[:Survivor]
       return true
     end
-    return false
+    false
   end
 
   def typeSUP?
     if self.poolType == POOL_TYPES[:SUP]
       return true
     end
-    return false
+    false
   end
 
   def typePickEm?
     if self.poolType == POOL_TYPES[:PickEm]
       return true
     end
-    return false
+    false
   end
 
   def typePickEmSpread?
     if self.poolType == POOL_TYPES[:PickEmSpread]
       return true
     end
-    return false
+    false
   end
 
   def typeSurvivor?
     if self.poolType == POOL_TYPES[:Survivor]
       return true
     end
-    return false
+    false
   end
 
   #
@@ -114,7 +115,7 @@ end
       message = Pool::POOL_INVITE_MSG
     end
 
-    return message
+    message
   end
 
   #
@@ -155,7 +156,7 @@ end
       else
         return true
       end
-      return false
+      false
     end
   end
 
@@ -213,7 +214,7 @@ end
     if entries && entries.count > 0
         user_nickname = user_nickname + "_#{entries.count}"
     end
-    return user_nickname
+    user_nickname
   end
 
   #
@@ -263,18 +264,18 @@ end
     elsif entries.count == 0
       self.update_attribute(:pool_done, true)
       return determineSurvivorWinners
-    elsif ((current_week.week_number == season.number_of_weeks) &&
-        current_week.checkStateFinal)
+    elsif (current_week.week_number == season.number_of_weeks) &&
+        current_week.checkStateFinal
       self.update_attribute(:pool_done, true)
       return entries
-    elsif (entries.count == 1 &&
+    elsif entries.count == 1 &&
              ((current_week.week_number >= self.starting_week) &&
-              current_week.checkStateFinal))
+              current_week.checkStateFinal)
       self.update_attribute(:pool_done, true)
       return entries
     end
 
-    return false
+    false
   end
 
   #
@@ -297,12 +298,12 @@ end
         end
         return true
       end
-      return false
+      false
     end
 
     def checkUpdateFields
       if !self.isOpen?
-        if (self.changed & ["poolType", "allowMulti"]).any?
+        if (self.changed & [ "poolType", "allowMulti" ]).any?
           self.errors.add(:poolType, "You cannot change the Pool attributes after the first week has completed!")
         end
       end
@@ -315,7 +316,7 @@ end
       # Find all picks from season.week_number - 1 and self.id (not sure easiest way to do it.)
       season = Season.find(self.season_id)
       current_week = season.getCurrentWeek
-      if (current_week.week_number == self.starting_week)
+      if current_week.week_number == self.starting_week
         # If it's the first week then return all entries
         winners = self.entries
       else
@@ -348,14 +349,13 @@ end
           entry.save
         end
       end
-      return winners
+      winners
     end
 
     #
     # Updates the survivor status of each surviving entry in the pool
     #
     def updateSurvivor(current_week)
-
       knocked_out_entries = Array.new
       winning_teams = current_week.getWinningTeams
 
@@ -391,7 +391,7 @@ end
           entry.save
         end
       end
-      return true
+      true
     end
 
     def updateSUP(current_week)
