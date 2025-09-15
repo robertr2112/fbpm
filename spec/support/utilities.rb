@@ -1,6 +1,5 @@
 module AuthenticationHelper
-
-  def sign_in(user, options={})
+  def sign_in(user, options = {})
     if options[:no_capybara]
       # Sign in when not using Capybara.
       user.remember
@@ -12,11 +11,11 @@ module AuthenticationHelper
     end
   end
 
-  def sign_out(user, options={})
+  def sign_out(user, options = {})
     if options[:no_capybara]
-      # Sign in when not using Capybara.
+      # Sign out when not using Capybara.
       user.remember = false
-      puts("sign_out: no_capybara")
+      puts('sign_out: no_capybara')
     else
       visit user_path(user)
       find('a.user-name').hover
@@ -41,13 +40,13 @@ module AuthenticationHelper
   # will setup a pool with num_users number of users and num_entries number of
   # entries per user in entered season
   def setup_pool_with_users_and_entries(season, num_users, num_entries)
-    users = Array.new
+    users = []
     users[0] = FactoryBot.create(:user_with_pool_and_entry, season: season)
     pool = users[0].pools.first
     1.upto(4) do |n|
       users[n] = FactoryBot.create(:user_with_pool_and_entry, season: season, pool: pool)
     end
-    return users
+    users
   end
 
   #
@@ -61,7 +60,6 @@ module AuthenticationHelper
   #             numUsersForgot  - The number of users to have forget to pick for this week
   #
   def pool_update_survivor_users(season, pool, users, numUsersCorrect, numUsersForgot)
-
     week = season.getCurrentWeek
     new_users = users
     numUsersForgot.times do
@@ -77,21 +75,19 @@ module AuthenticationHelper
     #
     season.updatePools
     pool.reload
-
   end
 
   # Have num_users number of users pick the winning home team and the rest pick the away team
   def users_pick_winning_team(week, pool, users, num_users)
-
     user_count = 1
     users.each do |user|
       entry = pool.entries.where(user_id: user.id)[0]
       if entry.survivorStatusIn
-        if user_count <= num_users then
-          team_index = week.games[0].homeTeamIndex
-        else
-          team_index = week.games[0].awayTeamIndex
-        end
+        team_index = if user_count <= num_users
+                       week.games[0].homeTeamIndex
+                     else
+                       week.games[0].awayTeamIndex
+                     end
 
         new_pick = entry.picks.build(week_id: week.id, week_number: week.week_number)
         new_game_pick = new_pick.game_picks.build(chosenTeamIndex: team_index)
@@ -104,31 +100,27 @@ module AuthenticationHelper
   end
 
   def numberRemainingSurvivorEntries(pool)
-
     num_entries = 0
     pool.entries.each do |entry|
-      if entry.survivorStatusIn then
-        num_entries += 1
-      end
+      num_entries += 1 if entry.survivorStatusIn
     end
-    return num_entries
+    num_entries
   end
 
-#module MailerMacros
-#  def last_email
-#    ActionMailer::Base.deliveries.last
-#  end
-#
-#  def extract_token_from_email(token_name)
-#    mail_body = last_email.body.to_s
-#    mail_body[/#{token_name.to_s}_token=([^"]+)/, 1]
-#  end
+  # module MailerMacros
+  #  def last_email
+  #    ActionMailer::Base.deliveries.last
+  #  end
+  #
+  #  def extract_token_from_email(token_name)
+  #    mail_body = last_email.body.to_s
+  #    mail_body[/#{token_name.to_s}_token=([^"]+)/, 1]
+  #  end
 
- #
- # Debug code
- #
- #save_and_open_page
- #puts current_url
- #pry
-
+  #
+  # Debug code
+  #
+  # save_and_open_page
+  # puts current_url
+  # pry
 end

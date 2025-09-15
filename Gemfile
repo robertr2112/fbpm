@@ -7,7 +7,7 @@ gem "rails", "~> 7.2.2", ">= 7.2.2.1"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem "puma", ">= 7.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 # gem "importmap-rails", ">= 0.3.4"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
@@ -71,7 +71,7 @@ gem "watir"
 
 # Gems for adding SMS support
 gem "phonelib"
-gem "twilio-ruby"
+gem "twilio-ruby", ">= 7.8.0"
 
 #
 # Bootstrap support gems
@@ -99,7 +99,7 @@ group :development, :test do
   gem "selenium-webdriver", "4.34.0"
 
   # Add support to create test factories using FactoryBot
-  gem "factory_bot_rails"
+  gem "factory_bot_rails", ">= 6.5.1"
   gem "pry"
   gem "pry-byebug" # Recommended for step-by-step debugging
   gem "pry-rails"
