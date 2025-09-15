@@ -1,11 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe "Edit page", type: :system, js: true do
+RSpec.describe 'Edit page', type: :system, js: true do
   before do
     # driven_by(:selenium_chrome_headless)
-    driven_by(:selenium_chrome)
+    driven_by(:selenium_chrome_headless_sandboxless)
+    # driven_by(:selenium_chrome)
   end
-  describe "edit" do
+  describe 'edit' do
     let(:user) { FactoryBot.create(:user) }
 
     before do
@@ -14,63 +15,63 @@ RSpec.describe "Edit page", type: :system, js: true do
       find('h1.pageHeader', text: 'Update your profile')
     end
 
-    context "page content" do
+    context 'page content' do
       scenario do
-        expect(page).to have_content("Update your profile")
+        expect(page).to have_content('Update your profile')
       end
       scenario do
-        expect(page).to have_title(full_title("Edit user"))
+        expect(page).to have_title(full_title('Edit user'))
       end
       scenario do
         expect(page).to have_link('Change?', href: 'http://gravatar.com/emails')
       end
     end
 
-    context "with invalid Name" do
+    context 'with invalid Name' do
       scenario "it should show message it can't be blank" do
-        fill_in 'user_name', with: ""
-        click_button "Update Profile"
+        fill_in 'user_name', with: ''
+        click_button 'Update Profile'
         expect(page).to have_content('can\'t be blank')
       end
     end
 
-    context "with invalid Name" do
+    context 'with invalid Name' do
       scenario "it should show message it can't be blank" do
-        fill_in 'user_user_name', with: ""
-        click_button "Update Profile"
+        fill_in 'user_user_name', with: ''
+        click_button 'Update Profile'
         expect(page).to have_content('can\'t be blank')
       end
     end
 
-    context "with invalid Email" do
+    context 'with invalid Email' do
       scenario "it should show message it can't be blank" do
-        fill_in 'user_email', with: ""
-        click_button "Update Profile"
+        fill_in 'user_email', with: ''
+        click_button 'Update Profile'
         expect(page).to have_content('can\'t be blank')
       end
     end
 
-    context "with invalid Password" do
-      scenario "should show password is too short" do
-        fill_in 'user_password', with: "12345"
-        click_button "Update Profile"
+    context 'with invalid Password' do
+      scenario 'should show password is too short' do
+        fill_in 'user_password', with: '12345'
+        click_button 'Update Profile'
         expect(page).to have_content('is too short')
       end
     end
 
-    context "with invalid Password Confirmation" do
+    context 'with invalid Password Confirmation' do
       scenario "should show password confirmation doesn\'t match" do
-        fill_in 'user_password', with: "123456"
-        fill_in 'user_password_confirmation', with: "12345"
-        click_button "Update Profile"
+        fill_in 'user_password', with: '123456'
+        fill_in 'user_password_confirmation', with: '12345'
+        click_button 'Update Profile'
         expect(page).to have_content('Password confirmation doesn\'t match Password')
       end
     end
 
-    context "with valid information" do
-      let(:new_name)  { "New Name" }
-      let(:new_user_name)  { "Name1" }
-      let(:new_email) { "new@example.com" }
+    context 'with valid information' do
+      let(:new_name) { 'New Name' }
+      let(:new_user_name) { 'Name1' }
+      let(:new_email) { 'new@example.com' }
 
       before do
         fill_in 'user_name',                  with: new_name
@@ -78,8 +79,8 @@ RSpec.describe "Edit page", type: :system, js: true do
         fill_in 'user_email',                 with: new_email
         fill_in 'user_password',              with: user.password
         fill_in 'user_password_confirmation', with: user.password
-        click_button "Update Profile"
-        find('div.alert.alert-success', text: "Profile updated")
+        click_button 'Update Profile'
+        find('div.alert.alert-success', text: 'Profile updated')
       end
 
       scenario "expect page to have_title 'New Name | Football Pool Mania'" do
@@ -90,14 +91,14 @@ RSpec.describe "Edit page", type: :system, js: true do
         expect(page).to have_selector('div.alert.alert-success')
       end
 
-       scenario do  # !!!! This should be in a header test not in Edit
+      scenario do # !!!! This should be in a header test not in Edit
         user.reload
-        find("h1.pageHeader", text: "#{user.name} - My Pools")
+        find('h1.pageHeader', text: "#{user.name} - My Pools")
         Capybara.using_wait_time(5) do
           find('a.user-name').hover
           expect(page).to have_link('Log out', href: logout_path)
         end
-       end
+      end
 
       scenario "expect user name to be 'New Name'" do
         user.reload
