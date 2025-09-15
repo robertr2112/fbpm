@@ -1,7 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../config/environment', __dir__)
 require 'spec_helper'
+ENV['RAILS_ENV'] ||= 'test'
+require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
@@ -26,20 +26,20 @@ SimpleCov.start
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
-  puts e.to_s.strip
-  exit 1
+  abort e.to_s.strip
 end
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  # Configure fixture paths...
+  config.fixture_paths = Rails.root.join('spec/fixtures')
 
+  ## Include FactoryBot methods ##
   config.include FactoryBot::Syntax::Methods
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
@@ -62,52 +62,37 @@ RSpec.configure do |config|
   #     end
   #
   # The different available types are documented in the features, such as in
-  # https://relishapp.com/rspec/rspec-rails/docs
+  # https://rspec.info/features/6-0/rspec-rails
   config.infer_spec_type_from_file_location!
 
+  # Filter lines from Rails gems in backtraces.
+  config.filter_rails_from_backtrace!
+  # arbitrary gems may also be filtered via:
+  # config.filter_gems_from_backtrace("gem name")
+
+  # Include helper files
   config.include AuthenticationHelper
   config.include ApplicationHelper
+
+  # Configure system test files to use rack_test for non JS tests and Selenium for JS tests
+  config.before(:each, type: :system) do
+    driven_by :rack_test # rack_test by default, for performance
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :selenium_chrome_headless # selenium when we need javascript
+    host = Capybara.current_session.server.host
+    port = Capybara.current_session.server.port
+    ActionMailer::Base.default_url_options = { host: host, port: port }
+  end
+
+  config.after(:each, type: :system, js: true) do
+    ActionMailer::Base.default_url_options = {} # Reset to avoid affecting other tests
+  end
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
     Rails.application.load_seed # loading seeds
   end
 
-  config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
-  end
-
-  config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
-  end
-
-  config.before(:all) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:all) do
-    DatabaseCleaner.clean
-  end
-
-  # This block configures Caypbara's driver to use Selenium
-  # It makes it use the chrome browser, but can also be configured
-  # to user Firefox, etc.
-  Capybara.register_driver :selenium do |app|
-    Capybara::Selenium::Driver.new(app, browser: :chrome)
-  end
-
-  Capybara.server = :puma, { Silent: true }
-
-  # Filter lines from Rails gems in backtraces.
-  config.filter_rails_from_backtrace!
-  # arbitrary gems may also be filtered via:
-  # config.filter_gems_from_backtrace("gem name")
 end

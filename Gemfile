@@ -1,108 +1,133 @@
-source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+source "https://rubygems.org"
 
-ruby '2.7.6'
+ruby "3.4.2"
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.5'
-# Use sqlite3 as the database for Active Record
-#gem 'sqlite3'
-# Use Puma as the app server
-gem 'puma', '5.6.5'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'mini_racer', platforms: :ruby
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
+gem "rails", "~> 7.2.2", ">= 7.2.2.1"
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+# gem "importmap-rails", ">= 0.3.4"
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails", ">= 0.7.11"
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails", ">= 0.4.0"
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+# gem "jbuilder", "~> 2.7"
 
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+# Use SCSS for stylesheets
+gem "sassc", "2.4.0"
+gem "sassc-rails", "~>2.1.2"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+gem "turbolinks", "~> 5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
-# Use ActiveModel has_secure_password
-gem 'bcrypt', '~> 3.1.7'
+gem "jbuilder", "~> 2.11"
+# Use Active Model has_secure_password
+gem "bcrypt", "~> 3.1.7"
+# !!!! Workaround !!!
+# This gem is missing in Ruby 3.4.2
+gem "irb"
+# This gem is added to work around a bundle load problem
+gem "ffi", "1.17.2"
+# Load bigdecimal and mutex_m because they're no longer in ruby after ruby 3.4.0
+gem "bigdecimal", "3.2.2"
+gem "mutex_m"
+# Load drb because it's no longer in ruby after ruby 3.4.0
+gem "drb", "2.2.3"
+#  load fiddle because it's no longer in ruby after ruby 3.5.0
+gem "fiddle", "1.1.8"
+#  load benchmark because it's no longer in ruby after ruby 3.5.0
+gem "benchmark"
+#  Use concurrent-ruby 1.3.4 until using Rails version 7.1 !!!
+gem "concurrent-ruby", "1.3.5"
+# !!!! Workarounds over !!!
+
+# This gem is added to work around some already initialized constant errors
+# with net/protocol in Ruby version
+gem "net-http"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem "bootsnap", ">= 1.4.2", require: false
 
 ###=================###
 ### Added gems      ###
 ###=================###
-gem 'faker'
+gem "faker"
 # The following are for form help
-gem 'select2-rails'
-gem 'simple_form'
-gem 'cocoon'
-
-# The following Gem is used to parse the NFL page for schedules to build
-# a season.
-gem 'nokogiri'
+gem "select2-rails"
+gem "simple_form", "~> 5.3", ">= 5.3.1"
+gem "cocoon"
 
 # Mail support (validates email format)
-gem 'email_validator'
+gem "email_validator"
 
 # Database.  Using the same database for production/development
-gem 'pg',  '~> 0.20'
+gem "pg",  "~> 1.6"
 
 # Watir: This is used to scrape data from the NFL.com site
-gem 'watir'
+gem "watir"
 
 # Gems for adding SMS support
-gem 'phonelib'
-gem 'twilio-ruby'
+gem "phonelib"
+gem "twilio-ruby"
 
 #
 # Bootstrap support gems
 #
-gem 'bootstrap', '4.6.0'
-gem 'jquery-rails'
-gem 'will_paginate-bootstrap4'
+gem "bootstrap", "4.6.2"
+gem "jquery-rails"
+gem "will_paginate-bootstrap4"
 # Fontawesome fonts
-gem 'font-awesome-rails'
-# Use SCSS for stylesheets
-gem 'sassc', '2.1.0'
-gem 'sassc-rails', '~>2.1.2'
+gem "font-awesome-rails"
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  #gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem "brakeman", require: false
+
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
+
+  gem "rspec-rails", "~> 8.0"
+  # Adds support for Capybara system testing and selenium driver
+  gem "capybara", "3.40.0"
+  gem "capybara-email"
+  gem "selenium-webdriver", "4.34.0"
+
+  # Add support to create test factories using FactoryBot
+  gem "factory_bot_rails"
+  gem "pry"
+  gem "pry-byebug" # Recommended for step-by-step debugging
+  gem "pry-rails"
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in
   # the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
-  # Spring speeds up development by keeping your application running in the background.
-  # Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem "web-console", ">= 4.1.0"
+  gem "listen", "~> 3.2"
   # automate testing with Guard
-  gem 'guard', '2.17.0'
-  gem 'guard-rspec', '4.7.3'
-  gem 'annotate'
-  gem 'letter_opener_web'
-  gem 'childprocess'
-  gem 'pry-rails'
+  # gem 'guard', '2.17.0'
+  # gem 'guard-rspec', '4.7.3'
+  gem "annotate"
+  gem "letter_opener_web"
+  gem "childprocess"
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-  gem 'webdrivers'
+  # gem 'webdrivers' # Not needed with latest version of Selenium-webdriver and ruby 3+
   # Email support
-  gem 'email_spec'
+  gem "email_spec"
   # Added gems
-  gem 'database_cleaner'
+  gem "database_cleaner"
   # Code coverage tool
-  gem 'simplecov', require: false, group: :test
-  #gem 'launchy'
-  #gem 'libnotify', '0.9.4'
-  #gem 'rubocop-rspec'
+  gem "simplecov", require: false, group: :test
+  gem "launchy"
+  # gem 'rubocop-rspec'
 end
 
-gem 'execjs'
+gem "execjs"

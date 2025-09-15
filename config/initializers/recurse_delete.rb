@@ -1,1 +1,1 @@
-require "recurse-delete"
+require "recurse_delete"

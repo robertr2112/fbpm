@@ -16,7 +16,7 @@
         <% season = current_season(1) %>
         <% if season %> <!-- Only show the pool menus if season has been created -->
         <li class="nav-item dropdown">
-          <a  class="nav-link dropdown-toggle" id="dropdownMenu1" href="#"
+          <a  class="nav-link dropdown-toggle pool-mgmt" id="dropdownMenu1" href="#"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
              <i class="fa fa-trophy fa-fw"></i>Pool Management
           </a>
@@ -24,28 +24,28 @@
             <li> <%= link_to '<i class="fa fa-football-ball fa-fw"></i>Show all pools'.html_safe,
                pools_path(year: season.year), class:'dropdown-item' %> </li>
             <li><%= link_to '<i class="fa fa-cog fa-fw"></i>Create new pool'.html_safe,
-               new_pool_path , class:'dropdown-item' %></li>
+               new_pool_path , class:'dropdown-item pool-new' %></li>
             <!-- Show things you can do for each pool -->
             <% if current_user %>
               <% current_user.pools.where(season_id: season.id).each do |pool| %>
                 <div class="dropdown-divider"></div>
                 <!-- Level two dropdown - This is the per pool menu list -->
                 <li class="nav-item dropdown">
-                  <a class="dropdown-item dropdown-toggle" id="dropdownMenuPools" href="#"
+                  <a class="dropdown-item dropdown-toggle pool-name" id="dropdownMenuPools" href="#"
                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <%= pool.name %>
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools">
                     <% if pool.isOwner?(current_user) %>
                       <li><%= link_to "Edit pool", edit_pool_path(pool),
-                            class:'dropdown-item' %></li>
+                            class:'dropdown-item pool-edit' %></li>
                       <li><%= link_to "Delete pool", pool, method: :delete,
                             data: {confirm: "Are you sure?"}, title: "Delete#{pool.name}",
-                            class:'dropdown-item' %></li>
+                            class:'dropdown-item pool-delete' %></li>
                       <li><%= link_to "Send Group Message", new_pool_pool_message_path(pool),
                             class:'dropdown-item' %></li>
                       <li><%= link_to "Invite people to join", invite_path(pool.id),
-                            class:'dropdown-item' %></li>
+                            class:'dropdown-item pool-invite' %></li>
                     <% end %>
                     <% if pool.isMember?(current_user) %>
                       <!-- This is the entry management items for each entry -->
@@ -54,7 +54,7 @@
                       <% end %>
                       <% if pool.isOpen?  && !pool.isOwner?(current_user) %>
                         <li><%= link_to "Leave Pool", leave_path(pool.id), id: pool.id,
-                            class:'dropdown-item' %></li>
+                            class:'dropdown-item pool-leave' %></li>
                       <% end %>
                     <% end %>
                   </ul>
@@ -71,21 +71,21 @@
         <!-- Level one dropdown for User management -->
         <li class="nav-item dropdown dropleft">
           <a id="dropdownMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
-             aria-expanded="false" class="nav-link dropdown-toggle">
+             aria-expanded="false" class="nav-link dropdown-toggle user-name">
              <%= current_user.name %></a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
             <%= link_to '<i class="fa fa-user fa-fw"></i>Profile'.html_safe, current_user,
-                  class:'dropdown-item' %>
+                  class:'dropdown-item user-profile' %>
             <%= link_to '<i class=" fa fa-cog fa-fw"></i>Settings'.html_safe,
-                  edit_user_path(current_user), class:'dropdown-item'  %>
+                  edit_user_path(current_user), class:'dropdown-item user-settings'  %>
             <% if !current_user.activated? %>
               <%= link_to '<i class="fa fa-envelope fa-fw"></i>Resend Activation Email'.html_safe,
-                  resend_activation_path(current_user), class:'dropdown-item' %>
+                  resend_activation_path(current_user), class:'dropdown-item user-resend' %>
             <% end %>
             <div class="dropdown-divider"></div>
             <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Log out'.html_safe,
-            logout_path, method: "delete", class:'dropdown-item' %>
+            logout_path, method: "delete", class:'dropdown-item user-logout' %>
           </div>
         </li>
         <!-- End Level one -->

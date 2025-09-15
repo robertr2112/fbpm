@@ -19,7 +19,7 @@
 <% prev_game = nil %>
 <% unscheduled_games = false %>
 <% games.order(:game_date).each do |game| %>
-  <% if game.game_date %>
+  <% if game.game_date && game.game_date.year != 1900 %>
     <% game_datetime = game.game_date.in_time_zone('Central Time (US & Canada)') %>
     <% if prev_game %>
       <% prev_game_datetime = prev_game.game_date.in_time_zone('Central Time (US & Canada)') %>
@@ -32,10 +32,11 @@
       <h2 class="gameDate"><%= gameDate %> </h2>
     <% end %>
   <% else %>
-    <% gameTime = nil %>
+    <% gameTime = " 5:00 AM" %>
+    <% game.network = "" %>
     <% if (!prev_game || !unscheduled_games) %>
       <% unscheduled_games = true %>
-      <h2 class="gameDate"> Games Not Scheduled Yet </h2>
+      <h2 class="gameDate"> Date/Time TBD - Flex Games </h2>
     <% end %>
   <% end %>
   <div class="row gameRow">

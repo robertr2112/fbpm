@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Authentication", type: :feature do
+RSpec.describe "Authentication", type: :system do
 
   subject { page }
 
@@ -29,13 +29,25 @@ RSpec.feature "Authentication", type: :feature do
 
       scenario { should have_title(user.name) }
       scenario { should have_link('All Users',   href: users_path) }
-      scenario { should have_link('Profile',     href: user_path(user)) }
-      scenario { should have_link('Settings',    href: edit_user_path(user)) }
-      scenario { should have_link('Log out',     href: logout_path) }
+      scenario "Should have sub-link 'Profile' under user name link", js: true do
+        click_link(user.name)
+        should have_link('Profile',     href: user_path(user)) 
+      end
+      scenario "Should have sub-link 'Settings' under user name link", js: true do
+        click_link(user.name)
+        should have_link('Settings',    href: edit_user_path(user))
+      end
+      scenario "Should have sub-link 'Log out' under <user name> link", js: true do
+        click_link(user.name)
+        should have_link('Log out',     href: logout_path)
+      end
       scenario { should_not have_link('Log in',  href: login_path) }
 
       context "followed by signout" do
-        before { click_link "Log out" }
+        before do
+          click_link(user.name)
+          click_link "Log out"
+        end
         scenario { should have_link('Log in') }
       end
     end

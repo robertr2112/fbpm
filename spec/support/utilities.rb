@@ -12,6 +12,18 @@ module AuthenticationHelper
     end
   end
 
+  def sign_out(user, options={})
+    if options[:no_capybara]
+      # Sign in when not using Capybara.
+      user.remember = false
+      puts("sign_out: no_capybara")
+    else
+      visit user_path(user)
+      find('a.user-name').hover
+      find('a.user-logout').click
+    end
+  end
+
   #  Here are the support routines to test out pools
 
   # add scores for all games and all weeks in the season, where all home teams win (for simplicity)

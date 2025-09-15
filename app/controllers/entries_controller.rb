@@ -47,7 +47,7 @@ class EntriesController < ApplicationController
   def update
     @entry = Entry.find_by_id(params[:id])
     @pool = Pool.find_by_id(@entry.pool_id)
-    if @entry.update_attributes(entry_params)
+    if @entry.update(entry_params)
       flash[:success] = "Entry updated"
       redirect_to @pool
     else

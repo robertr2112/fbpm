@@ -1,8 +1,8 @@
-require 'json'
+require "json"
 class WeeksController < ApplicationController
   before_action :logged_in_user
   before_action :activated_user
-  before_action :admin_user, except: [:show, :index]
+  before_action :admin_user, except: [ :show ]
   around_action :set_time_zone
 
   def new
@@ -43,7 +43,7 @@ class WeeksController < ApplicationController
         # Set the state to Pend
         redirect_to @week
       else
-        render 'new'
+        render "new"
       end
     else
       flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
@@ -80,7 +80,7 @@ class WeeksController < ApplicationController
         `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
     else
       nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
+        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
     end
     if nfl_games_json.include? "Exception"
       flash[:danger] = "Cannot create week! There was a problem contacting the website."
@@ -94,7 +94,7 @@ class WeeksController < ApplicationController
               "Week #{@week.week_number} for '#{season.year}' was created successfully!"
         redirect_to @week
       else
-        render 'new'
+        render "new"
       end
     end # if Exception
   end
@@ -116,7 +116,7 @@ class WeeksController < ApplicationController
       end
       if nfl_games_json.include? "Exception"
         flash[:danger] = "Cannot update games for week #{@week.week_number}. There was a problem contacting the website!"
-        redirect_to @week  
+        redirect_to @week
       else
         nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
         @week.create_nfl_week(season, nfl_games["game"])
@@ -160,7 +160,7 @@ class WeeksController < ApplicationController
       "The scores for Week #{@week.week_number} were updated successfully!"
     end
     redirect_to @week
-   end
+  end
 
 
   def edit
@@ -174,7 +174,7 @@ class WeeksController < ApplicationController
 
   def update
     @week = Week.find_by_id(params[:id])
-    if @week.update_attributes(week_params)
+    if @week.update(week_params)
       flash[:success] = "Successfully updated week #{@week.week_number}."
       redirect_to @week
     else
@@ -245,18 +245,18 @@ class WeeksController < ApplicationController
   private
     def week_params
       params.require(:week).permit(:state, :week_number,
-                                   games_attributes: [:id, :week_id,
+                                   games_attributes: [ :id, :week_id,
                                                      :homeTeamIndex,
                                                      :awayTeamIndex,
                                                      :spread,
                                                      :homeTeamScore,
                                                      :awayTeamScore,
                                                      :game_date,
-                                                     :_destroy] )
+                                                     :_destroy ])
     end
 
     def set_time_zone
-      Time.use_zone('Central Time (US & Canada)') { yield }
+      Time.use_zone("Central Time (US & Canada)") { yield }
     end
 
     def weekFinalReady(week)
@@ -267,15 +267,14 @@ class WeeksController < ApplicationController
         end
       end
 
-      return true
+      true
     end
 
     # Before filters
     def admin_user
       if !current_user.admin?
-        flash[:danger] = 'Only an Admin User can access that page!'
+        flash[:danger] = "Only an Admin User can access that page!"
         redirect_to current_user
       end
     end
-
 end

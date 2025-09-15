@@ -144,7 +144,7 @@ class PoolsController < ApplicationController
   def update
     @pool = Pool.find_by_id(params[:id])
     if @pool.isOwner?(current_user)
-      if @pool.update_attributes(pool_params)
+      if @pool.update(pool_params)
         flash[:success] = "Pool updated."
         redirect_to @pool
       else

@@ -58,8 +58,8 @@ class Pick < ApplicationRecord
       old_game_pick = pick.game_picks.first
       if (old_game_pick != current_game_pick &&
           old_game_pick.chosenTeamIndex == current_game_pick.chosenTeamIndex)
-        errors[:base] << "You have already picked this team!  Please choose another team."
-        current_game_pick.errors[:chosenTeamIndex] << "You have already picked this team!  Please choose another team."
+        errors.add(:base, "You have already picked this team!  Please choose another team.")
+        current_game_pick.errors.add(:chosenTeamIndex, "You have already picked this team!  Please choose another team.")
         return false
       end
     end
@@ -69,10 +69,9 @@ class Pick < ApplicationRecord
 
       game = week.find_game(current_game_pick.chosenTeamIndex)
       if game.gameStarted?
-        errors[:base] <<
-                       "This game has started!  Please choose another team."
-        current_game_pick.errors[:chosenTeamIndex] <<
-                       "This game has started!  Please choose another team."
+        errors.add(:base, "This game has started!  Please choose another team.")
+        current_game_pick.errors.add(:chosenTeamIndex,
+                       "This game has started!  Please choose another team.")
         return false
       end
     end

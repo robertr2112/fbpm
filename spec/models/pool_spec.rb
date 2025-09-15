@@ -85,7 +85,7 @@ RSpec.describe Pool, type: :model do
   end
 
   it "should allow a user to update the pool" do
-    @pool.update_attributes(name: "new name")
+    @pool.update(name: "new name")
     @pool.save
   end
 
@@ -195,7 +195,7 @@ RSpec.describe Pool, type: :model do
     it "should allow user to change entry name" do
       entry = Entry.where(user_id: user1.id, pool_id: @pool.id).first
       new_name = "test name 1"
-      entry.update_attributes(name: new_name)
+      entry.update(name: new_name)
       expect(entry.name).to eq new_name
     end
 
@@ -547,6 +547,7 @@ RSpec.describe Pool, type: :model do
           it "should show 2 remaining entries if all picked wrong team and 2 were correct previous week" do
             # has <n> users pick homeTeam in first game which is always a winner, remainder pick losing away
             # team
+
             # week 1
             pool_update_survivor_users(season, @pool, @users, 5, 0)
 
