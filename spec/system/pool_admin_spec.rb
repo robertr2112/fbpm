@@ -60,6 +60,7 @@ RSpec.describe 'Pool Management', type: :system do
 
   def when_I_create_a_pool
     visit new_pool_path
+    find('h1.pageHeader', text: 'Create New Pool')
     fill_in 'pool_name', with: 'Test Pool'
     click_button 'Create pool'
     @pool = Pool.find_by_name('Test Pool')
