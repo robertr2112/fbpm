@@ -213,7 +213,7 @@ def getNFLGames_espn(doc):
 
             # Get team names
             for teams in game_details.find_all("span", {"class": "Table__Team"}):
-                children = teams.findChildren("a" , recursive=False)
+                children = teams.find_all("a" , recursive=False)
                 href = children[0]['href'].split('/')
                 team_name = href[-1].replace('-', ' ')
                 team_name = string.capwords(team_name, sep = None)
