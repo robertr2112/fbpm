@@ -5,7 +5,7 @@
     <div class="panel panel-primary">
       <div class="panel-header"><%= @team.name %></div>
       <div class="panel-body">
-        <%= image_tag(asset_path(@team.imagePath), size: "120x90") %>
+        <%= image_tag(@team.imagePath, size: "120x90") %>
         <% if @team.nfl %>
           NFL Team<br />
         <% else %>

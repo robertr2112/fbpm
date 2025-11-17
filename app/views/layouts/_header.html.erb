@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top" id="main_navbar">
   <%= link_to "Football Pool Mania", root_path, class:'header-brand navbar-brand col-4' %>
-  <button class="navbar-toggler" type="button" data-toggle="collapse"
-          data-target="#navbar-list-2" aria-controls="navbarNav" aria-expanded="false"
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbar-list-2" aria-controls="navbarNav" aria-expanded="false"
           aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -17,7 +17,7 @@
         <% if season %> <!-- Only show the pool menus if season has been created -->
         <li class="nav-item dropdown">
           <a  class="nav-link dropdown-toggle pool-mgmt" id="dropdownMenu1" href="#"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
              <i class="fa fa-trophy fa-fw"></i>Pool Management
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -32,7 +32,7 @@
                 <!-- Level two dropdown - This is the per pool menu list -->
                 <li class="nav-item dropdown">
                   <a class="dropdown-item dropdown-toggle pool-name" id="dropdownMenuPools" href="#"
-                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <%= pool.name %>
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools">
@@ -70,7 +70,7 @@
         </li>
         <!-- Level one dropdown for User management -->
         <li class="nav-item dropdown dropleft">
-          <a id="dropdownMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
+          <a id="dropdownMenu2" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
              aria-expanded="false" class="nav-link dropdown-toggle user-name">
              <%= current_user.name %></a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu2">

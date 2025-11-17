@@ -1,8 +1,8 @@
-require "json"
+require 'json'
 class WeeksController < ApplicationController
   before_action :logged_in_user
   before_action :activated_user
-  before_action :admin_user, except: [ :show ]
+  before_action :admin_user, except: [:show]
   around_action :set_time_zone
 
   def new
@@ -10,13 +10,13 @@ class WeeksController < ApplicationController
     if !@season.nil?
       @week = @season.weeks.new
       @game = @week.games.build
-      if @season.weeks.order(:week_number).last.blank?
-        @week.week_number = @season.current_week
-      else
-        @week.week_number = @season.weeks.order(:week_number).last.week_number + 1
-      end
+      @week.week_number = if @season.weeks.order(:week_number).last.blank?
+                            @season.current_week
+                          else
+                            @season.weeks.order(:week_number).last.week_number + 1
+                          end
       if @week.week_number > @season.number_of_weeks
-        flash[:danger] = "Cannot create week. This would exceed the number of weeks for this Season!"
+        flash[:danger] = 'Cannot create week. This would exceed the number of weeks for this Season!'
         redirect_to @season
       end
 
@@ -30,20 +30,20 @@ class WeeksController < ApplicationController
     @season = Season.find_by_id(params[:season_id])
     if !@season.nil?
       @week = @season.weeks.new(week_params)
-      if @season.weeks.order(:week_number).last.blank?
-        @week.week_number = @season.current_week
-      else
-        @week.week_number = @season.weeks.order(:week_number).last.week_number + 1
-      end
+      @week.week_number = if @season.weeks.order(:week_number).last.blank?
+                            @season.current_week
+                          else
+                            @season.weeks.order(:week_number).last.week_number + 1
+                          end
       @week.setState(Week::STATES[:Pend])
       if @week.save
         # Handle a successful save
         flash[:success] =
-            "Week #{@week.week_number} for '#{@season.year}' was created successfully!"
+          "Week #{@week.week_number} for '#{@season.year}' was created successfully!"
         # Set the state to Pend
         redirect_to @week
       else
-        render "new"
+        render 'new'
       end
     else
       flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
@@ -58,13 +58,13 @@ class WeeksController < ApplicationController
     if !season.nil?
       @week = season.weeks.create
       @week.setState(Week::STATES[:Pend])
-      if season.weeks.order(:week_number).last.blank?
-        @week.week_number = season.current_week
-      else
-        @week.week_number = season.weeks.order(:week_number).last.week_number + 1
-      end
+      @week.week_number = if season.weeks.order(:week_number).last.blank?
+                            season.current_week
+                          else
+                            season.weeks.order(:week_number).last.week_number + 1
+                          end
       if @week.week_number > season.number_of_weeks
-        flash[:danger] = "Cannot create week! This would exceed the number of weeks for this Season!"
+        flash[:danger] = 'Cannot create week! This would exceed the number of weeks for this Season!'
         redirect_to season
       end
 
@@ -75,26 +75,24 @@ class WeeksController < ApplicationController
 
     # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
     # in Production mode, not using Webdriver_manager.
-    if Rails.env.production?
-      nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-    else
-      nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-    end
-    if nfl_games_json.include? "Exception"
-      flash[:danger] = "Cannot create week! There was a problem contacting the website."
+    nfl_games_json = if Rails.env.production?
+                       `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+                     else
+                       `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+                     end
+    if nfl_games_json.include? 'Exception'
+      flash[:danger] = 'Cannot create week! There was a problem contacting the website.'
       redirect_to seasons_path
     else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-      @week.create_nfl_week(season, nfl_games["game"])
+      @week.create_nfl_week(season, nfl_games['game'])
       if @week.save
         # Handle a successful save
         flash[:success] =
-              "Week #{@week.week_number} for '#{season.year}' was created successfully!"
+          "Week #{@week.week_number} for '#{season.year}' was created successfully!"
         redirect_to @week
       else
-        render "new"
+        render 'new'
       end
     end # if Exception
   end
@@ -107,26 +105,25 @@ class WeeksController < ApplicationController
       season = Season.find_by_id(@week.season_id)
       # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
       # in Production mode, not using Webdriver_manager.
-      if Rails.env.production?
-        nfl_games_json =
-          `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-      else
-        nfl_games_json =
-          `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
-      end
-      if nfl_games_json.include? "Exception"
-        flash[:danger] = "Cannot update games for week #{@week.week_number}. There was a problem contacting the website!"
+      nfl_games_json = if Rails.env.production?
+                         `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+                       else
+                         `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+                       end
+      if nfl_games_json.include? 'Exception'
+        flash[:danger] =
+          "Cannot update games for week #{@week.week_number}. There was a problem contacting the website!"
         redirect_to @week
       else
         nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-        @week.create_nfl_week(season, nfl_games["game"])
+        @week.create_nfl_week(season, nfl_games['game'])
         if @week.save
           # Handle a successful save
           flash[:success] =
-                "The games for Week #{@week.week_number} were updated successfully!"
+            "The games for Week #{@week.week_number} were updated successfully!"
         else
           flash[:danger] =
-                "The games for Week #{@week.week_number} were not updated!"
+            "The games for Week #{@week.week_number} were not updated!"
         end
         redirect_to @week
       end
@@ -143,33 +140,30 @@ class WeeksController < ApplicationController
 
     # Using -e flag scrapes the ESPN website for schedule and -P mode runs it
     # in Production mode, not using Webdriver_manager.
-    if Rails.env.production?
-      nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-    else
-      nfl_games_json =
-        `python lib/assets/python/nfl-scraper.py -e -y "#{season.year}" -n "#{@week.week_number}"`
-    end
+    nfl_games_json = if Rails.env.production?
+                       `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+                     else
+                       `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
+                     end
     # Rails.logger.info "nfl_games_json: #{nfl_games_json}"
-    if nfl_games_json.include? "Exception"
-      flash[:danger] = "Cannot update scores! There was a problem contacting the website."
+    if nfl_games_json.include? 'Exception'
+      flash[:danger] = 'Cannot update scores! There was a problem contacting the website.'
     else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-      @week.add_scores_nfl_week(season, nfl_games["game"])
+      @week.add_scores_nfl_week(season, nfl_games['game'])
       flash[:success] =
-      "The scores for Week #{@week.week_number} were updated successfully!"
+        "The scores for Week #{@week.week_number} were updated successfully!"
     end
     redirect_to @week
   end
 
-
   def edit
     @week = Week.find_by_id(params[:id])
     @games = @week.games
-    if @week.checkStateFinal
-      flash[:warning] = "Can't Edit the week once it is in the Final state!"
-      redirect_to @week
-    end
+    return unless @week.checkStateFinal
+
+    flash[:warning] = "Can't Edit the week once it is in the Final state!"
+    redirect_to @week
   end
 
   def update
@@ -201,7 +195,7 @@ class WeeksController < ApplicationController
         redirect_to @week
       end
     else
-      flash[:danger] = "Only an Admin user can delete weeks!"
+      flash[:danger] = 'Only an Admin user can delete weeks!'
       redirect_to @week
     end
   end
@@ -225,56 +219,54 @@ class WeeksController < ApplicationController
   def final
     @week = Week.find_by_id(params[:id])
     if @week.checkStateFinal
-        flash[:danger] = "Week #{@week.week_number} is already Final!"
-        redirect_to @week
+      flash[:danger] = "Week #{@week.week_number} is already Final!"
+      redirect_to @week
+    elsif weekFinalReady(@week)
+      @week.setState(Week::STATES[:Final])
+      # Update the entries status/totals based on this weeks results
+      @season = Season.find_by_id(@week.season_id)
+      @season.updatePools
+      flash[:success] = "Week #{@week.week_number} is final!"
+      redirect_to @week
     else
-      if weekFinalReady(@week)
-        @week.setState(Week::STATES[:Final])
-        # Update the entries status/totals based on this weeks results
-        @season = Season.find_by_id(@week.season_id)
-        @season.updatePools
-        flash[:success] = "Week #{@week.week_number} is final!"
-        redirect_to @week
-      else
-        flash[:danger] = "Week #{@week.week_number} is not ready to be Final.  Please ensure all scores have been entered."
-        redirect_to @week
-      end
+      flash[:danger] =
+        "Week #{@week.week_number} is not ready to be Final.  Please ensure all scores have been entered."
+      redirect_to @week
     end
   end
 
   private
-    def week_params
-      params.require(:week).permit(:state, :week_number,
-                                   games_attributes: [ :id, :week_id,
-                                                     :homeTeamIndex,
-                                                     :awayTeamIndex,
-                                                     :spread,
-                                                     :homeTeamScore,
-                                                     :awayTeamScore,
-                                                     :game_date,
-                                                     :_destroy ])
+
+  def week_params
+    params.require(:week).permit(:state, :week_number,
+                                 games_attributes: %i[id week_id
+                                                      homeTeamIndex
+                                                      awayTeamIndex
+                                                      spread
+                                                      homeTeamScore
+                                                      awayTeamScore
+                                                      game_date
+                                                      _destroy])
+  end
+
+  def set_time_zone(&block)
+    Time.use_zone('Central Time (US & Canada)', &block)
+  end
+
+  def weekFinalReady(week)
+    games = week.games
+    games.each do |game|
+      return false if game.homeTeamScore == 0 && game.awayTeamScore == 0
     end
 
-    def set_time_zone
-      Time.use_zone("Central Time (US & Canada)") { yield }
-    end
+    true
+  end
 
-    def weekFinalReady(week)
-      games = week.games
-      games.each do |game|
-        if game.homeTeamScore == 0 && game.awayTeamScore == 0
-          return false
-        end
-      end
+  # Before filters
+  def admin_user
+    return if current_user.admin?
 
-      true
-    end
-
-    # Before filters
-    def admin_user
-      if !current_user.admin?
-        flash[:danger] = "Only an Admin User can access that page!"
-        redirect_to current_user
-      end
-    end
+    flash[:danger] = 'Only an Admin User can access that page!'
+    redirect_to current_user
+  end
 end

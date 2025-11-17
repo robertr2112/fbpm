@@ -1,4 +1,4 @@
-<div class="btn-toolbar weeks-nav" role="toolbar" aria-label="NFL Weeks Toolbar buttons">
+<div class="btn-toolbar weeks-nav" id="weeks_nav" role="toolbar" aria-label="NFL Weeks Toolbar buttons">
   <div class="btn-group-sm" role="group" aria-label="First group">
       <% if current_season(1) %>
         <% if current_user.admin? %>
@@ -15,7 +15,7 @@
         <% if season.weeks.any? %>
           <div class="btn-group" role="group">
             <button class="btn btn-sm btn-dark appStateBtn dropdown-toggle" type="button"
-                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
               Week #
             </button>

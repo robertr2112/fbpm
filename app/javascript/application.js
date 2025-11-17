@@ -1,0 +1,18 @@
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+import "@hotwired/turbo-rails"
+import "@hotwired/stimulus"
+import "@hotwired/stimulus-loading"
+import "jquery"
+import "bootstrap"
+import "@popperjs/core"
+import "@rails/activestorage"
+import "@rails/actioncable"
+import "@notus.sh/cocooned"
+import "select2"
+import "@fortawesome/fontawesome-free"
+
+import "controllers"
+import "custom/forms"
+import "custom/header_dropdowns"
+import "custom/picks"
+import "custom/weeks"

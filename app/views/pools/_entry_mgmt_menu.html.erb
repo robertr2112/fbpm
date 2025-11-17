@@ -3,13 +3,13 @@
   <li><%= link_to "Create entry", new_pool_entry_path(pool),
          class:'dropdown-item' %></li>
 <% end %>
-<li class="divider"></li>
+<div class="dropdown-divider"></div>
 <!-- Level Three dropdown - This is the per entry menu list -->
 <% entries = pool.entries.where(user_id: current_user.id) %>
 <% entries.each do |entry| %>
   <li class="nav-item dropdown">
     <a class="dropdown-item dropdown-toggle" id="dropdownMenuEntries" href="#"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <%= entry.name %>
     </a>
     <ul class="dropdown-menu left" aria-labelledby="dropdownMenuEntries">

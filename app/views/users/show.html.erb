@@ -1,15 +1,6 @@
 <% provide(:title, @user.name) %>
 <!-- Render the navigation bars -->
 <%= render 'shared/mgmt_weeks_nav', season: current_season(1), week_number: 0 %>
-<!-- Add javascrip to show the phone modal message -->
-<script type="text/javascript">
-    window.onload = function () {
-        OpenBootstrapPopup();
-    };
-    function OpenBootstrapPopup() {
-        $("#simpleModal").modal('show');
-    }
-</script>
 
 <div class="container pageContent">
   <!-- Show modal if phone number not added -->

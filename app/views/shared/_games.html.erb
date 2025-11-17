@@ -8,10 +8,12 @@
       <% else %>
         <% teamNickname = team.name.split(' ').last %>
       <% end %>
-      <span class="bye-team-image"> <%= image_tag(asset_path(team.imagePath), size: "40x30") %> </span>
-      <span class="bye-team-name team-name">
-        <%= teamNickname.upcase %>
-      </span>
+      <div class="col-auto d-flex align-items-center">
+        <span class="bye-team-image"> <%= image_tag(team.imagePath, size: "40x30") %> </span>
+        <span class="bye-team-name team-name">
+          <%= teamNickname.upcase %>
+        </span>
+      </div>
     <% end %>
   </div>
 <% end %>
@@ -70,7 +72,7 @@
         <span class="team-name">
           <b><%= teamNickname.upcase %></b>
         </span>
-        <span> <%= image_tag(asset_path(team.imagePath), size: "40x30") %> </span>
+        <span> <%= image_tag(team.imagePath, size: "40x30") %> </span>
         <% if showScores %>
           <span class="awayScoreWon"><b><%= game.awayTeamScore %></b></span>
         <% end %>
@@ -81,7 +83,7 @@
         <span class="team-name">
           <%= teamNickname.upcase %>
         </span>
-        <span> <%= image_tag(asset_path(team.imagePath), size: "40x30") %> </span>
+        <span> <%= image_tag(team.imagePath, size: "40x30") %> </span>
         <% if showScores %>
           <span class="awayScoreLost"><%= game.awayTeamScore %></span>
         <% end %>
@@ -121,7 +123,7 @@
         <% if showScores %>
           <span class="homeScoreWon"><b><%= game.homeTeamScore %></b></span>
         <% end %>
-        <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
+        <%= image_tag(team.imagePath, size: "40x30") %>
         <b class="team-name"><%= teamNickname.upcase %></b>
       </div>
     <% else %>
@@ -130,7 +132,7 @@
         <% if showScores %>
           <span class="homeScoreLost"><%= game.homeTeamScore %></span>
         <% end %>
-        <%= image_tag(asset_path(team.imagePath), size: "40x30") %>
+        <%= image_tag(team.imagePath, size: "40x30") %>
         <span class="team-name"><%= teamNickname.upcase %></span>
       </div>
     <% end %>

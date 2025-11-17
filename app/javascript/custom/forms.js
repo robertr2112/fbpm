@@ -1,6 +1,5 @@
 /* Setup the select2 functions */
-/* $(document).ready(function() { */
-$( document ).on('turbolinks:load', function() {
+$( document ).on('turbo:load', function() {
 
   setSelect2Format();
 
