@@ -1,5 +1,4 @@
 class PoolMessagesController < ApplicationController
-  before_action :logged_in_user
   before_action :activated_user
 
   def new

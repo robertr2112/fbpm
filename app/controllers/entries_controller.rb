@@ -1,5 +1,4 @@
 class EntriesController < ApplicationController
-  before_action :logged_in_user
   before_action :activated_user
 
   def new
@@ -35,7 +34,7 @@ class EntriesController < ApplicationController
       flash[:success] = "Entry: #{@entry.name} was created successfully!"
       redirect_to @pool
     else
-      render 'new'
+      render "new"
     end
   end
 
@@ -51,7 +50,7 @@ class EntriesController < ApplicationController
       flash[:success] = "Entry updated"
       redirect_to @pool
     else
-      render 'edit'
+      render "edit"
     end
   end
 

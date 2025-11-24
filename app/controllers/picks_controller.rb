@@ -1,5 +1,4 @@
 class PicksController < ApplicationController
-  before_action :logged_in_user
   before_action :activated_user
 
   def new
@@ -33,7 +32,7 @@ class PicksController < ApplicationController
           "Your pick(s) for Week '#{@week.week_number}' was saved!"
       redirect_to @pool
     else
-      render 'new'
+      render "new"
     end
   end
 
@@ -65,7 +64,7 @@ class PicksController < ApplicationController
       flash[:success] = "Your pick(s) for Week '#{@week.week_number}' was changed!"
       redirect_to @pool
     else
-      render 'edit'
+      render "edit"
     end
   end
 
@@ -73,8 +72,8 @@ class PicksController < ApplicationController
     def pick_params
       params.require(:pick).permit(:week_id, :total_score,
                                    :week_number, :sup_points,
-                                   game_picks_attributes: [:id, :pick_id,
-                                                     :chosenTeamIndex] )
+                                   game_picks_attributes: [ :id, :pick_id,
+                                                     :chosenTeamIndex ])
     end
 
     def pickErrorCheck(week, entry)
@@ -93,5 +92,4 @@ class PicksController < ApplicationController
         message = "Week #{week.week_number} is not open for picks yet!"
       end
     end
-
 end

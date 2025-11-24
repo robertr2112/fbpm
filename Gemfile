@@ -128,7 +128,7 @@ group :development do
   # automate testing with Guard
   # gem 'guard', '2.17.0'
   # gem 'guard-rspec', '4.7.3'
-  gem "annotate"
+  gem "annot8"
   gem "letter_opener_web"
   gem "childprocess"
 end

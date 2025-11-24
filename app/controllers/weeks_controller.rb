@@ -1,8 +1,7 @@
-require 'json'
+require "json"
 class WeeksController < ApplicationController
-  before_action :logged_in_user
   before_action :activated_user
-  before_action :admin_user, except: [:show]
+  before_action :admin_user, except: [ :show ]
   around_action :set_time_zone
 
   def new
@@ -12,11 +11,11 @@ class WeeksController < ApplicationController
       @game = @week.games.build
       @week.week_number = if @season.weeks.order(:week_number).last.blank?
                             @season.current_week
-                          else
+      else
                             @season.weeks.order(:week_number).last.week_number + 1
-                          end
+      end
       if @week.week_number > @season.number_of_weeks
-        flash[:danger] = 'Cannot create week. This would exceed the number of weeks for this Season!'
+        flash[:danger] = "Cannot create week. This would exceed the number of weeks for this Season!"
         redirect_to @season
       end
 
@@ -32,9 +31,9 @@ class WeeksController < ApplicationController
       @week = @season.weeks.new(week_params)
       @week.week_number = if @season.weeks.order(:week_number).last.blank?
                             @season.current_week
-                          else
+      else
                             @season.weeks.order(:week_number).last.week_number + 1
-                          end
+      end
       @week.setState(Week::STATES[:Pend])
       if @week.save
         # Handle a successful save
@@ -43,7 +42,7 @@ class WeeksController < ApplicationController
         # Set the state to Pend
         redirect_to @week
       else
-        render 'new'
+        render "new"
       end
     else
       flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
@@ -60,11 +59,11 @@ class WeeksController < ApplicationController
       @week.setState(Week::STATES[:Pend])
       @week.week_number = if season.weeks.order(:week_number).last.blank?
                             season.current_week
-                          else
+      else
                             season.weeks.order(:week_number).last.week_number + 1
-                          end
+      end
       if @week.week_number > season.number_of_weeks
-        flash[:danger] = 'Cannot create week! This would exceed the number of weeks for this Season!'
+        flash[:danger] = "Cannot create week! This would exceed the number of weeks for this Season!"
         redirect_to season
       end
 
@@ -77,22 +76,22 @@ class WeeksController < ApplicationController
     # in Production mode, not using Webdriver_manager.
     nfl_games_json = if Rails.env.production?
                        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-                     else
+    else
                        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-                     end
-    if nfl_games_json.include? 'Exception'
-      flash[:danger] = 'Cannot create week! There was a problem contacting the website.'
+    end
+    if nfl_games_json.include? "Exception"
+      flash[:danger] = "Cannot create week! There was a problem contacting the website."
       redirect_to seasons_path
     else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-      @week.create_nfl_week(season, nfl_games['game'])
+      @week.create_nfl_week(season, nfl_games["game"])
       if @week.save
         # Handle a successful save
         flash[:success] =
           "Week #{@week.week_number} for '#{season.year}' was created successfully!"
         redirect_to @week
       else
-        render 'new'
+        render "new"
       end
     end # if Exception
   end
@@ -107,16 +106,16 @@ class WeeksController < ApplicationController
       # in Production mode, not using Webdriver_manager.
       nfl_games_json = if Rails.env.production?
                          `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-                       else
+      else
                          `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-                       end
-      if nfl_games_json.include? 'Exception'
+      end
+      if nfl_games_json.include? "Exception"
         flash[:danger] =
           "Cannot update games for week #{@week.week_number}. There was a problem contacting the website!"
         redirect_to @week
       else
         nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-        @week.create_nfl_week(season, nfl_games['game'])
+        @week.create_nfl_week(season, nfl_games["game"])
         if @week.save
           # Handle a successful save
           flash[:success] =
@@ -142,15 +141,15 @@ class WeeksController < ApplicationController
     # in Production mode, not using Webdriver_manager.
     nfl_games_json = if Rails.env.production?
                        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-                     else
+    else
                        `python lib/assets/python/nfl-scraper.py -eP -y "#{season.year}" -n "#{@week.week_number}"`
-                     end
+    end
     # Rails.logger.info "nfl_games_json: #{nfl_games_json}"
-    if nfl_games_json.include? 'Exception'
-      flash[:danger] = 'Cannot update scores! There was a problem contacting the website.'
+    if nfl_games_json.include? "Exception"
+      flash[:danger] = "Cannot update scores! There was a problem contacting the website."
     else
       nfl_games = JSON.parse(nfl_games_json).with_indifferent_access
-      @week.add_scores_nfl_week(season, nfl_games['game'])
+      @week.add_scores_nfl_week(season, nfl_games["game"])
       flash[:success] =
         "The scores for Week #{@week.week_number} were updated successfully!"
     end
@@ -195,7 +194,7 @@ class WeeksController < ApplicationController
         redirect_to @week
       end
     else
-      flash[:danger] = 'Only an Admin user can delete weeks!'
+      flash[:danger] = "Only an Admin user can delete weeks!"
       redirect_to @week
     end
   end
@@ -250,7 +249,7 @@ class WeeksController < ApplicationController
   end
 
   def set_time_zone(&block)
-    Time.use_zone('Central Time (US & Canada)', &block)
+    Time.use_zone("Central Time (US & Canada)", &block)
   end
 
   def weekFinalReady(week)
@@ -266,7 +265,7 @@ class WeeksController < ApplicationController
   def admin_user
     return if current_user.admin?
 
-    flash[:danger] = 'Only an Admin User can access that page!'
+    flash[:danger] = "Only an Admin User can access that page!"
     redirect_to current_user
   end
 end

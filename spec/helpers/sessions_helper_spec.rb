@@ -11,18 +11,13 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe SessionsHelper, type: :helper do
-
-
-
   context "When user logs in" do
-
     let(:user) { FactoryBot.create(:user) }
 
     it "current_user returns right user when session is nil" do
-
       remember(user)
       expect(user).to eq current_user
-      expect(logged_in?).to be true
+      expect(authenticated?).to be true
     end
 
     it "current_user returns nil when remember digest is wrong" do
@@ -30,6 +25,5 @@ RSpec.describe SessionsHelper, type: :helper do
       user.update_attribute(:remember_digest, User.digest(User.new_token))
       expect(current_user).to be nil
     end
-
   end
 end

@@ -88,3 +88,96 @@ General information - See https://apidock.com/ruby/DateTime/strftime
 Date format - game.game_date.strftime("%A, %B %d")
 Time format - game.game_date.strftime("%l:%M %p %Z")
 
+Password and Session management
+-------------------------------
+Sign UP
+-------
+- Home page has link to sign up : /signup users#new GET
+- After filling in form and saving go to users#create POST
+  - Save to database, which creates activation token
+    - Create token in self.activation_token : token = User.new_token 
+      - SecureRandom.urlsafe_base64
+    - Create self.activation_digest with token : User.digest(token)
+        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                              BCrypt::Engine.cost
+        BCrypt::Password.create(string, cost: cost)
+  - Send activation email : user.send_activation_email 
+    - UserMailer.accout_activation(self).deliver_now
+      - Send email with activation info
+        - links to activate account with token(user.activation_token) & user email
+          - account_activation#edit with user.activation_token, user.email
+  - log_in user (Sessions Helper)
+    - save session : session[:user_id] = user.id
+  - redirect to user page
+
+Activation
+----------
+- User clicks Activation link (edit#account_activation)
+  - find user by email
+  - verify found user and !user.activated and user.authenticated?
+    - user.authenticated?(:activation, params[:id](token in email)
+      - digest = send("#{attribute}_digest")
+      - return false if digest.nil?
+      - BCrypt::Password.new(digest).is_password?(token)
+  - if all pass then activate user
+    - user.activate = true
+    - log_in user
+      - session[:user_id] = user.id 
+    - redirect_to user
+
+Sign In
+-------
+- Link to log in : login_path (sessions#new GET)
+- Fill in form and submit
+  - Get user from email
+  - log in (same as above)
+  - check remember param
+  - if true call remember(user) in sessions_helper
+    - call user.remember
+      - self.remember_token = User.new_token (same as above)
+      - update_attribute(:remember_digest, User.digest(remember_token))
+    - cookies.permanent.signed[:user_id] = user.id
+    - cookies.permanent[:remember_token] = user.remember_token
+  - otherwise call forget(user)
+    - call user.forget
+      - update_attribute(:remember_digest, nil)
+    - cookies.delete(:user_id)
+    - cookies.delete(:remember_token)
+  - redirect_back_or user (got to page they were trying to go or the user page)
+  
+Getting current_user
+--------------------
+This gets the user for the session (called from anywhere in the app)
+- get user from user_id = session[:user_id]
+  - @current_user ||= User.find_by(id: user_id)
+- If null then get user from user_id = cookies.signed[:user_id] based on remember
+  - user = User.find_by(id: user_id)
+  - verify found user and !user.activated and user.authenticated? (same as above)
+    - log_in user
+    - @current_user = user
+
+Password Reset
+--------------
+- Click link to send password reset email : password_reset#new
+  - Open password_reset new form and get email address and click submit
+    - user = User.find_by_email(params[:email])
+    - user.send_password_reset if user
+      - self.update_attribute(:password_reset_token, create_token)
+        - create_token() : User.encrypt(User.new_token) (same as above)
+      - self.update_attribute(:password_reset_sent_at, Time.zone.now)
+      - UserMailer.password_reset(self).deliver_now
+      - password_reset mailer sends email
+        - contains link_to password_reset#edit and param user.password_reset_token
+    - redirect_to root_url, notice: "Email sent with password instructions."
+  
+- When user clicks link in password reset email
+  - password_reset controller edit gets user
+    - @user = User.find_by_password_reset_token!(params[:id])
+  - User fills in password and password_confirmation and hits update
+    - password_reset controller update
+      - find user in same way as edit
+      - Make sure that the link is not timed out
+        - if @user.password_reset_sent_at < 2.hours.ago
+          - redirect_to password_reset#new
+      - otherwise update users password : @user.update(user_params)
+      - if that fails got back to password_reset#edit

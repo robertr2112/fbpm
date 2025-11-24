@@ -1,24 +1,22 @@
 class SessionsController < ApplicationController
+  allow_unauthenticated_access only: %i[ new create ]
+  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_url, alert: "Try again later." }
 
   def new
   end
 
   def create
-    user = User.find_by(email: params[:session][:email].downcase)
-    if user && user.authenticate(params[:session][:password])
-      # Sign the user in and redirect to the page requested.
-      log_in(user)
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      redirect_back_or user
+    if user = User.authenticate_by(params.permit(:email, :password))
+      start_new_session_for user
+      redirect_to after_authentication_url
     else
-      # Error message for invalid user email ID
-      flash.now[:danger] = "Invalid email/password combination."
-      render 'new'
+      redirect_to new_session_path, alert: "Try another email address or password."
     end
   end
 
   def destroy
-    log_out if logged_in?
-    redirect_to root_url
+    terminate_session
+    flash[:notice] = "You have been signed out."
+    redirect_to new_session_path
   end
 end

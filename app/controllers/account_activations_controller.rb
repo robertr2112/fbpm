@@ -1,9 +1,8 @@
 class AccountActivationsController < ApplicationController
-
   # Handle activating the account
   def edit
     user = User.find_by_email(params[:email])
-    if user && !user.activated? && user.authenticated?(:activation, params[:id])
+    if user && !user.activated? && user.email_authenticated?(:activation, params[:id])
       user.activate
       log_in(user)
       flash[:success] = "Account activated!"
@@ -13,5 +12,4 @@ class AccountActivationsController < ApplicationController
       redirect_to root_url
     end
   end
-
 end

@@ -1,12 +1,10 @@
 class PoolsController < ApplicationController
-  before_action :logged_in_user
   before_action :activated_user
-  before_action :admin_user, only: [:pool_diagnostics, :pool_diag_chg ]
+  before_action :admin_user, only: [ :pool_diagnostics, :pool_diag_chg ]
 
   def new
     year = Season.getSeasonYear
 
-    # !!!! This code breaks once the college pools are added
     season = Season.where(year: year, nfl_league: true).first
     if season && season.isOpen?
       @pool = current_user.pools.new
@@ -47,7 +45,7 @@ class PoolsController < ApplicationController
         @pool.setOwner(current_user, true)
         redirect_to @pool
       else
-        render 'new'
+        render "new"
       end
     else
       flash[:danger] = "Cannot create a pool because the #{year} season is not ready for pools!"
@@ -111,10 +109,10 @@ class PoolsController < ApplicationController
   def show
     @pool = Pool.find_by_id(params[:id])
     if @pool.nil?
-      flash[:warning] = 'The pool you tried to access does not exist'
+      flash[:warning] = "The pool you tried to access does not exist"
       redirect_to pools_path
     else
-      @pools = @pool.users.paginate(:page => params[:page])
+      @pools = @pool.users.paginate(page: params[:page])
       @season = Season.find_by_id(@pool.season_id)
       @current_week = @pool.getCurrentWeek
     end
@@ -148,7 +146,7 @@ class PoolsController < ApplicationController
         flash[:success] = "Pool updated."
         redirect_to @pool
       else
-        render 'edit'
+        render "edit"
       end
     else
       flash[:danger] = "Only the owner can edit the pool!"
@@ -212,15 +210,14 @@ class PoolsController < ApplicationController
     end
 
     def authenticate
-      deny_access unless logged_in?
+      deny_access unless current_user.present?
     end
 
     # Before filters
     def admin_user
       if !current_user.admin?
-        flash[:danger] = 'Only an Admin User can access that page!'
+        flash[:danger] = "Only an Admin User can access that page!"
         redirect_to current_user
       end
     end
-
 end

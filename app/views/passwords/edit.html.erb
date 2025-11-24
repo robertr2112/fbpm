@@ -1,0 +1,34 @@
+<% provide(:title, "Update Password") %>
+
+<div class="container">
+  <h1 class="pageHeader">Update your Password</h1>
+  <div class="col-sm-8">
+
+    <%= simple_form_for :user, url: password_path(params[:token]), method: :put,
+             html: { class: 'form-horizontal' },
+             wrapper: :horizontal_form,
+             wrapper_mappings: {
+              check_boxes: :horizontal_collection,
+              radio_buttons: :horizontal_collection,
+              file: :horizontal_file,
+              boolean: :horizontal_boolean
+    } do |f| %>
+
+      <%= f.input :password,
+                  as: :password,
+                  required: true,
+                  input_html: { autocomplete: "new-password",
+                                placeholder: "Enter new password",
+                                maxlength: 72 } %>
+
+      <%= f.input :password_confirmation,
+                  as: :password,
+                  required: true,
+                  input_html: { autocomplete: "new-password",
+                                placeholder: "Repeat new password",
+                                maxlength: 72 } %>
+
+      <%= f.button :submit, "Update Password", class: "btn btn-large btn-primary" %>
+    <% end %>
+  </div>
+</div>

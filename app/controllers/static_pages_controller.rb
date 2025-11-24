@@ -1,7 +1,9 @@
 class StaticPagesController < ApplicationController
+  allow_unauthenticated_access only: [ :home ]
+  before_action :resume_session, only: [ :home ]
   def home
     # if the user is logged_in then redirect to their home page
-    if logged_in?
+    if authenticated?
       redirect_to current_user
     end
   end
@@ -14,5 +16,4 @@ class StaticPagesController < ApplicationController
 
   def help
   end
-
 end

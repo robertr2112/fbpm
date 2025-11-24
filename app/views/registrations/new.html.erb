@@ -3,6 +3,7 @@
   <h1 class="pageHeader">Sign up</h1>
   <div class="col-sm-8">
     <%= simple_form_for @user,
+          url: registrations_url,
           wrapper: :horizontal_form,
           wrapper_mappings: {
           check_boxes: :horizontal_collection,
@@ -10,7 +11,7 @@
           file: :horizontal_file,
           boolean: :horizontal_boolean
     } do |f| %>
-      <%= render 'fields', f: f, edit: 0 %>
+      <%= render 'shared/userFields', f: f, edit: 0 %>
       <%= f.button :submit, 'Create my account', class: "btn btn-large btn-primary" %>
     <% end %>
   </div>

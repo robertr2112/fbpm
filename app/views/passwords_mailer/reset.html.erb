@@ -1,0 +1,7 @@
+<%= image_tag(attachments['fbpm_logo.png'].url, class: "img-rounded") %>
+<p>
+  You can reset your password within the next 15 minutes with 
+  <%= link_to "this password reset link", edit_password_url(@user.password_reset_token) %>.
+</p>
+<p>If you did not request your password to be reset, just ignore this email and your password
+   will continue to stay the same.</p>

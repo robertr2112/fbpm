@@ -1,28 +1,6 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update, :show, :destroy]
-  before_action :correct_user, only: [:edit, :update]
+  before_action :correct_user, only: [ :edit, :update ]
   before_action :admin_user, only: :destroy
-
-  def new
-    redirect_to(root_path) unless !logged_in?
-    @user = User.new
-  end
-
-  def create
-    redirect_to(root_path) unless !logged_in?
-    @user = User.new(user_params)
-    if @user.save
-      # Handle a successful save
-      @user.send_activation_email
-      log_in(@user)
-      flash[:info] = "Please check your email to activate your account."
-      redirect_to @user
-    else
-      @user.password = ""
-      @user.password_confirmation = ""
-      render 'new'
-    end
-  end
 
   def index
     if current_user.admin?
@@ -40,11 +18,12 @@ class UsersController < ApplicationController
   end
 
   def update
+    byebug
     if @user.update(user_params)
       flash[:success] = "Profile updated"
       redirect_to @user
     else
-      render 'edit'
+      render "edit"
     end
   end
 
@@ -72,7 +51,7 @@ class UsersController < ApplicationController
   def admin_add
     if current_user.admin?
       user = User.find_by_id(params[:id])
-      user.update_attribute(:admin, '1')
+      user.update_attribute(:admin, "1")
       flash[:success] = "Admin status has been granted to User: '#{user.name}!"
     else
       flash[:danger] = "Only an Admin user can update admin status!"
@@ -83,7 +62,7 @@ class UsersController < ApplicationController
   def admin_del
     if current_user.admin?
       user = User.find_by_id(params[:id])
-      user.update_attribute(:admin, '0')
+      user.update_attribute(:admin, "0")
       flash[:success] = "Admin status has been removed from User: '#{user.name}!"
     else
       flash[:danger] = "Only an Admin user can update admin status!"
@@ -111,16 +90,15 @@ class UsersController < ApplicationController
     end
 
     def correct_user
-      @user = User.find_by_id(params[:id])
-      redirect_to(root_url) unless current_user?(@user)
+      @user = User.find(params[:id])
+      redirect_to root_url unless @user == Current.user
     end
 
     # Before filters
     def admin_user
       if !current_user.admin?
-        flash[:danger] = 'Only an Admin User can access that page!'
+        flash[:danger] = "Only an Admin User can access that page!"
         redirect_to current_user
       end
     end
-
 end

@@ -10,17 +10,16 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
+  resource :session, only: %i[ :new, :create, :destroy ]
   resources :users
   resources :teams, only: [ :edit, :update, :index, :show ]
-  resources :password_resets
+  resources :passwords, only: %i[new create edit update], param: :token
+  resource :registrations, only: [ :new, :create ]
 
   # Static routes
   # root "seasons#index" # Temporary root page
   root "static_pages#home"
-  get    "/signup",             to: "users#new"
-  get    "/login",              to: "sessions#new"
-  post   "/login",              to: "sessions#create"
-  delete "/logout",             to: "sessions#destroy"
+  get "/signup",              to: "users#new"
   match "/help",              to: "static_pages#help",            via: "get"
   match "/about",             to: "static_pages#about",           via: "get"
   match "/contact",           to: "static_pages#contact",         via: "get"

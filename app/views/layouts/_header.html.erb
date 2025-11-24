@@ -6,7 +6,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse justify-content-end" id="navbar-list-2">
-    <% if logged_in? %>
+    <% if authenticated? %>
       <ul class="navbar-nav" id="main-nav-list">
         <li class="nav-item">
           <%= link_to '<i class="fa fa-home fa-fw"></i>Home'.html_safe,
@@ -84,26 +84,28 @@
                   resend_activation_path(current_user), class:'dropdown-item user-resend' %>
             <% end %>
             <div class="dropdown-divider"></div>
-            <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Log out'.html_safe,
-            logout_path, method: "delete", class:'dropdown-item user-logout' %>
+              <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Sign out'.html_safe, session_path, 
+                         data: { turbo_method: :delete }, class:'dropdown-item user-logout' %>
           </div>
         </li>
         <!-- End Level one -->
       </ul>
     <% else %>
       <!-- Login form -->
-      <%= form_for(:session, url: login_path,
+      <%= form_with(url: session_path,
              html: {class: 'header-form-inline form-inline ml-auto'}) do |f| %>
-        <div class="form-group">
-          <%= f.email_field :email, class: 'form-control form-control-sm mr-1',
-                id: 'login_email', placeholder: 'Email Address' %>
-        </div>
+        <div class="col-auto d-flex align-items-center">
+          <div class="form-group">
+            <%= f.email_field :email, class: 'form-control form-control-sm mr-1',
+                  id: 'login_email', placeholder: 'Email Address' %>
+          </div>
 
-        <div class="header-form-group">
-          <%= f.password_field :password, class: 'form-control form-control-sm mr-1',
-                id: 'login_password', placeholder: 'Password' %>
-        </div>
-        <%= f.submit "Log in", class: "btn btn-sm btn-primary", id: 'login_button' %>
+          <div class="header-form-group">
+            <%= f.password_field :password, class: 'form-control form-control-sm mr-1',
+                  id: 'login_password', placeholder: 'Password' %>
+          </div>
+          <%= f.submit "Sign in", class: "btn btn-sm btn-primary", id: 'login_button' %>
+        <div>
       <% end %>
     <% end %>
   </div>

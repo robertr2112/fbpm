@@ -13,6 +13,7 @@
 #
 #  index_weeks_on_season_id  (season_id)
 #
+
 require "open-uri"
 require "nokogiri"
 require "pp"

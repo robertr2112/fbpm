@@ -13,6 +13,7 @@
 #
 #  index_weeks_on_season_id  (season_id)
 #
+
 FactoryBot.define do
   factory :week do
     state        { 0 }

@@ -1,6 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :logged_in_user
-  before_action :admin_user, except: [:index, :show]
+  before_action :admin_user, except: [ :index, :show ]
 
   def edit
     @team = Team.find_by_id(params[:id])
@@ -17,7 +16,7 @@ class TeamsController < ApplicationController
         flash[:success] = "Team Info updated"
         redirect_to @team
       else
-        render 'edit'
+        render "edit"
       end
     else
         flash[:danger] = "Cannot find Team with id #{params[:id]}!"
@@ -32,7 +31,7 @@ class TeamsController < ApplicationController
     end
   end
   def index
-    @teams = Team.where(nfl: true).paginate(page: params[:page], per_page: 11).order('name ASC')
+    @teams = Team.where(nfl: true).paginate(page: params[:page], per_page: 11).order("name ASC")
   end
 
   private
@@ -45,9 +44,8 @@ class TeamsController < ApplicationController
     # Before filters
     def admin_user
       if !current_user.admin?
-        flash[:danger] = 'Only an Admin User can access that page!'
+        flash[:danger] = "Only an Admin User can access that page!"
         redirect_to current_user
       end
     end
-
 end

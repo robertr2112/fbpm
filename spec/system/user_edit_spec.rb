@@ -91,7 +91,7 @@ RSpec.describe 'Edit page', type: :system, js: true do
         expect(page).to have_selector('div.alert.alert-success')
       end
 
-      scenario do # !!!! This should be in a header test not in Edit
+      scenario do # ! This should be in a header test not in Edit
         user.reload
         find('h1.pageHeader', text: "#{user.name} - My Pools")
         Capybara.using_wait_time(5) do

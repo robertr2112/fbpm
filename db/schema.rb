@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_06_25_043456) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_24_222944) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "entries", force: :cascade do |t|
     t.integer "pool_id"
@@ -91,6 +91,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_25_043456) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.boolean "nfl"
@@ -106,9 +115,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_25_043456) do
     t.boolean "admin", default: false
     t.boolean "supervisor", default: false
     t.string "password_digest"
-    t.string "remember_digest"
-    t.string "password_reset_token"
-    t.datetime "password_reset_sent_at", precision: nil
     t.boolean "activated", default: false
     t.string "activation_digest"
     t.datetime "created_at", precision: nil, null: false
@@ -117,7 +123,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_25_043456) do
     t.string "phone"
     t.integer "contact", default: 1
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["remember_digest"], name: "index_users_on_remember_digest"
   end
 
   create_table "weeks", force: :cascade do |t|
@@ -129,4 +134,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_25_043456) do
     t.index ["season_id"], name: "index_weeks_on_season_id"
   end
 
+  add_foreign_key "sessions", "users"
 end
