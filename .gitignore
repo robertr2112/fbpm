@@ -51,4 +51,4 @@ yarn-debug.log*
 !/app/assets/builds/.keep
 
 # Ignore byebug
-/.byebug_history
+.byebug_history
