@@ -1,26 +1,15 @@
 module AuthenticationHelper
   def sign_in(user, options = {})
-    if options[:no_capybara]
-      # Sign in when not using Capybara.
-      user.remember
-    else
-      visit login_path
-      find('#signin_email').set(user.email)
-      find('#signin_password').set(user.password)
-      find('#signin_button').click
-    end
+    visit login_path
+    find('#signin_email').set(user.email)
+    find('#signin_password').set(user.password)
+    find('#signin_button').click
   end
 
   def sign_out(user, options = {})
-    if options[:no_capybara]
-      # Sign out when not using Capybara.
-      user.remember = false
-      puts('sign_out: no_capybara')
-    else
-      visit user_path(user)
-      find('a.user-name').hover
-      find('a.user-logout').click
-    end
+    visit user_path(user)
+    find('a.user-name').hover
+    find('a.user-logout').click
   end
 
   #  Here are the support routines to test out pools

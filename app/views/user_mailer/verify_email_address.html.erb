@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <%= image_tag(attachments['fbpm_logo.png'].url, class: "img-rounded") %>
+
+    <p>Hi <%= @user.name %>,</p>
+
+    <p>Before you can use your account you need to verify your email to activate your user account, 
+      click the URL below to verify your email.</p>
+
+    <p><%= link_to "Verify Email",  
+           email_address_verification_url(@user.email_address_verification_token) %></p>
+
+  </body>
+</html>

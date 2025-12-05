@@ -5,18 +5,9 @@
   font-size: inherit;
 }
 
-/*
- * Make the header links a darker black and bold on hover
-.header-links li {
-  a {
-    color: #1a1a1a !important;
-    &:hover {
-      color: #0d0d0d !important;
-      font-weight: bold !important;
-    }
-  }
+#main_navbar {
+  width: 100%;
 }
-*/
 
 /*
  * Make the active header link bold

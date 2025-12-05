@@ -2,20 +2,19 @@
 #
 # Table name: users
 #
-#  id                :bigint           not null, primary key
-#  activated         :boolean          default(FALSE)
-#  activated_at      :datetime
-#  activation_digest :string
-#  admin             :boolean          default(FALSE)
-#  contact           :integer          default(1)
-#  email             :string
-#  name              :string
-#  password_digest   :string
-#  phone             :string
-#  supervisor        :boolean          default(FALSE)
-#  user_name         :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id              :bigint           not null, primary key
+#  activated       :boolean          default(FALSE)
+#  activated_at    :datetime
+#  admin           :boolean          default(FALSE)
+#  contact         :integer          default(1)
+#  email           :string
+#  name            :string
+#  password_digest :string
+#  phone           :string
+#  supervisor      :boolean          default(FALSE)
+#  user_name       :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #

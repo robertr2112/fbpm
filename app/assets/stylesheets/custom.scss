@@ -19,7 +19,6 @@ $gray-dark: #737373;
 }
 
 /* Font Awesome */
-/*
 @font-face {
   font-family: 'FontAwesome';
   src: asset-url('fontawesome-webfont.eot');
@@ -27,11 +26,12 @@ $gray-dark: #737373;
   font-weight: normal;
   font-style: normal;
 }
-*/
 
+/* !!! Test to make sure this isn't needed.
 html {
   overflow-y: scroll;
 }
+*/
 
 html,body
 {

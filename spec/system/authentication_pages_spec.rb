@@ -1,21 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe "Authentication", type: :system do
-
   subject { page }
 
   context "signin page" do
-    before { visit login_path }
+    before { visit session_path }
 
     context "with invalid information" do
       before { click_button 'signin_button' }
 
-      scenario { should have_title('Log in') }
-      scenario { should have_selector('div.alert.alert-danger', text: 'Invalid') }
+      scenario { should have_title('Sign in') }
+      scenario { should have_selector('div.alert.alert-error', text: 'Invalid') }
 
       context "after visiting another page" do
         before { click_link 'Football Pool Mania' }
-        scenario { should_not have_selector('div.alert.alert-danger') }
+        scenario { should_not have_selector('div.alert.alert-error') }
       end
     end
 
@@ -31,7 +30,7 @@ RSpec.describe "Authentication", type: :system do
       scenario { should have_link('All Users',   href: users_path) }
       scenario "Should have sub-link 'Profile' under user name link", js: true do
         click_link(user.name)
-        should have_link('Profile',     href: user_path(user)) 
+        should have_link('Profile',     href: user_path(user))
       end
       scenario "Should have sub-link 'Settings' under user name link", js: true do
         click_link(user.name)
@@ -54,7 +53,6 @@ RSpec.describe "Authentication", type: :system do
   end
 
   feature "authorization", type: :request do
-
     context "for non-logged-in users" do
       let(:user) { FactoryBot.create(:user) }
 
@@ -82,7 +80,6 @@ RSpec.describe "Authentication", type: :system do
       end
 
       context "in the Users controller" do
-
         context "visiting the edit page" do
           before { visit edit_user_path(user) }
           scenario { should have_title('Log in') }

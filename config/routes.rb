@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   resources :teams, only: [ :edit, :update, :index, :show ]
   resources :passwords, only: %i[new create edit update], param: :token
   resource :registrations, only: [ :new, :create ]
+  resources :email_address_verifications, only: [ :show ], param: :token do
+    collection do
+      post "resend"
+    end
+  end
 
   # Static routes
   # root "seasons#index" # Temporary root page
@@ -27,8 +32,9 @@ Rails.application.routes.draw do
                        as: :admin_add,     via: "get"
   match "users/admin_del/:id", to: "users#admin_del",
                        as: :admin_del,     via: "get"
-  match "users/resend_activation/:id", to: "users#resend_activation",
-                       as: :resend_activation, via: "get"
+  # !!! No longer needed
+  # match "users/resend_activation/:id", to: "users#resend_activation",
+  #                     as: :resend_activation, via: "get"
 
 
   # Diagnostics paths
@@ -67,7 +73,6 @@ Rails.application.routes.draw do
 
   resources :weeks, only: [ :edit, :update, :show, :destroy ]
   resources :picks, only: [ :edit, :update, :destroy ]
-  resources :account_activations, only: [ :edit ]
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

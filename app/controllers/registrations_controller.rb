@@ -11,10 +11,9 @@ class RegistrationsController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       # Handle a successful save
-      # @user.send_activation_email
-      @user.activate
       start_new_session_for @user
-      # flash[:info] = "Please check your email to activate your account."
+      UserMailer.verify_email_address(@user).deliver_later
+      flash[:info] = "Please check your email to activate your account."
       redirect_to @user
     else
       @user.password = ""
@@ -27,7 +26,7 @@ class RegistrationsController < ApplicationController
   private
 
     def user_params
-      params.require(:user).permit(:name, :user_name, :phone, :contact, :email, :password,
-                                   :password_confirmation)
+      params.expect(user: [ :name, :user_name, :phone, :contact, :email, :password,
+                                   :password_confirmation ])
     end
 end

@@ -2,20 +2,19 @@
 #
 # Table name: users
 #
-#  id                :bigint           not null, primary key
-#  activated         :boolean          default(FALSE)
-#  activated_at      :datetime
-#  activation_digest :string
-#  admin             :boolean          default(FALSE)
-#  contact           :integer          default(1)
-#  email             :string
-#  name              :string
-#  password_digest   :string
-#  phone             :string
-#  supervisor        :boolean          default(FALSE)
-#  user_name         :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id              :bigint           not null, primary key
+#  activated       :boolean          default(FALSE)
+#  activated_at    :datetime
+#  admin           :boolean          default(FALSE)
+#  contact         :integer          default(1)
+#  email           :string
+#  name            :string
+#  password_digest :string
+#  phone           :string
+#  supervisor      :boolean          default(FALSE)
+#  user_name       :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #
@@ -23,15 +22,19 @@
 #
 class User < ApplicationRecord
   has_secure_password
+
+  # Handle the email_address_verification
+  include EmailAddressVerification
+  has_email_address_verification
+
   has_many :sessions, dependent: :destroy
 
   normalizes :email, with: ->(e) { e.strip.downcase }
   default_scope -> { order(name: :asc) }
 
-  # before_create :create_activation_digest
-
   CONTACT_PREF = { Email: 1, Both: 2, Text: 3 }
 
+  # Setup pool relationships
   has_many :pool_memberships, dependent: :destroy
   has_many :pools, through: :pool_memberships, dependent: :destroy
   has_many :entries, dependent: :delete_all
@@ -68,11 +71,6 @@ class User < ApplicationRecord
   # Activates an account.
   def activate
     update_columns(activated: true, activated_at: Time.zone.now)
-  end
-
-  # Sends activation email.
-  def send_activation_email
-    UserMailer.account_activation(self).deliver_now
   end
 
   # Resend the activation email

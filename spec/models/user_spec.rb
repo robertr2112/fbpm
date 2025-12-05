@@ -2,20 +2,19 @@
 #
 # Table name: users
 #
-#  id                :bigint           not null, primary key
-#  activated         :boolean          default(FALSE)
-#  activated_at      :datetime
-#  activation_digest :string
-#  admin             :boolean          default(FALSE)
-#  contact           :integer          default(1)
-#  email             :string
-#  name              :string
-#  password_digest   :string
-#  phone             :string
-#  supervisor        :boolean          default(FALSE)
-#  user_name         :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id              :bigint           not null, primary key
+#  activated       :boolean          default(FALSE)
+#  activated_at    :datetime
+#  admin           :boolean          default(FALSE)
+#  contact         :integer          default(1)
+#  email           :string
+#  name            :string
+#  password_digest :string
+#  phone           :string
+#  supervisor      :boolean          default(FALSE)
+#  user_name       :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #
@@ -39,8 +38,6 @@ RSpec.describe User, type: :model do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
-  it { should respond_to(:remember_token) }
-  it { should respond_to(:remember_digest) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:admin) }
   it { should respond_to(:supervisor) }
@@ -150,20 +147,4 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "remember digest" do
-    it "should be blank before user.remember is called" do
-      expect(@user.remember_digest).to be_blank
-    end
-
-    it "should not be blank after user.remember is called" do
-      @user.remember
-      expect(@user.remember_digest).not_to be_blank
-    end
-  end
-
-  describe "authenticated?" do
-    it "authenticated? should return false for a user with nil digest" do
-      expect(@user.authenticated?(:remember, '')).to be false
-    end
-  end
 end

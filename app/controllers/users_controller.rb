@@ -70,23 +70,23 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  # Setup to resend the activation email
-  def resend_activation
-    user = User.find_by_id(params[:id])
-    if user.activated?
-      flash[:notice] = "User account has already been activated!"
-    else
-      user.resend_activation
-      flash[:success] = "Activate account message has been resent!"
-    end
-    redirect_to root_url
-  end
+  # Setup to resend the activation email !!!! Is this still needed?
+  # def resend_activation
+  #  user = User.find_by_id(params[:id])
+  #  if user.activated?
+  #    flash[:notice] = "User account has already been activated!"
+  #  else
+  #    user.resend_activation
+  #    flash[:success] = "Activate account message has been resent!"
+  #  end
+  #  redirect_to root_url
+  # end
 
   private
 
     def user_params
-      params.require(:user).permit(:name, :user_name, :phone, :contact, :email, :password,
-                                   :password_confirmation)
+      params.expect(user: [ :name, :user_name, :phone, :contact, :email, :password,
+                                   :password_confirmation ])
     end
 
     def correct_user
