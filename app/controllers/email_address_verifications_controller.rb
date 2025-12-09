@@ -1,11 +1,12 @@
 class EmailAddressVerificationsController < ApplicationController
   # Handle activating the account
   def show
-    user = User.find_by_email_address_verification_token(params[:token])
-    if user == current_user && !user.activated?
-      user.activate
+    @user = User.find_by_email_address_verification_token(params[:token])
+    if @user == current_user && !@user.activated?
+      @user.activate
+      start_new_session_for @user
       flash[:success] = "Account activated!"
-      redirect_to user
+      redirect_to @user
     else
       flash[:danger] = "Invalid activation link"
       redirect_to root_url

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Static pages", type: :system do
-
   subject { page }
 
   feature "when visiting the Home page and not signed in" do
@@ -13,7 +12,7 @@ RSpec.describe "Static pages", type: :system do
     scenario "should be able to do a login" do
       fill_in 'login_email',    with: user.email.upcase
       fill_in 'login_password', with: user.password
-      click_button 'Log in'
+      click_button 'Sign in'
       expect(should have_title(full_title(user.name)))
     end
 
@@ -23,7 +22,7 @@ RSpec.describe "Static pages", type: :system do
     end
 
     scenario "should have link to login page" do
-      expect(should have_link('Log in'))
+      expect(should have_link('Sign in'))
     end
   end
 

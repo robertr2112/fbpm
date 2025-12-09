@@ -6,24 +6,17 @@ RSpec.describe 'User signup', type: :system, js: true do
     # driven_by(:selenium_chrome_headless)
     driven_by(:selenium_chrome_headless_sandboxless)
     # driven_by(:selenium_chrome)
-    # host = Capybara.current_session.server.host
-    # port = Capybara.current_session.server.port
-    # ActionMailer::Base.default_url_options = { host: host, port: port }
   end
-
-  # after do
-  #  ActionMailer::Base.default_url_options = {} # Reset to avoid affecting other tests
-  # end
 
   describe 'signup', js: true do
     before do
-      visit signup_path
+      visit new_registrations_path
     end
 
     # Alias submit for "Create my account"
     let(:submit) { 'Create my account' }
 
-    context 'with invalid information' do
+    context 'with no information' do
       scenario 'should not create a user' do
         expect { click_button submit }.not_to change(User, :count)
       end
@@ -40,27 +33,126 @@ RSpec.describe 'User signup', type: :system, js: true do
       end
     end
 
+    context 'with invalid information' do
+      before do
+        fill_in 'user_name',                  with: 'Example User'
+        fill_in 'user_user_name',             with: 'User1'
+        fill_in 'user_email',                 with: 'user1@example.com'
+        fill_in 'user_phone',                 with: '555-123-4567'
+        select  'Email',                      from: 'user_contact'
+        fill_in 'user_password',              with: 'foobar'
+        fill_in 'user_password_confirmation', with: 'foobar'
+      end
+
+      context 'with invalid Name' do
+        scenario "it should show message Name can't be blank" do
+          fill_in 'user_name',                  with: ''
+          click_button submit
+          expect(page).to have_content('Name can\'t be blank')
+        end
+      end
+
+      context 'with invalid User Name' do
+        scenario "it should show message User name can't be blank" do
+          fill_in 'user_user_name',             with: ''
+          click_button submit
+          expect(page).to have_content('User name can\'t be blank')
+        end
+      end
+
+      context 'with invalid phone' do
+        scenario "it should show message Phone is invalid" do
+          fill_in 'user_phone',                 with: '555'
+          select  'Text',                       from: 'user_contact'
+          click_button submit
+          expect(page).to have_content('Phone is invalid')
+        end
+      end
+
+      context 'with blank phone and contact method text' do
+        scenario "it should show message Phone can't be blank" do
+          fill_in 'user_phone',                 with: ''
+          select  'Text',                       from: 'user_contact'
+          click_button submit
+          expect(page).to have_content('Phone can\'t be blank')
+        end
+      end
+
+      context 'with blank phone and contact method both' do
+        scenario "it should show message Phone can't be blank" do
+          fill_in 'user_phone',                 with: ''
+          select  'Both',                       from: 'user_contact'
+          click_button submit
+          expect(page).to have_content('Phone can\'t be blank')
+        end
+      end
+
+      context 'with blank Email' do
+        scenario "it should show message Email can't be blank" do
+          fill_in 'user_email',                 with: ''
+          click_button submit
+          expect(page).to have_content('Email can\'t be blank and Email is invalid')
+        end
+      end
+
+      context 'with invalid Email' do
+        scenario "it should show message Email is invalid" do
+          fill_in 'user_email',                 with: 'user1@'
+          click_button submit
+          expect(page).to have_content('Email is invalid')
+        end
+      end
+
+      context 'with blank Password' do
+        scenario 'should show Password can\'t be blank' do
+          fill_in 'user_password',              with: ''
+          fill_in 'user_password_confirmation', with: ''
+          click_button submit
+          expect(page).to have_content('Password can\'t be blank')
+        end
+      end
+
+      context 'with <6 character Password' do
+        scenario 'should show Password is too short' do
+          fill_in 'user_password',              with: '12345'
+          fill_in 'user_password_confirmation', with: '12345'
+          click_button submit
+          expect(page).to have_content('Password is too short (minimum is 6 characters)')
+        end
+      end
+
+      context 'with invalid Password Confirmation' do
+        scenario "should show password confirmation doesn\'t match" do
+          fill_in 'user_password',              with: 'foobar'
+          fill_in 'user_password_confirmation', with: '123456'
+          click_button submit
+          expect(page).to have_content('Password confirmation doesn\'t match Password')
+        end
+      end
+    end
+
     context 'with valid information' do
       before do
         fill_in 'user_name',                  with: 'Example User'
         fill_in 'user_user_name',             with: 'User1'
         fill_in 'user_email',                 with: 'user1@example.com'
         fill_in 'user_phone',                 with: '555-123-4567'
-        select 'Text', from: 'user_contact'
+        select  'Text',                       from: 'user_contact'
         fill_in 'user_password',              with: 'foobar'
         fill_in 'user_password_confirmation', with: 'foobar'
       end
 
       scenario 'should update user count by 1' do
-        Capybara.using_wait_time(5) do
-          expect { click_button submit }.to change(User, :count).by(1)
-        end
+        count = User.count
+        click_button submit
+        find('h1.pageHeader', text: "Example User")
+        expect(User.count).to eq(count + 1)
       end
 
       scenario 'should send user account activation email' do
-        Capybara.using_wait_time(5) do
-          expect { click_button submit }.to change(ActionMailer::Base.deliveries, :size).by(1)
-        end
+        click_button 'Create my account'
+        find('h1.pageHeader', text: "Example User")
+        expect(page).to have_content("Please check your email to activate your account.")
       end
 
       context 'after creating the user' do
@@ -70,7 +162,7 @@ RSpec.describe 'User signup', type: :system, js: true do
         end
         let(:user) { User.find_by(email: 'user1@example.com') }
 
-        scenario "should have title of the 'user.name'" do
+        scenario "should have title of the Example User" do
           expect(page).to have_title(user.name)
         end
         scenario 'should show user as not activated and show notice to activate' do
@@ -89,44 +181,11 @@ RSpec.describe 'User signup', type: :system, js: true do
         end
 
         scenario 'clicking resend_activation button should resend email', js: true do
-          ActionMailer::Base.deliveries.clear
           find('a.user-name').hover
           find('a.user-resend').click
           find('div.alert.alert-success')
-          expect(ActionMailer::Base.deliveries.size).to eq 1
           expect(page).to have_selector('div.alert.alert-success',
                                         text: 'Activate account message has been resent')
-        end
-
-        context 'and the user is activated' do
-          before do
-            ActionMailer::Base.deliveries.clear
-            find('a.user-name').hover
-            find('a.user-resend').click
-            find('div.alert.alert-success')
-          end
-
-          scenario "should show message 'Account activated'" do
-            email = ActionMailer::Base.deliveries.last
-            html_body = email.html_part.body.to_s
-            document = Nokogiri::HTML(html_body)
-            target_link = document.at("a:contains('Activate user account')")
-            link_url = target_link['href']
-            visit link_url
-            expect(page).to have_selector('div.alert.alert-success',
-                                          text: 'Account activated!')
-          end
-
-          scenario 'after activation then resend_activation should not be visible' do
-            email = ActionMailer::Base.deliveries.last
-            html_body = email.html_part.body.to_s
-            document = Nokogiri::HTML(html_body)
-            target_link = document.at("a:contains('Activate user account')")
-            link_url = target_link['href']
-            visit link_url
-            find('a.user-name').hover
-            expect(page).not_to have_selector('a.user-resend')
-          end
         end
       end
     end

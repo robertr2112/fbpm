@@ -50,7 +50,8 @@ class User < ApplicationRecord
   # format: { with: URI::MailTo::EMAIL_REGEXP } - This should work but doesn't
 
   validates :contact, inclusion:   { in: 1..3 }
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: false
+  validates :password, presence: true, length: { minimum: 6 }, on: :create
+  validates :password, length: { minimum: 6 }, allow_nil: true, on: :update
 
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :

@@ -1,15 +1,17 @@
 module AuthenticationHelper
-  def sign_in(user, options = {})
-    visit login_path
+  def sign_in_user(user, options = {})
+    visit new_session_path
     find('#signin_email').set(user.email)
     find('#signin_password').set(user.password)
     find('#signin_button').click
+    find('h1.pageHeader', text: user.name)
   end
 
-  def sign_out(user, options = {})
+  def sign_out_user(user, options = {})
     visit user_path(user)
     find('a.user-name').hover
     find('a.user-logout').click
+    find('h1.pageHeader', text: 'Sign in')
   end
 
   #  Here are the support routines to test out pools
@@ -74,9 +76,9 @@ module AuthenticationHelper
       if entry.survivorStatusIn
         team_index = if user_count <= num_users
                        week.games[0].homeTeamIndex
-                     else
+        else
                        week.games[0].awayTeamIndex
-                     end
+        end
 
         new_pick = entry.picks.build(week_id: week.id, week_number: week.week_number)
         new_game_pick = new_pick.game_picks.build(chosenTeamIndex: team_index)

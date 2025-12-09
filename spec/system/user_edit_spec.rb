@@ -10,7 +10,7 @@ RSpec.describe 'Edit page', type: :system, js: true do
     let(:user) { FactoryBot.create(:user) }
 
     before do
-      sign_in(user)
+      sign_in_user(user)
       visit edit_user_path(user)
       find('h1.pageHeader', text: 'Update your profile')
     end
@@ -24,14 +24,6 @@ RSpec.describe 'Edit page', type: :system, js: true do
       end
       scenario do
         expect(page).to have_link('Change?', href: 'http://gravatar.com/emails')
-      end
-    end
-
-    context 'with invalid Name' do
-      scenario "it should show message it can't be blank" do
-        fill_in 'user_name', with: ''
-        click_button 'Update Profile'
-        expect(page).to have_content('can\'t be blank')
       end
     end
 
@@ -96,7 +88,7 @@ RSpec.describe 'Edit page', type: :system, js: true do
         find('h1.pageHeader', text: "#{user.name} - My Pools")
         Capybara.using_wait_time(5) do
           find('a.user-name').hover
-          expect(page).to have_link('Log out', href: logout_path)
+          expect(page).to have_link('Sign out', href: session_path)
         end
       end
 

@@ -18,12 +18,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    byebug
-    if @user.update(user_params)
-      flash[:success] = "Profile updated"
-      redirect_to @user
-    else
-      render "edit"
+     respond_to do |format|
+      if @user.update(user_params)
+        flash[:success] = "Profile updated"
+        format.html { redirect_to @user }
+      else
+        format.html { render(:edit, status: :unprocessable_entity) }
+      end
     end
   end
 
@@ -91,14 +92,14 @@ class UsersController < ApplicationController
 
     def correct_user
       @user = User.find(params[:id])
-      redirect_to root_url unless @user == Current.user
+      redirect_to root_url unless @user == current_user
     end
 
     # Before filters
     def admin_user
       if !current_user.admin?
         flash[:danger] = "Only an Admin User can access that page!"
-        redirect_to current_user
+        redirect_to root_url
       end
     end
 end

@@ -12,7 +12,7 @@ RSpec.describe 'User pages', type: :system do
     let(:user) { FactoryBot.create(:user) }
 
     before do
-      sign_in user
+      sign_in_user user
       visit users_path
       click_link 'All Users'
     end
@@ -50,7 +50,7 @@ RSpec.describe 'User pages', type: :system do
   describe 'profile page' do
     let(:user) { FactoryBot.create(:user) }
     before do
-      sign_in user
+      sign_in_user user
       visit user_path(user)
     end
 
@@ -61,7 +61,7 @@ RSpec.describe 'User pages', type: :system do
   end
 
   describe 'signup page' do
-    before { visit signup_path }
+    before { visit new_registrations_path }
 
     scenario "Should have content 'Sign up'" do
       expect(page).to have_content('Sign up')

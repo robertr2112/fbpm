@@ -39,17 +39,17 @@ RSpec.describe 'Pool Management', type: :system do
 
   def given_that_a_season_has_been_created
     @admin_user = FactoryBot.create(:admin)
-    sign_in @admin_user
+    sign_in_user @admin_user
     @season = FactoryBot.create(:season_with_weeks_and_games, num_weeks: 4, num_games: 4)
     @season.setState(Season::STATES[:Open])
-    sign_out @admin_user # requires javascript and that is not setup yet
+    sign_out_user @admin_user # requires javascript and that is not setup yet
   end
 
   # And Definitions
 
   def and_I_am_a_logged_in_user
     @user =  FactoryBot.create(:user)
-    sign_in @user
+    sign_in_user @user
   end
 
   def and_I_have_created_a_pool

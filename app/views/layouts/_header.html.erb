@@ -41,8 +41,8 @@
                         <li><%= link_to "Edit pool", edit_pool_path(pool),
                               class:'dropdown-item pool-edit' %></li>
                         <li><%= link_to "Delete pool", pool, method: :delete,
-                              data: {confirm: "Are you sure?"}, title: "Delete#{pool.name}",
-                              class:'dropdown-item pool-delete' %></li>
+                              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                              title: "Delete#{pool.name}", class:'dropdown-item pool-delete' %></li>
                         <li><%= link_to "Send Group Message", new_pool_pool_message_path(pool),
                               class:'dropdown-item' %></li>
                         <li><%= link_to "Invite people to join", invite_path(pool.id),
