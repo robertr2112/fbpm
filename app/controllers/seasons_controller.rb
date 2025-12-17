@@ -15,7 +15,7 @@ class SeasonsController < ApplicationController
       flash[:success] = "Season for year '#{@season.year}' was created successfully!"
       redirect_to @season
     else
-      render "new"
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -38,7 +38,7 @@ class SeasonsController < ApplicationController
         flash[:success] = "Season updated."
         redirect_to @season
       else
-        render "edit"
+        render :edit, status: :unprocessable_entity
       end
     else
       flash[:danger] = "Cannot edit the Season after it has been marked Open!"
@@ -153,13 +153,13 @@ class SeasonsController < ApplicationController
   private
 
     def season_params
-      params.require(:season).permit(:year, :nfl_league, :number_of_weeks, :current_week,
+      params.expect(season: [ :year, :nfl_league, :number_of_weeks, :current_week,
                                      weeks_attributes: [ :id, :season_id,
                                                        :week_number, :state, :_destroy,
                                      games_attributes: [ :id, :week_id, :homeTeamIndex,
                                                      :awayTeamIndex, :spread,
                                                      :homeTeamScore, :awayTeamScore,
-                                                     :game_date, :_destroy ] ])
+                                                     :game_date, :_destroy ] ] ])
     end
 
     # Before filters

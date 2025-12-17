@@ -16,7 +16,7 @@ class TeamsController < ApplicationController
         flash[:success] = "Team Info updated"
         redirect_to @team
       else
-        render "edit"
+        render :edit, status: :unprocessable_entity
       end
     else
         flash[:danger] = "Cannot find Team with id #{params[:id]}!"
@@ -37,8 +37,7 @@ class TeamsController < ApplicationController
   private
 
     def team_params
-      params.require(:team).permit(:name, :nfl,
-                                   :imagePath)
+      params.expect(team: [ :name, :nfl, :imagePath ])
     end
 
     # Before filters

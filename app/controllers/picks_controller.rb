@@ -32,7 +32,7 @@ class PicksController < ApplicationController
           "Your pick(s) for Week '#{@week.week_number}' was saved!"
       redirect_to @pool
     else
-      render "new"
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -64,16 +64,16 @@ class PicksController < ApplicationController
       flash[:success] = "Your pick(s) for Week '#{@week.week_number}' was changed!"
       redirect_to @pool
     else
-      render "edit"
+      render :edit, status: :unprocessable_entity
     end
   end
 
   private
     def pick_params
-      params.require(:pick).permit(:week_id, :total_score,
+      params.expect(pick: [ :week_id, :total_score,
                                    :week_number, :sup_points,
                                    game_picks_attributes: [ :id, :pick_id,
-                                                     :chosenTeamIndex ])
+                                                     :chosenTeamIndex ] ])
     end
 
     def pickErrorCheck(week, entry)

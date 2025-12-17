@@ -45,7 +45,7 @@ class PoolsController < ApplicationController
         @pool.setOwner(current_user, true)
         redirect_to @pool
       else
-        render "new"
+        render :new, status: :unprocessable_entity
       end
     else
       flash[:danger] = "Cannot create a pool because the #{year} season is not ready for pools!"
@@ -146,7 +146,7 @@ class PoolsController < ApplicationController
         flash[:success] = "Pool updated."
         redirect_to @pool
       else
-        render "edit"
+        render :edit, status: :unprocessable_entity
       end
     else
       flash[:danger] = "Only the owner can edit the pool!"
@@ -205,8 +205,8 @@ class PoolsController < ApplicationController
   private
 
     def pool_params
-      params.require(:pool).permit(:name, :poolType, :allowMulti,
-                                   :isPublic, :starting_week, :password)
+      params.expect(pool: [ :name, :poolType, :allowMulti,
+                                   :isPublic, :starting_week, :password ])
     end
 
     def authenticate

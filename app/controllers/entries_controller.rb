@@ -34,7 +34,7 @@ class EntriesController < ApplicationController
       flash[:success] = "Entry: #{@entry.name} was created successfully!"
       redirect_to @pool
     else
-      render "new"
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -50,7 +50,8 @@ class EntriesController < ApplicationController
       flash[:success] = "Entry updated"
       redirect_to @pool
     else
-      render "edit"
+      render :edit, status: :unprocessable_entity
+    end
     end
   end
 
@@ -72,6 +73,6 @@ class EntriesController < ApplicationController
 
   private
     def entry_params
-      params.require(:entry).permit(:name, :survivorStatusIn, :supTotalPoints)
+      params.expect(entry: [ :name, :survivorStatusIn, :supTotalPoints ])
     end
 end

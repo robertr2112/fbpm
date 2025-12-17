@@ -42,7 +42,7 @@ class WeeksController < ApplicationController
         # Set the state to Pend
         redirect_to @week
       else
-        render "new"
+        render :new, status: :unprocessable_entity
       end
     else
       flash[:danger] = "Cannot create week. Season with id:#{params[:season_id]} does not exist!"
@@ -171,7 +171,7 @@ class WeeksController < ApplicationController
       flash[:success] = "Successfully updated week #{@week.week_number}."
       redirect_to @week
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -237,7 +237,7 @@ class WeeksController < ApplicationController
   private
 
   def week_params
-    params.require(:week).permit(:state, :week_number,
+    params.expect(week: [ :state, :week_number,
                                  games_attributes: %i[id week_id
                                                       homeTeamIndex
                                                       awayTeamIndex
@@ -245,7 +245,7 @@ class WeeksController < ApplicationController
                                                       homeTeamScore
                                                       awayTeamScore
                                                       game_date
-                                                      _destroy])
+                                                      _destroy] ])
   end
 
   def set_time_zone(&block)
