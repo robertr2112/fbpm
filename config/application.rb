@@ -24,5 +24,8 @@ module Fbpm
     # config.eager_load_paths << Rails.root.join("extras")
     config.time_zone = "Central Time (US & Canada)"
     config.active_support.to_time_preserves_timezone = :zone
+
+    # Disable actioncable
+    config.action_cable.mount_path = nil
   end
 end
