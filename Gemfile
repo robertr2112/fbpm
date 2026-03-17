@@ -115,9 +115,9 @@ group :development, :test do
   #
   # Debugging tools - Recommended for step-by-step debugging
   #
-  gem "pry"
-  gem "pry-byebug"
-  gem "pry-rails"
+  # gem "pry"
+  # gem "pry-byebug"
+  # gem "pry-rails"
 end
 
 group :development do

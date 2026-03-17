@@ -13,7 +13,6 @@
 #
 
 class Season < ApplicationRecord
-
   before_create do
     self.year = Time.now.strftime("%Y") unless self.year
     self.current_week = 1
@@ -32,10 +31,10 @@ class Season < ApplicationRecord
   def self.getSeasonYear
     year = Time.now.strftime("%Y").to_i
     month = Time.now.strftime("%m").to_i
-    if (month >= 1) && (month <= 3)
+    if (month >= 1) && (month <= 2)
       year = year - 1
     end
-    return year.to_s
+    year.to_s
   end
 
   def setState(new_state)
@@ -66,7 +65,7 @@ class Season < ApplicationRecord
         return false
       end
     end
-    return true
+    true
   end
 
   #
@@ -89,5 +88,4 @@ class Season < ApplicationRecord
       self.update_attribute(:current_week, self.current_week+1)
     end
   end
-
 end
