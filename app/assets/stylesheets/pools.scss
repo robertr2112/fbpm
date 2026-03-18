@@ -49,12 +49,12 @@
 }
 
 .entry-name {
-  color: black;
+  color: black !important;
   @include table-entry-width(250px);
 }
 
 .entry-name-out {
-  color: red;
+  color: red !important;
   @include table-entry-width(250px);
 }
 
@@ -67,12 +67,12 @@
 }
 
 .entry-success {
-  color: green;
+  color: green !important;
   @include table-entry-width(150px);
 }
 
 .entry-error {
-  color: red;
+  color: red !important;
   @include table-entry-width(150px);
 }
 
@@ -92,7 +92,7 @@ ul#pool-members {
 
 .survivor-board-table {
   overflow: auto;
-  /* max-height:400px; !!! uncomment this to add vertical scroll bar */
+  max-height:400px; /* !!! uncomment this to add vertical scroll bar */
   width: 100%;
   margin: 0;
 }
