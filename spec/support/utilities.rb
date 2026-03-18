@@ -1,5 +1,5 @@
 module AuthenticationHelper
-  def sign_in_user(user, options = {})
+  def sign_in_user(user)
     visit new_session_path
     find('#signin_email').set(user.email)
     find('#signin_password').set(user.password)
@@ -7,7 +7,7 @@ module AuthenticationHelper
     find('h1.pageHeader', text: user.name)
   end
 
-  def sign_out_user(user, options = {})
+  def sign_out_user(user)
     visit user_path(user)
     find('a.user-name').hover
     find('a.user-logout').click
