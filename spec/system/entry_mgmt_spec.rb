@@ -38,17 +38,21 @@ RSpec.describe 'Entry Management', type: :system do
     end
   end
 
-  #  feature 'Delete' do
-  #    scenario 'Deleting a pool', js: true do
-  #      given_that_a_season_has_been_created
-  #      and_I_am_a_logged_in_user
-  #      and_I_have_created_a_pool
-  #      when_I_delete_a_pool
-  #      then_the_pool_should_not_appear_in_my_profile
-  #    end
-  #  end
+  feature 'delete', js: true do
+    before do
+      given_that_a_season_has_been_created
+      and_another_user_creates_a_pool
+      and_I_am_a_logged_in_user
+      and_I_join_the_pool
+    end
 
-  # Given Definitions
+    scenario 'the entry is deleted when the user leaves the pool' do
+      when_I_leave_the_pool
+      then_the_entry_should_be_deleted
+    end
+  end
+
+  ### Given Definitions ###
 
   def given_that_a_season_has_been_created
     @admin_user = FactoryBot.create(:admin)
@@ -58,7 +62,8 @@ RSpec.describe 'Entry Management', type: :system do
     sign_out_user @admin_user # requires javascript and that is not setup yet
   end
 
-  # And Definitions
+  ### And Definitions ###
+
   def and_I_am_a_logged_in_user
     @user =  FactoryBot.create(:user)
     sign_in_user @user
@@ -79,7 +84,11 @@ RSpec.describe 'Entry Management', type: :system do
     when_I_create_a_pool
   end
 
-  # When Definitions
+  def and_I_join_the_pool
+    when_I_join_the_pool
+  end
+
+  ### When Definitions ###
 
   def when_I_create_a_pool
     visit new_pool_path
@@ -94,6 +103,13 @@ RSpec.describe 'Entry Management', type: :system do
     click_link 'Join', href: join_path(@pool.id)
   end
 
+  def when_I_leave_the_pool
+    visit pool_path(@pool)
+    find_link('Pool Management').hover
+    find_link("#{@pool.name}").hover
+    click_link 'Leave Pool'
+  end
+
   def when_I_update_the_entry_name
     find_link('Pool Management').hover
     find_link("#{@pool.name}").hover
@@ -104,15 +120,23 @@ RSpec.describe 'Entry Management', type: :system do
     fill_in 'entry_name', with: "#{@new_entry_name}"
     click_button 'Save changes'
   end
-  # Then Definitions
+
+  ### Then Definitions ###
 
   def then_an_entry_should_be_created
     visit user_path(@user)
     entry_name = @user.user_name
     expect(page).to have_text(entry_name)
   end
+
   def then_the_new_entry_name_should_be_shown
     visit user_path(@user)
     expect(page).to have_text("#{@new_entry_name}")
+  end
+
+  def then_the_entry_should_be_deleted
+    visit user_path(@user)
+    entry_name = @user.user_name
+    expect(page).to_not have_text(entry_name)
   end
 end
