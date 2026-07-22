@@ -16,11 +16,12 @@
 #  week_id       :integer
 #
 FactoryBot.define do
+
   factory :game do
     sequence(:homeTeamIndex, (1..16).cycle) { |n| n }
     sequence(:awayTeamIndex, (17..32).cycle) { |n| n }
     game_date { Time.zone.now + 10.minutes }
-    network { "CBS" }
     week
   end
+
 end
