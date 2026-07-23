@@ -18,15 +18,14 @@
 require 'rails_helper'
 
 RSpec.describe Pick, type: :model do
-
   let(:user) { FactoryBot.create(:user) }
   let(:season) { FactoryBot.create(:season_with_weeks_and_games, num_weeks: 4, num_games: 16) }
 
   before do
-    @pool_attr = { :name => "Pool 1", :poolType => 2, 
-                   :isPublic => true }
+    @pool_attr = { name: "Pool 1", poolType: 2,
+                   isPublic: true }
     @pool = user.pools.create(@pool_attr.merge(season_id: season.id,
-                                   starting_week: 1)) 
+                                   starting_week: 1))
     @week = season.weeks[0]
     @games = @week.games
     @teams = @week.buildSelectTeams
@@ -38,11 +37,11 @@ RSpec.describe Pick, type: :model do
     @pick = @entry.picks.create(week_id: @week.id, week_number: @week.week_number)
     @game_pick = @pick.game_picks.create(chosenTeamIndex: @first_team_picked)
   end
-  
+
   subject { @pick }
-  
+
   it { should be_valid }
-  
+
   it { should respond_to(:week_id) }
   it { should respond_to(:entry_id) }
   it { should respond_to(:week_number) }
@@ -50,7 +49,7 @@ RSpec.describe Pick, type: :model do
   it { should respond_to(:pickLocked?) }
   it { should respond_to(:pickValid?) }
   it { should respond_to(:buildSelectTeams) }
-  
+
   # survivor pool test only
   describe "when in survivor pool" do
     describe "pickValid?" do
@@ -70,15 +69,14 @@ RSpec.describe Pick, type: :model do
         expect(new_pick.save).to eq true
       end
     end
-    
+
     describe "buildSelectTeams" do
-    
       it "should not include teams already picked" do
         teams = @pick.buildSelectTeams(@week)
         expect(teams.include?(@first_team_picked)).to eq false
       end
     end
-    
+
     describe "when the current dateTime is after game start dateTime" do
       it "should not allow the pick" do
         week = season.weeks[1]
@@ -101,30 +99,25 @@ RSpec.describe Pick, type: :model do
           new_pick.save
         end.not_to change(Pick, :count)
       end
-      
+
       it "should not allow the pick to be changed" do
         week = season.weeks[1]
         games = week.games
-        
+
         # Make initial pick while time is before start
         games[0].save
         new_pick = @entry.picks.build(week_id: week.id, week_number: week.week_number)
         new_game_pick = new_pick.game_picks.build(chosenTeamIndex: games[0].homeTeamIndex)
         new_game_pick.save
         new_pick.save
-        
-        # update game start time
-        if Time.zone.now.dst?
-          games[0].game_date = @games[0].game_date - 15.minutes
-        else
-          games[0].game_date = @games[0].game_date - 75.minutes
-        end
+
+        # update game start time so that game has already started
+        games[0].game_date = Time.zone.now - 15.minutes
         games[0].save
-        
+
         # pick.pickLocked? should show the pick as locked and not able to be updated.
         expect(new_pick.pickLocked?).to eq true
       end
     end
   end
-  
 end
