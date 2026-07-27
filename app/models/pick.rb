@@ -16,7 +16,6 @@
 #
 
 class Pick < ApplicationRecord
-
   belongs_to :entry
   has_many :game_picks, dependent: :delete_all
 
@@ -39,9 +38,9 @@ class Pick < ApplicationRecord
 
     game = week.find_game(current_game_pick .chosenTeamIndex)
     if game.gameStarted?
-        return true
+        true
     else
-       return false
+       false
     end
   end
 
@@ -50,14 +49,13 @@ class Pick < ApplicationRecord
   # CALLED FROM: ActiveRecord validate
   #
   def pickValid?
-
     # Verify this team hasn't already been picked in this pool
     current_game_pick = self.game_picks.first
     entry = Entry.find(self.entry_id)
     entry.picks.each do |pick|
       old_game_pick = pick.game_picks.first
-      if (old_game_pick != current_game_pick &&
-          old_game_pick.chosenTeamIndex == current_game_pick.chosenTeamIndex)
+      if old_game_pick != current_game_pick &&
+          old_game_pick.chosenTeamIndex == current_game_pick.chosenTeamIndex
         errors.add(:base, "You have already picked this team!  Please choose another team.")
         current_game_pick.errors.add(:chosenTeamIndex, "You have already picked this team!  Please choose another team.")
         return false
@@ -76,7 +74,7 @@ class Pick < ApplicationRecord
       end
     end
 
-    return true
+    true
   end
 
   # Build list of available teams to choose for a survivor pool
@@ -105,8 +103,6 @@ class Pick < ApplicationRecord
       end
     end
 
-    return avail_teams
-
+    avail_teams
   end
-
 end

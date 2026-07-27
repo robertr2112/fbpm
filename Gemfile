@@ -137,8 +137,6 @@ group :test do
   # gem 'webdrivers' # Not needed with latest version of Selenium-webdriver and ruby 3+
   # Email support
   gem "email_spec"
-  # Added gems
-  gem "database_cleaner"
   # Code coverage tool
   gem "simplecov", require: false, group: :test
   gem "launchy"

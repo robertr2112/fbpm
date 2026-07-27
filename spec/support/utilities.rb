@@ -16,13 +16,23 @@ module AuthenticationHelper
 
   #  Here are the support routines to test out pools
 
+  def build_survivor_context
+    season = FactoryBot.create(:season_with_weeks_and_games, num_weeks: 3, num_games: 3)
+    season.update!(current_week: 1)
+    season.weeks.update_all(state: Week::STATES[:Pend])
+    add_season_games_scores(season)
+    users  = setup_pool_with_users_and_entries(season, 5, 1)
+    pool   = users[0].pools.first
+    pool.update!(pool_done: false)
+    [ season, users, pool ]
+  end
+
   # add scores for all games and all weeks in the season, where all home teams win (for simplicity)
   # for each week, but leave current week as 1 and don't mark any weeks as final
   def add_season_games_scores(season)
     season.weeks.each do |week|
       week.games.each do |game|
-        game.homeTeamScore = rand(18...42)
-        game.awayTeamScore = rand(0...17)
+        game.update!(homeTeamScore: 21, awayTeamScore: 10)
         game.save
       end
     end
@@ -34,9 +44,24 @@ module AuthenticationHelper
     users = []
     users[0] = FactoryBot.create(:user_with_pool_and_entry, season: season)
     pool = users[0].pools.first
-    1.upto(4) do |n|
+    1.upto(num_users - 1) do |n|
       users[n] = FactoryBot.create(:user_with_pool_and_entry, season: season, pool: pool)
     end
+
+    # If you truly want multiple entries per user, add them explicitly here
+    if num_entries > 1
+      users.each do |user|
+        (num_entries - 1).times do
+          pool.entries.create!(
+            name: pool.getEntryName(user),
+            user_id: user.id,
+            survivorStatusIn: true,
+            supTotalPoints: 0
+          )
+        end
+      end
+    end
+
     users
   end
 
@@ -52,11 +77,47 @@ module AuthenticationHelper
   #
   def pool_update_survivor_users(season, pool, users, numUsersCorrect, numUsersForgot)
     week = season.getCurrentWeek
-    new_users = users
-    numUsersForgot.times do
-      new_users.shift
+    correct_count = 1
+    forgot_count = 1
+    users.each do |user|
+      # Get entry for this user
+      entry = pool.entries.where(user_id: user.id)[0]
+
+      # Skip the first numUsersForgot users as those who forgot to pick
+      if forgot_count <= numUsersForgot
+        forgot_count  += 1
+        next
+      # Next mark the users for numUsersCorrect number of correct users, the rest will
+      # be incorrect
+      else
+        if entry.survivorStatusIn
+
+          used_team_indices = entry.game_picks.pluck(:chosenTeamIndex)
+
+          # All home teams this week
+          home_teams = week.games.map(&:homeTeamIndex)
+
+          # All away teams this week
+          away_teams = week.games.map(&:awayTeamIndex)
+
+          if correct_count <= numUsersCorrect
+            # Must pick an unused HOME team
+            team_index = home_teams.find { |t| !used_team_indices.include?(t) }
+          else
+            # Must pick an unused AWAY team
+            team_index = away_teams.find { |t| !used_team_indices.include?(t) }
+          end
+
+          new_pick = entry.picks.build(week_id: week.id, week_number: week.week_number)
+          new_game_pick = new_pick.game_picks.build(chosenTeamIndex: team_index)
+          new_pick.save
+          new_game_pick.save
+        end
+
+        forgot_count  += 1
+        correct_count += 1
+      end
     end
-    users_pick_winning_team(week, pool, new_users, numUsersCorrect) unless pool.pool_done
     week.setState(Week::STATES[:Final])
 
     # Call season.updatePools instead of directly calling pool.updateEntries directly so
@@ -68,28 +129,6 @@ module AuthenticationHelper
     pool.reload
   end
 
-  # Have num_users number of users pick the winning home team and the rest pick the away team
-  def users_pick_winning_team(week, pool, users, num_users)
-    user_count = 1
-    users.each do |user|
-      entry = pool.entries.where(user_id: user.id)[0]
-      if entry.survivorStatusIn
-        team_index = if user_count <= num_users
-                       week.games[0].homeTeamIndex
-        else
-                       week.games[0].awayTeamIndex
-        end
-
-        new_pick = entry.picks.build(week_id: week.id, week_number: week.week_number)
-        new_game_pick = new_pick.game_picks.build(chosenTeamIndex: team_index)
-        new_game_pick.save
-        new_pick.save
-      end
-
-      user_count += 1
-    end
-  end
-
   def numberRemainingSurvivorEntries(pool)
     num_entries = 0
     pool.entries.each do |entry|
@@ -97,21 +136,4 @@ module AuthenticationHelper
     end
     num_entries
   end
-
-  # module MailerMacros
-  #  def last_email
-  #    ActionMailer::Base.deliveries.last
-  #  end
-  #
-  #  def extract_token_from_email(token_name)
-  #    mail_body = last_email.body.to_s
-  #    mail_body[/#{token_name.to_s}_token=([^"]+)/, 1]
-  #  end
-
-  #
-  # Debug code
-  #
-  # save_and_open_page
-  # puts current_url
-  # pry
 end

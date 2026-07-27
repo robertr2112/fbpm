@@ -32,131 +32,101 @@ class Pool < ApplicationRecord
 
   attr_accessor :password
 
-  validates :name,     presence:   true,
-                       length:      { maximum: 30 },
-                       uniqueness:  { case_sensitive: false }
-if nil
-  validates :poolType, inclusion:   { in: 0..3 }
-else
-  validates :poolType, exclusion:   { in: [ 0, 1, 3, 4 ] }
-end
+  validates :name,
+            presence:   true,
+            length:     { maximum: 30 },
+            uniqueness: { case_sensitive: false }
+  validates :poolType, inclusion: { in: 0..3 }
   validates :allowMulti, inclusion: { in: [ true, false ] }
-  validates :isPublic, inclusion:   { in: [ true, false ] }
+  validates :isPublic,   inclusion: { in: [ true, false ] }
 
   POOL_INVITE_MSG = "From Football Pool Mania: You're invited to join a survivor pool! \
   Click the attached link (login or create a new account) to join the pool! (If creating \
   a new account you will need to click the link again after authenticating your account to join)"
 
   #
-  # The following routines check the poolType. There is both a Class and
-  # an Instance version of each routine.
+  # Class helpers for pool types
   #
   def self.typeSUP?(type)
-    if type == POOL_TYPES[:SUP]
-      return true
-    end
-    false
+    type == POOL_TYPES[:SUP]
   end
 
   def self.typePickEm?(type)
-    if type == POOL_TYPES[:PickEm]
-      return true
-    end
-    false
+    type == POOL_TYPES[:PickEm]
   end
 
   def self.typePickEmSpread?(type)
-    if type == POOL_TYPES[:PickEmSpread]
-      return true
-    end
-    false
+    type == POOL_TYPES[:PickEmSpread]
   end
 
   def self.typeSurvivor?(type)
-    if type == POOL_TYPES[:Survivor]
-      return true
-    end
-    false
+    type == POOL_TYPES[:Survivor]
   end
 
+  #
+  # Instance helpers for pool types
+  #
   def typeSUP?
-    if self.poolType == POOL_TYPES[:SUP]
-      return true
-    end
-    false
+    poolType == POOL_TYPES[:SUP]
   end
 
   def typePickEm?
-    if self.poolType == POOL_TYPES[:PickEm]
-      return true
-    end
-    false
+    poolType == POOL_TYPES[:PickEm]
   end
 
   def typePickEmSpread?
-    if self.poolType == POOL_TYPES[:PickEmSpread]
-      return true
-    end
-    false
+    poolType == POOL_TYPES[:PickEmSpread]
   end
 
   def typeSurvivor?
-    if self.poolType == POOL_TYPES[:Survivor]
-      return true
-    end
-    false
+    poolType == POOL_TYPES[:Survivor]
   end
 
   #
   # Build Pool invite email message
   #
   def buildPoolInviteMsg
-    if self.typeSurvivor?
-      message = Pool::POOL_INVITE_MSG
-    end
-
-    message
+    return Pool::POOL_INVITE_MSG if typeSurvivor?
+    nil
   end
 
   #
   # Used to determine if the listed user is a member in the pool
   #
   def isMember?(user)
-    self.pool_memberships.find_by_user_id(user.id)
+    pool_memberships.find_by_user_id(user.id)
   end
 
   #
   # Used to determine if the listed user is the owner of the pool.
   #
   def isOwner?(user)
-    pool_membership = self.pool_memberships.find_by_user_id(user.id)
-    if pool_membership
-      pool_membership.owner
-    end
+    membership = pool_memberships.find_by_user_id(user.id)
+    membership&.owner
   end
 
   def getOwner
-    pool_membership = self.pool_memberships.find_by_owner(true)
-    User.find(pool_membership.user_id)
+    membership = pool_memberships.find_by_owner(true)
+    User.find(membership.user_id)
   end
+
   #
   # This is used to determine if users can join/leave the pool.  Once the pool is no longer open then
   # users cannot join or leave the pool.
   #
   def isOpen?
-    season = Season.find_by_id(self.season_id)
-    if season
-      first_week = season.weeks.find_by_week_number(self.starting_week)
-      if self.typeSurvivor?
-        if first_week && (first_week.checkStateClosed || first_week.checkStateFinal)
-          return false
-        else
-          return true
-        end
+    s = season
+    return false unless s
+
+    first_week = s.weeks.find_by_week_number(starting_week)
+    if typeSurvivor?
+      if first_week && (first_week.checkStateClosed || first_week.checkStateFinal)
+        false
       else
-        return true
+        true
       end
-      false
+    else
+      true
     end
   end
 
@@ -164,10 +134,10 @@ end
   # Used to set/remove ownership of the pool from the listed user
   #
   def setOwner(user, flag)
-    pool_membership = self.pool_memberships.find_by_user_id(user.id)
-    if pool_membership
-      pool_membership.owner = flag
-      pool_membership.save
+    membership = pool_memberships.find_by_user_id(user.id)
+    if membership
+      membership.owner = flag
+      membership.save
     end
   end
 
@@ -177,30 +147,29 @@ end
   def addUser(user)
     # Add user to the pool and save
     user.pools << self
-    self.setOwner(user, false)
+    setOwner(user, false)
     user.save
     # Create an entry in the pool for this user
-    entry_name = self.getEntryName(user)
-    new_entry_params = { name: entry_name }
-    self.entries.create(new_entry_params.merge(user_id: user.id))
+    entry_name = getEntryName(user)
+    entries.create(name: entry_name, user_id: user.id)
   end
 
   #
   # Removes the listed user from the pool
   #
   def removeUser(user)
-    self.removeEntries(user)
-    pool_membership = self.pool_memberships.find_by_user_id(user.id)
-    pool_membership.destroy
+    removeEntries(user)
+    membership = pool_memberships.find_by_user_id(user.id)
+    membership&.destroy
   end
 
   #
   # Removes all memberships from the pool
   #
   def remove_memberships
-    users = self.users.each do |user|
-      pool_membership = self.pool_memberships.find_by_user_id(user.id)
-      pool_membership.destroy
+    users.each do |user|
+      membership = pool_memberships.find_by_user_id(user.id)
+      membership&.destroy
     end
   end
 
@@ -209,10 +178,10 @@ end
   # for the first entry and then adds _<entry number>
   #
   def getEntryName(user)
-    entries = self.entries.where(user_id: user.id)
+    user_entries  = entries.where(user_id: user.id)
     user_nickname = user.user_name
-    if entries && entries.count > 0
-        user_nickname = user_nickname + "_#{entries.count}"
+    if user_entries && user_entries.count > 0
+      user_nickname = "#{user_nickname}_#{user_entries.count}"
     end
     user_nickname
   end
@@ -221,18 +190,18 @@ end
   # This routine is used to update the survivor status and SUP total points for those pools
   # for each entry.  It is called after a week is marked final.
   def updateEntries(current_week)
-    if self.typeSurvivor?
-      if !self.pool_done
+    if typeSurvivor?
+      unless pool_done
         # Update all entries survivorStatus
         updateSurvivor(current_week)
         # Check to see if their is a winner and mark pool done if there is a winner
         haveSurvivorWinner?
       end
-    elsif self.typeSUP?
+    elsif typeSUP?
       updateSUP(current_week)
-    elsif self.typePickEm?
+    elsif typePickEm?
       updatePickEm(current_week)
-    elsif self.typePickEmSpread?
+    elsif typePickEmSpread?
       updatePickEmSpread(current_week)
     end
   end
@@ -241,8 +210,7 @@ end
   # Used to remove all entries for a user from the pool.  It is called when a user leaves
   # the pool
   def removeEntries(user)
-    entries = Entry.where({ pool_id: self.id, user_id: user.id })
-    entries.each do |entry|
+    Entry.where(pool_id: id, user_id: user.id).each do |entry|
       entry.recurse_delete
     end
   end
@@ -256,23 +224,23 @@ end
   end
 
   def getSurvivorWinner
-    season = Season.find(self.season_id)
-    current_week = self.getCurrentWeek
-    entries = self.entries.where(survivorStatusIn: true)
-    if self.pool_done
-      return entries
-    elsif entries.count == 0
-      self.update_attribute(:pool_done, true)
+    s            = season
+    current_week = getCurrentWeek
+    entries_rel  = self.entries.where(survivorStatusIn: true)
+    if pool_done
+      return entries_rel
+    elsif entries_rel.count == 0
+      update_attribute(:pool_done, true)
       return determineSurvivorWinners
-    elsif (current_week.week_number == season.number_of_weeks) &&
-        current_week.checkStateFinal
-      self.update_attribute(:pool_done, true)
-      return entries
-    elsif entries.count == 1 &&
-             ((current_week.week_number >= self.starting_week) &&
-              current_week.checkStateFinal)
-      self.update_attribute(:pool_done, true)
-      return entries
+    elsif (current_week.week_number == s.number_of_weeks) &&
+          current_week.checkStateFinal
+      update_attribute(:pool_done, true)
+      return entries_rel
+    elsif entries_rel.count == 1 &&
+          (current_week.week_number >= starting_week) &&
+          current_week.checkStateFinal
+      update_attribute(:pool_done, true)
+      return entries_rel
     end
 
     false
@@ -281,125 +249,107 @@ end
   #
   # Used to get the current week.  It calls season.getCurrentWeek.
   def getCurrentWeek
-    season = Season.find(self.season_id)
     season.getCurrentWeek
   end
 
   private
 
-    def pool_valid?
-      if self.poolType != Pool::POOL_TYPES[:Survivor]
-        if self.poolType == Pool::POOL_TYPES[:PickEm]
-          type = "PickEm"
-        elsif self.poolType == Pool::POOL_TYPES[:PickEmSpread]
-          type = "PickEmSpread"
-        else
-          type = "SUP"
-        end
-        return true
-      end
-      false
-    end
+  def pool_valid?
+    poolType != Pool::POOL_TYPES[:Survivor]
+  end
 
-    def checkUpdateFields
-      if !self.isOpen?
-        if (self.changed & [ "poolType", "allowMulti" ]).any?
-          self.errors.add(:poolType, "You cannot change the Pool attributes after the first week has completed!")
-        end
+  def checkUpdateFields
+    unless isOpen?
+      if (changed & [ "poolType", "allowMulti" ]).any?
+        errors.add(:poolType, "You cannot change the Pool attributes after the first week has completed!")
       end
     end
+  end
 
-    #
-    #  This finds winners if they all happened to get knocked out the same week.
-    #
-    def determineSurvivorWinners
-      # Find all picks from season.week_number - 1 and self.id (not sure easiest way to do it.)
-      season = Season.find(self.season_id)
-      current_week = season.getCurrentWeek
-      if current_week.week_number == self.starting_week
-        # If it's the first week then return all entries
-        winners = self.entries
-      else
-        # If it's not the first week then determine everyone who picked correctly the previous
-        # week and return those entries
-        previous_week = Week.find_by_week_number(current_week.week_number - 1)
-        winners = Array.new
-        winning_teams = previous_week.getWinningTeams
-        self.entries.each do |entry|
-          picks = entry.picks.where(week_number: previous_week.week_number)
-          if picks
-            picks.each do |pick|
-              pick.game_picks.each do |game_pick|
-                winning_teams.each do |team|
-                  if game_pick.chosenTeamIndex == team
-                    winners << entry
-                  end
-                end
-              end
+  #
+  #  This finds winners if they all happened to get knocked out the same week.
+  #
+  def determineSurvivorWinners
+    # Find all picks from season.week_number - 1 and self.id (not sure easiest way to do it.)
+    s            = season
+    current_week = s.getCurrentWeek
+    if current_week.week_number == starting_week
+      # If it's the first week then return all entries
+      winners = entries.to_a
+    else
+      # If it's not the first week then determine everyone who picked correctly the previous
+      # week and return those entries
+      previous_week = s.weeks.find_by_week_number(current_week.week_number - 1)
+      winners       = []
+
+      winning_teams = previous_week.getWinningTeams
+      entries.each do |entry|
+        picks = entry.picks.where(week_number: previous_week.week_number)
+        next if picks.empty?
+
+        picks.each do |pick|
+          pick.game_picks.each do |game_pick|
+            if winning_teams.include?(game_pick.chosenTeamIndex)
+              winners << entry
+              break
             end
           end
         end
       end
-      # Now that we have determined the survivor winners let's mark the
-      # SurvivorStatusIn back to true so getSurvivorWinner can return
-      # the correct winners without calling this routine again.
-      if winners
-        winners.each do |entry|
-          entry.update_attribute(:survivorStatusIn, true)
-          entry.save
-        end
-      end
-      winners
+    end
+    # Now that we have determined the survivor winners let's mark the
+    # SurvivorStatusIn back to true so getSurvivorWinner can return
+    # the correct winners without calling this routine again.
+    winners.each do |entry|
+      entry.update_attribute(:survivorStatusIn, true)
     end
 
-    #
-    # Updates the survivor status of each surviving entry in the pool
-    #
-    def updateSurvivor(current_week)
-      knocked_out_entries = Array.new
-      winning_teams = current_week.getWinningTeams
+    winners
+  end
 
-      # Go through all entries and find those who picked a losing team
-      self.entries.each do |entry|
-        if entry.survivorStatusIn
-          found_team = false
-          picks = entry.picks.where(week_number: current_week.week_number)
-          if picks
-            picks.each do |pick|
-              pick.game_picks.each do |game_pick|
-                winning_teams.each do |team|
-                  if game_pick.chosenTeamIndex == team
-                    found_team = true
-                  end
-                end
-              end
-            end
-            # Add this entry to the knocked_out list
-            if !found_team
-              knocked_out_entries << entry
-            end
+  #
+  # Updates the survivor status of each surviving entry in the pool
+  #
+  def updateSurvivor(current_week)
+    knocked_out_entries = []
+    winning_teams       = current_week.getWinningTeams
+    self.entries.each do |entry|
+      next unless entry.survivorStatusIn
+
+      # Get picks for the current week
+      picks = entry.picks.where(week_number: current_week.week_number)
+
+      # If user forgot to pick → knocked out
+      if picks.empty?
+        knocked_out_entries << entry
+        next
+      end
+
+      # Otherwise check if any pick matches a winning team
+      found_team = false
+      picks.each do |pick|
+        pick.game_picks.each do |game_pick|
+          if winning_teams.include?(game_pick.chosenTeamIndex)
+            found_team = true
+            break
           end
         end
+        break if found_team
       end
 
-      #
-      # if knocked out, update survivor status to false
-      #
-      if knocked_out_entries
-        knocked_out_entries.each do |entry|
-          entry.update_attribute(:survivorStatusIn, false)
-          entry.save
-        end
-      end
-      true
+      # Knock out if no winning pick found
+      knocked_out_entries << entry unless found_team
+    end
+    # Apply knockouts
+    knocked_out_entries.each do |entry|
+      entry.update_attribute(:survivorStatusIn, false)
+      entry.save
     end
 
-    def updateSUP(current_week)
-    end
+    true
+  end
 
-    def updatePickEm(current_week)
-    end
-
-    def updatePickEmSpread(current_week)
-    end
+  def updateSUP(current_week); end
+  def updatePickEm(current_week); end
+  def updatePickEmSpread(current_week); end
 end

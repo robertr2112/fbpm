@@ -24,21 +24,13 @@ FactoryBot.define do
       num_games  { 5 }
     end
 
-    #   factory :week_with_games do
-    #     after (:create) do |week, evaluator|
-    #       home_games = (1..16).sort_by { rand }
-    #       away_games = (17..32).sort_by { rand }
-    #       1.upto(evaluator.num_games) do |n|
-    #         create(:game, week: week)
-    #         create(:game, week: week, homeTeamIndex: home_games[n-1],
-    #                                   awayTeamIndex: away_games[n-1])
-    #       end
-    #     end
-    #   end
     factory :week_with_games do
       after(:create) do |week, evaluator|
-        home_games = (1..16).sort_by { rand }
-        away_games = (17..32).sort_by { rand }
+        # All 32 team indices
+        teams = (1..32).to_a.shuffle
+
+        # Pair them: [team1, team2], [team3, team4], ...
+        pairs = teams.each_slice(2).to_a
 
         # Anchor dates
         today = Time.zone.today
@@ -46,6 +38,8 @@ FactoryBot.define do
         monday = sunday + 1.day
 
         evaluator.num_games.times do |n|
+          home_team, away_team = pairs[n]   # ← guaranteed unique pair
+
           if n == 0
             # Monday game at 18:30
             game_time = monday.to_time.change(hour: 18, min: 30)
@@ -58,8 +52,8 @@ FactoryBot.define do
           create(
             :game,
             week: week,
-            homeTeamIndex: home_games[n],
-            awayTeamIndex: away_games[n],
+            homeTeamIndex: home_team,
+            awayTeamIndex: away_team,
             game_date: game_time,
             network: [ "CBS", "FOX", "NBC", "ESPN" ].sample
           )

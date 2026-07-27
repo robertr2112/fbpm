@@ -14,9 +14,9 @@
 
 class Season < ApplicationRecord
   before_create do
-    self.year = Time.now.strftime("%Y") unless self.year
-    self.current_week = 1
-    self.state = Season::STATES[:Pend]
+    self.year ||= Time.now.strftime("%Y")
+    self.current_week ||= 1
+    self.state ||= Season::STATES[:Pend]
   end
 
   STATES = { Pend: 0, Open: 1, Closed: 2 }
@@ -26,66 +26,64 @@ class Season < ApplicationRecord
 
   accepts_nested_attributes_for :weeks, allow_destroy: true
 
-  validates :number_of_weeks, inclusion:   { in: 1..18 }
+  validates :number_of_weeks, inclusion: { in: 1..18 }
 
   def self.getSeasonYear
-    year = Time.now.strftime("%Y").to_i
+    year  = Time.now.strftime("%Y").to_i
     month = Time.now.strftime("%m").to_i
-    if (month >= 1) && (month <= 2)
-      year = year - 1
-    end
+    year -= 1 if (1..2).include?(month)
     year.to_s
   end
 
   def setState(new_state)
-    self.update_attribute(:state, new_state)
+    update_attribute(:state, new_state)
   end
 
   def isPending?
-    self.state == STATES[:Pend]
+    state == STATES[:Pend]
   end
 
   def isOpen?
-    self.state == STATES[:Open]
+    state == STATES[:Open]
   end
 
   def isClosed?
-    self.state == STATES[:Closed]
+    state == STATES[:Closed]
   end
 
   def canBeClosed?
-    if self.weeks.empty?
-      return false
+    return false if weeks.empty?
+    return false if weeks.count != number_of_weeks
+
+    weeks.order(:week_number).each do |week|
+      return false unless week.checkStateFinal
     end
-    if self.weeks.count != self.number_of_weeks
-      return false
-    end
-    self.weeks.order(:week_number).each do |week|
-      if !week.checkStateFinal
-        return false
-      end
-    end
+
     true
   end
 
   #
-  # Return a link to the current_week record
+  # Return the current_week record for this season
   #
   def getCurrentWeek
-    self.weeks.find_by_week_number(self.current_week)
+    weeks.find_by_week_number(current_week)
   end
 
   #
   # Have every pool update their entries. This is called after a week is marked 'final'
   #
   def updatePools
-    self.pools.each do |pool|
-      if self.getCurrentWeek.week_number >= pool.starting_week
-        pool.updateEntries(self.getCurrentWeek)
+    current = getCurrentWeek
+    return unless current
+
+    pools.each do |pool|
+      if current.week_number >= pool.starting_week
+        pool.updateEntries(current)
       end
     end
-    if self.current_week < self.number_of_weeks
-      self.update_attribute(:current_week, self.current_week+1)
+
+    if current_week < number_of_weeks
+      update_attribute(:current_week, current_week + 1)
     end
   end
 end

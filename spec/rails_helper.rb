@@ -91,8 +91,18 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+    # Reset test DB without DatabaseCleaner
+    connection = ActiveRecord::Base.connection
+
+    # Disable referential integrity so truncation works
+    connection.disable_referential_integrity do
+      connection.tables.each do |table|
+        next if table == "schema_migrations"
+        next if table == "ar_internal_metadata"
+        connection.execute("TRUNCATE TABLE #{table} RESTART IDENTITY CASCADE")
+      end
+    end
+
     Rails.application.load_seed # loading seeds
   end
-
 end

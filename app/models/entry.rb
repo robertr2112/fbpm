@@ -21,23 +21,23 @@ class Entry < ApplicationRecord
   belongs_to :pool
   belongs_to :user
   has_many   :picks, dependent: :delete_all
+  has_many   :game_picks, through: :picks
 
   def entryStatusGood?
     if self.survivorStatusIn
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
   def madePicks?(week)
     picks = self.picks.where(week_id: week.id)
     picks.each do |pick|
-      if (pick.entry_id == self.id && pick.week_number == week.week_number)
+      if pick.entry_id == self.id && pick.week_number == week.week_number
         return true
       end
     end
-    return false
+    false
   end
-
 end
