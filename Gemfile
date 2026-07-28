@@ -112,12 +112,6 @@ group :development, :test do
 
   # Add support to create test factories using FactoryBot
   gem "factory_bot_rails", ">= 6.5.1"
-  #
-  # Debugging tools - Recommended for step-by-step debugging
-  #
-  # gem "pry"
-  # gem "pry-byebug"
-  # gem "pry-rails"
 end
 
 group :development do
@@ -134,13 +128,13 @@ group :development do
 end
 
 group :test do
-  # gem 'webdrivers' # Not needed with latest version of Selenium-webdriver and ruby 3+
   # Email support
   gem "email_spec"
   # Code coverage tool
   gem "simplecov", require: false, group: :test
   gem "launchy"
-  # gem 'rubocop-rspec'
+  gem "cuprite"
+  gem "rubocop-rspec"
 end
 
 gem "execjs"

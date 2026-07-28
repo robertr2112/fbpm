@@ -3,7 +3,6 @@ require 'nokogiri'
 
 RSpec.describe 'User pages', type: :system do
   before do
-    # driven_by(:selenium_chrome_headless)
     driven_by(:selenium_chrome_headless_sandboxless)
     # driven_by(:selenium_chrome)
   end
