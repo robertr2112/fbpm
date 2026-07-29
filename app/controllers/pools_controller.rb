@@ -24,11 +24,7 @@ class PoolsController < ApplicationController
   def create
     # Get either the NFL or college season
     year = Season.getSeasonYear
-    if Pool.typeSUP?(pool_params[:poolType])
-      season = Season.where(year: year, nfl_league: false).first
-    else
-      season = Season.where(year: year, nfl_league: true).first
-    end
+    season = Season.where(year: year, nfl_league: true).first
 
     if season && season.isOpen?
       # If the season is setup then create the pool.
@@ -205,7 +201,7 @@ class PoolsController < ApplicationController
   private
 
     def pool_params
-      params.expect(pool: [ :name, :poolType, :allowMulti,
+      params.expect(pool: [ :name, :pool_type, :allowMulti,
                                    :isPublic, :starting_week, :password ])
     end
 

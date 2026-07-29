@@ -7,8 +7,8 @@
 #  isPublic        :boolean          default(TRUE)
 #  name            :string
 #  password_digest :string
-#  poolType        :integer
 #  pool_done       :boolean          default(FALSE)
+#  pool_type       :integer          default("survivor")
 #  starting_week   :integer          default(1)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -20,7 +20,6 @@
 #
 FactoryBot.define  do
   factory :user_with_pool, parent: :user do
-
     transient do
       season   { 1 }
       pool     { nil }
@@ -38,7 +37,6 @@ FactoryBot.define  do
   end
 
   factory :user_with_pool_and_entry, parent: :user do
-
     transient do
       season       { 1 }
       num_entries  { 1 }
@@ -59,7 +57,7 @@ FactoryBot.define  do
 
   factory :pool do
     sequence(:name) { |n| "Pool-#{n}" }
-    poolType              { 2 }
+    pool_type             { :survivor }
     isPublic              { true }
     password              { "foobar" }
 
@@ -81,13 +79,12 @@ FactoryBot.define  do
   # join table factory - :feature
   factory :pool_membership do |membership|
     membership.association :user
-    membership.association :pool, :factory => :pool
+    membership.association :pool, factory: :pool
   end
 
   factory :game_pick do
     chosenTeamIndex  { 0 }
     pick
-
   end
 
   factory :pick do
@@ -104,16 +101,12 @@ FactoryBot.define  do
         pick.game_picks << create(:game_pick, pick: pick, chosenTeamIndex: evaluator.teamIndex)
       end
     end
-
   end
 
   factory :entry do
     sequence(:name)   { |n| "Entry #{n}" }
     survivorStatusIn  { true }
-    supTotalPoints    { 0 }
     user
     pool
-
   end
-
 end

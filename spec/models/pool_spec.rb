@@ -7,8 +7,8 @@
 #  isPublic        :boolean          default(TRUE)
 #  name            :string
 #  password_digest :string
-#  poolType        :integer
 #  pool_done       :boolean          default(FALSE)
+#  pool_type       :integer          default("survivor")
 #  starting_week   :integer          default(1)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -27,7 +27,7 @@ RSpec.describe Pool, type: :model do
   let(:season_with_weeks) { FactoryBot.create(:season_with_weeks) }
 
   before do
-    @pool_attr = { name: "Pool 1", poolType: 2,
+    @pool_attr = { name: "Pool 1", pool_type: :survivor,
                    isPublic: true }
     @pool = user.pools.build(@pool_attr.merge(season_id: season.id,
                                    starting_week: 1))
@@ -39,7 +39,7 @@ RSpec.describe Pool, type: :model do
 
   it { should respond_to(:name) }
   it { should respond_to(:season_id) }
-  it { should respond_to(:poolType) }
+  it { should respond_to(:pool_type) }
   it { should respond_to(:starting_week) }
   it { should respond_to(:allowMulti) }
   it { should respond_to(:isPublic) }
@@ -55,14 +55,9 @@ RSpec.describe Pool, type: :model do
   it { should respond_to(:addUser) }
   it { should respond_to(:removeUser) }
   it { should respond_to(:remove_memberships) }
-  it { should respond_to(:typeSUP?) }
-  it { should respond_to(:typePickEm?) }
-  it { should respond_to(:typePickEmSpread?) }
-  it { should respond_to(:typeSurvivor?) }
   it { should respond_to(:getEntryName) }
   it { should respond_to(:updateEntries) }
   it { should respond_to(:removeEntries) }
-  it { should respond_to(:haveSurvivorWinner?) }
   it { should respond_to(:getSurvivorWinner) }
   it { should respond_to(:getCurrentWeek) }
 
@@ -101,11 +96,6 @@ RSpec.describe Pool, type: :model do
 
   describe "when name is too long" do
     before { @pool.name =  "a" * 31 }
-    it { should_not be_valid }
-  end
-
-  describe "when poolType is invalid" do
-    before { @pool.poolType = 4 }
     it { should_not be_valid }
   end
 

@@ -4,7 +4,6 @@
 #
 #  id               :bigint           not null, primary key
 #  name             :string
-#  supTotalPoints   :integer          default(0)
 #  survivorStatusIn :boolean          default(TRUE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null

@@ -50,7 +50,7 @@
                       <% end %>
                       <% if pool.isMember?(current_user) %>
                         <!-- This is the entry management items for each entry -->
-                        <% if pool.typeSurvivor? %>
+                        <% if pool.survivor? %>
                           <%= render 'pools/entry_mgmt_menu', pool: pool, current_week: pool.getCurrentWeek %>
                         <% end %>
                         <% if pool.isOpen?  && !pool.isOwner?(current_user) %>

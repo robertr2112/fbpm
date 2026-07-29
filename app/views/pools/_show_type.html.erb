@@ -1,9 +1,7 @@
-<% if pool.typePickEm? %>
+<% if pool.pick_em? %>
   PickEm
-<% elsif pool.typePickEmSpread? %>
+<% elsif pool.pick_em_spread? %>
   PickEmSpread
-<% elsif pool.typeSurvivor? %>
+<% elsif pool.survivor? %>
   Survivor
-<% elsif pool.typeSUP? %>
-  SUP
 <% end %>

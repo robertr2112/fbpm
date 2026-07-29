@@ -42,13 +42,11 @@
       <div class="poolPageData"><%= @current_week.week_number %></div>
     </div>
     <div class="poolPageBoard">
-      <% if @pool.poolType == Pool::POOL_TYPES[:Survivor] %>
+      <% if @pool.survivor? %>
         <%= render 'show_survivor_board', pool: @pool, current_week: @current_week %>
-      <% elsif @pool.poolType == Pool::POOL_TYPES[:SUP] %>
-        <p>Sorry but SUP based pools are not supported at this time.</p>
-      <% elsif @pool.poolType == Pool::POOL_TYPES[:PickEm] %>
+      <% elsif @pool.pick_em? %>
         <p>Sorry but PickEm based pools are not supported at this time.</p>
-      <% elsif @pool.poolType == Pool::POOL_TYPES[:PickEmSpread] %>
+      <% elsif @pool.pick_em_spread? %>
         <p>Sorry but PickEmSpread based pools are not supported at this time.</p>
       <% end %>
     </div>

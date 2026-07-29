@@ -70,6 +70,13 @@ class Season < ApplicationRecord
   end
 
   #
+  # Determine if it's the last week of the season
+  #
+  def final_week?(week)
+    week.week_number == number_of_weeks
+  end
+
+  #
   # Have every pool update their entries. This is called after a week is marked 'final'
   #
   def updatePools

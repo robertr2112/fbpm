@@ -18,7 +18,7 @@ RSpec.describe PoolMembership, type: :model do
   let(:season) { FactoryBot.create(:season_with_weeks) }
 
   before do
-    @pool_attr = { name: "Pool 1", poolType: 2, isPublic: true,
+    @pool_attr = { name: "Pool 1", pool_type: :survivor, isPublic: true,
                    season_id: season.id, starting_week: 1 }
     @pool1 = user1.pools.create(@pool_attr)
     @pool_membership = user1.pool_memberships.find_by_pool_id(@pool1)
@@ -43,7 +43,7 @@ RSpec.describe PoolMembership, type: :model do
   describe "joining a pool" do
     before do
       @pool2 = user1.pools.create(@pool_attr.merge(name: "Pool 2",
-                                                    poolType: 2))
+                                                    pool_type: :survivor))
       user2.pools << @pool1
     end
 

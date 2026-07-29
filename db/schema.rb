@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_05_053012) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_29_164740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,7 +19,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_05_053012) do
     t.integer "user_id"
     t.string "name"
     t.boolean "survivorStatusIn", default: true
-    t.integer "supTotalPoints", default: 0
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["pool_id"], name: "index_entries_on_pool_id"
@@ -70,7 +69,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_05_053012) do
   create_table "pools", force: :cascade do |t|
     t.string "name"
     t.bigint "season_id"
-    t.integer "poolType"
+    t.integer "pool_type", default: 2
     t.integer "starting_week", default: 1
     t.boolean "allowMulti", default: false
     t.boolean "isPublic", default: true

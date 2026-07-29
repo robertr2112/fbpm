@@ -4,7 +4,6 @@
 #
 #  id               :bigint           not null, primary key
 #  name             :string
-#  supTotalPoints   :integer          default(0)
 #  survivorStatusIn :boolean          default(TRUE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -20,13 +19,12 @@
 require 'rails_helper'
 
 RSpec.describe Entry, type: :model do
-
   let(:user) { FactoryBot.create(:user) }
   let(:season) { FactoryBot.create(:season_with_weeks, num_weeks: 4) }
 
   before do
-    @pool_attr = { :name => "Pool 1", :poolType => 2,
-                   :isPublic => true }
+    @pool_attr = { name: "Pool 1", pool_type: :survivor,
+                   isPublic: true }
     @pool = user.pools.create(@pool_attr.merge(season_id: season.id,
                                    starting_week: 1))
     entry_name = @pool.getEntryName(user)
@@ -43,7 +41,6 @@ RSpec.describe Entry, type: :model do
   it { should respond_to(:user_id) }
   it { should respond_to(:name) }
   it { should respond_to(:survivorStatusIn) }
-  it { should respond_to(:supTotalPoints) }
   it { should respond_to(:entryStatusGood?) }
   it { should respond_to(:madePicks?) }
 
@@ -89,8 +86,6 @@ RSpec.describe Entry, type: :model do
         week = season.weeks[3]
         expect(@entry.madePicks?(week)).to be false
       end
-
     end
-
   end
 end

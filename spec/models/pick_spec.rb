@@ -22,7 +22,7 @@ RSpec.describe Pick, type: :model do
   let(:season) { FactoryBot.create(:season_with_weeks_and_games, num_weeks: 4, num_games: 16) }
 
   before do
-    @pool_attr = { name: "Pool 1", poolType: 2,
+    @pool_attr = { name: "Pool 1", pool_type: :survivor,
                    isPublic: true }
     @pool = user.pools.create(@pool_attr.merge(season_id: season.id,
                                    starting_week: 1))
