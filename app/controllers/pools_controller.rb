@@ -166,7 +166,8 @@ class PoolsController < ApplicationController
   def pool_diagnostics
     @pool = Pool.find_by_id(params[:id])
     if @pool
-      @season = Season.find_by_id(@pool.season.id)
+      result = Diagnostics::PoolDiagnostics.new.show(@pool)
+      @season = result[:season]
     else
       flash[:danger] = "Cannot find Pool with id #{params[:id]}!"
       redirect_to pools_path
@@ -175,26 +176,8 @@ class PoolsController < ApplicationController
 
   # This action receives multiple args.  The first is the pool, and the second is the action to do, the third is any other pertinent info
   def pool_diag_chg
-    if params[:surv]
-      entry = Entry.find_by_id(params[:entry_id])
-      pool = Pool.find_by_id(entry.pool_id)
-      if entry.survivorStatusIn
-        value = false
-      else
-        value = true
-      end
-      entry.update_attribute(:survivorStatusIn, value)
-      entry.save
-    elsif params[:pool_status]
-      pool = Pool.find_by_id(params[:pool_id])
-      if pool.pool_done
-        pool_done = false
-      else
-        pool_done = true
-      end
-      pool.update_attribute(:pool_done, pool_done)
-      pool.save
-    end
+    service = Diagnostics::PoolDiagnostics.new
+    pool = service.handle_change(params)
     redirect_to pool_diagnostics_path(pool)
   end
 

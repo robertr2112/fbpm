@@ -115,38 +115,8 @@ class SeasonsController < ApplicationController
   end
 
   def season_diag_chg
-    season = Season.find_by_id(params[:id])
-    if season.nil?
-      flash[:danger] = "The season you tried to access does not exist"
-      redirect_to seasons_path
-    end
-
-    # Change the current week
-    if params[:cur_week]
-      season.update_attribute(:current_week, params[:number])
-      season.save
-    end
-    if params[:chg_week_state]
-      week = Week.find_by_id(params[:week])
-      week.update_attribute(:state, params[:state])
-      week.save
-    end
-    if params[:update_nfl_team_info]
-      # Need to update the Cincinnati info, and change St Louis to Los Angeles
-
-      record = Team.find_by_name("Cinncinatti Bengals")
-      if record
-        record.name = "Cincinnati Bengals"
-        record.save!
-      end
-      record = Team.find_by_name("St Louis Rams")
-      if record
-        record.name = "Los Angeles Rams"
-        record.save!
-      end
-
-    end
-
+    service = Diagnostics::SeasonDiagnostics.new
+    season = service.handle_change(params.merge(id: params[:id]))
     redirect_to season_diagnostics_path(season)
   end
 
