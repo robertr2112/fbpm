@@ -55,8 +55,7 @@ module AuthenticationHelper
           pool.entries.create!(
             name: pool.getEntryName(user),
             user_id: user.id,
-            survivorStatusIn: true,
-            supTotalPoints: 0
+            survivorStatusIn: true
           )
         end
       end

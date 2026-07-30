@@ -33,7 +33,7 @@ RSpec.describe Pick, type: :model do
     @second_team_picked = @teams[1].id
     entry_name = @pool.getEntryName(user)
     @entry = @pool.entries.create(user_id: user.id, name: entry_name,
-                           survivorStatusIn: true, supTotalPoints: 0)
+                           survivorStatusIn: true)
     @pick = @entry.picks.create(week_id: @week.id, week_number: @week.week_number)
     @game_pick = @pick.game_picks.create(chosenTeamIndex: @first_team_picked)
   end

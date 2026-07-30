@@ -28,8 +28,7 @@ class EntriesController < ApplicationController
     @pool = Pool.find_by_id(params[:pool_id])
     @entry =
       @pool.entries.create(entry_params.merge(user_id: current_user.id,
-                                             survivorStatusIn: true,
-                                             supTotalPoints: 0))
+                                             survivorStatusIn: true))
     if @entry.id
       flash[:success] = "Entry: #{@entry.name} was created successfully!"
       redirect_to @pool
@@ -72,6 +71,6 @@ class EntriesController < ApplicationController
 
   private
     def entry_params
-      params.expect(entry: [ :name, :survivorStatusIn, :supTotalPoints ])
+      params.expect(entry: [ :name, :survivorStatusIn ])
     end
 end

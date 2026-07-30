@@ -5,7 +5,6 @@ class CreateEntries < ActiveRecord::Migration[4.2]
       t.integer :user_id
       t.string  :name
       t.boolean :survivorStatusIn, default: true
-      t.integer :supTotalPoints, default: 0
 
       t.timestamps
     end

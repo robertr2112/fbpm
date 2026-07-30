@@ -30,7 +30,7 @@ RSpec.describe Entry, type: :model do
     entry_name = @pool.getEntryName(user)
     @entry =
       @pool.entries.create(user_id: user.id, name: entry_name,
-                           survivorStatusIn: true, supTotalPoints: 0)
+                           survivorStatusIn: true)
   end
 
   subject { @entry }

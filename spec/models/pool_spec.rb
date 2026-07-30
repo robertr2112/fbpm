@@ -173,7 +173,7 @@ RSpec.describe Pool, type: :model do
     it "should allow a new entry" do
       expect do
         @pool.entries.create(name: @pool.getEntryName(user1), user_id: user1.id,
-                             survivorStatusIn: true, supTotalPoints: 0)
+                             survivorStatusIn: true)
       end.to change(@pool.entries, :count).by(1)
     end
     it "should verify getEntryName == user.<user_name>_1 for second entry" do
@@ -190,7 +190,7 @@ RSpec.describe Pool, type: :model do
 
     it "should allow removal of an entry" do
       new_entry = @pool.entries.create(name: @pool.getEntryName(user1), user_id: user1.id,
-                           survivorStatusIn: true, supTotalPoints: 0)
+                           survivorStatusIn: true)
       expect do
         new_entry.destroy
       end.to change(@pool.entries, :count).by(-1)
