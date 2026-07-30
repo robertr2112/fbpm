@@ -118,6 +118,9 @@ class SeasonsController < ApplicationController
     service = Diagnostics::SeasonDiagnostics.new
     season = service.handle_change(params.merge(id: params[:id]))
     redirect_to season_diagnostics_path(season)
+  rescue ActiveRecord::RecordNotFound
+    flash[:danger] = "The season you tried to access does not exist"
+    redirect_to seasons_path
   end
 
   private

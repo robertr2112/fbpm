@@ -32,5 +32,16 @@ RSpec.describe SeasonsController, type: :controller do
 
       expect(response).to redirect_to(season_diagnostics_path(season))
     end
+
+    it 'redirects to seasons index when the service cannot find the season' do
+      service_double = instance_double(Diagnostics::SeasonDiagnostics)
+      allow(Diagnostics::SeasonDiagnostics).to receive(:new).and_return(service_double)
+      expect(service_double).to receive(:handle_change).with(hash_including('id' => season.id.to_s)).and_raise(ActiveRecord::RecordNotFound)
+
+      get :season_diag_chg, params: { id: season.id }
+
+      expect(response).to redirect_to(seasons_path)
+      expect(flash[:danger]).to eq('The season you tried to access does not exist')
+    end
   end
 end
