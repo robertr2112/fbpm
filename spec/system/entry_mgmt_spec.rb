@@ -101,6 +101,8 @@ RSpec.describe 'Entry Management', type: :system do
   def when_I_join_the_pool
     visit pool_path(@pool)
     click_link 'Join', href: join_path(@pool.id)
+    # Wait for the join action to complete and show confirmation flash/redirect
+    expect(page).to have_text("Successfully added to Pool")
   end
 
   def when_I_leave_the_pool
