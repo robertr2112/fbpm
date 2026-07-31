@@ -38,6 +38,14 @@ Rails.application.routes.draw do
 
 
   # Diagnostics paths
+  resources :diagnostics, only: [ :index ] do
+    collection do
+      get :users
+      get :pools
+      get :weeks
+    end
+  end
+
   match "pools/diagnostics/:id",   to: "pools#pool_diagnostics",   as: :pool_diagnostics,    via: "get"
   match "pools/diag_chg/:id",      to: "pools#pool_diag_chg", as: :pool_diag_chg,    via: "get"
   match "seasons/diagnostics/:id", to: "seasons#season_diagnostics",   as: :season_diagnostics,    via: "get"

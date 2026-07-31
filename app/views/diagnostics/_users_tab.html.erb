@@ -1,0 +1,21 @@
+<!-- app/views/diagnostics/_users_tab.html.erb -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Admin</th>
+      <th>Pools</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.each do |u| %>
+      <tr>
+        <td><%= u.id %></td>
+        <td><%= u.email %></td>
+        <td><%= u.admin? %></td>
+        <td><%= u.pools.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
