@@ -1,0 +1,19 @@
+<!-- app/views/diagnostics/_weeks_tab.html.erb -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Week Number</th>
+      <th>Games</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% weeks.each do |w| %>
+      <tr>
+        <td><%= w.id %></td>
+        <td><%= w.number %></td>
+        <td><%= w.games.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

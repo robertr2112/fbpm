@@ -1,0 +1,21 @@
+<!-- app/views/diagnostics/_pools_tab.html.erb -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Season</th>
+      <th>Members</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pools.each do |p| %>
+      <tr>
+        <td><%= p.id %></td>
+        <td><%= p.name %></td>
+        <td><%= p.season.year %></td>
+        <td><%= p.pool_memberships.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

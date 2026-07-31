@@ -1,0 +1,66 @@
+<!-- app/views/diagnostics/index.html.erb -->
+<div class="container pageContent mt-4" data-controller="lazy-tabs">
+  <h1 class= "pageHeader">Diagnostics</h1>
+  <div class="col-sm-8">
+    <ul class="nav nav-tabs" id="diagnosticsTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active"
+                data-bs-toggle="tab"
+                data-bs-target="#users-pane"
+                type="button"
+                role="tab"
+                data-turbo-frame="diagnostics-users-pane"
+                data-turbo-action="replace"
+                data-url="<%= users_diagnostics_path %>">
+          Users
+        </button>
+      </li>
+
+      <li class="nav-item" role="presentation">
+        <button class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#pools-pane"
+                type="button"
+                role="tab"
+                data-turbo-frame="diagnostics-pools-pane"
+                data-url="<%= pools_diagnostics_path %>">
+          Pools
+        </button>
+      </li>
+
+      <li class="nav-item" role="presentation">
+        <button class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#weeks-pane"
+                type="button"
+                role="tab"
+                data-turbo-frame="diagnostics-weeks-pane"
+                data-url="<%= weeks_diagnostics_path %>">
+          Weeks
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+
+      <div class="tab-pane fade show active" id="users-pane" role="tabpanel">
+        <turbo-frame id="diagnostics-users-pane">
+          <div class="text-muted">Loading users…</div>
+        </turbo-frame>
+      </div>
+
+      <div class="tab-pane fade" id="pools-pane" role="tabpanel">
+        <turbo-frame id="diagnostics-pools-pane">
+          <div class="text-muted">Loading pools…</div>
+        </turbo-frame>
+      </div>
+
+      <div class="tab-pane fade" id="weeks-pane" role="tabpanel">
+        <turbo-frame id="diagnostics-weeks-pane">
+          <div class="text-muted">Loading weeks…</div>
+        </turbo-frame>
+      </div>
+
+    </div>
+  </div>
+</div>
