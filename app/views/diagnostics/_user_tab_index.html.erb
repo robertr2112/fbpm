@@ -1,0 +1,18 @@
+  <%= turbo_frame_tag user do %>
+  <div class="row row-item">
+    <div class= "col-sm-4"><%=user.name%></div>
+    <div class= "col-sm-4"><%=user.email%></div>
+    <div class= "col-sm-1"><%=user.admin?%></div>
+    <div class= "col-sm-1"><%=user.pools.count%></div>
+    <!-- div class= "right col-sm-4"-->
+      <!--%= link_to edit_doctor_path(doctor), class:"btn btn-outline-secondary btn-xs" do % -->
+        <!--i class="bi bi-pencil-square" aria-hidden="true" --><!--/i-->
+      <!--% end %-->
+      <!--%= link_to doctor, data: {"turbo-method": :delete,
+                    "turbo-confirm": 'Are you sure?'},
+                    class: "btn btn-outline-danger btn-xs"  do %-->
+            <!--i class="bi bi-trash2" aria-hidden="true"--><!--/i-->
+      <!--% end %-->
+    <!--/div-->
+  </div>
+<% end %>

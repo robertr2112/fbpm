@@ -7,7 +7,7 @@ class DiagnosticsController < ApplicationController
   end
 
   def users
-    @users = User.all
+    @pagy, @users = pagy(User.all, limit: 10)
     render turbo_stream: turbo_stream.replace(
       "diagnostics-users-pane",
       partial: "diagnostics/users_tab",
@@ -36,6 +36,9 @@ class DiagnosticsController < ApplicationController
   private
 
   def require_admin
-    redirect_to root_path unless current_user&.admin?
+    if !current_user&.admin?
+      flash[:alert] = "You are not authorized to access this page."
+      redirect_to root_path
+    end
   end
 end

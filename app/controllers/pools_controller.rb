@@ -95,7 +95,7 @@ class PoolsController < ApplicationController
       @season = Season.where(year: year, nfl_league: true).first
     end
     if @season
-      @pools = Pool.where(season_id: @season.id).paginate(page: params[:page])
+      @pagy, @pools = pagy(Pool.where(season_id: @season.id), limit: 10)
     else
       flash[:danger] = "Cannot find a season to show pools!"
       redirect_back(fallback_location: root_path)
@@ -108,7 +108,6 @@ class PoolsController < ApplicationController
       flash[:warning] = "The pool you tried to access does not exist"
       redirect_to pools_path
     else
-      @pools = @pool.users.paginate(page: params[:page])
       @season = Season.find_by_id(@pool.season_id)
       @current_week = @pool.getCurrentWeek
     end

@@ -1,7 +1,6 @@
 require 'rails_helper'
 RSpec.describe 'Entry Management', type: :system do
   before do
-    # driven_by(:selenium_chrome_headless)
     driven_by(:selenium_chrome_headless_sandboxless)
     # driven_by(:selenium_chrome)
   end
@@ -59,7 +58,7 @@ RSpec.describe 'Entry Management', type: :system do
     sign_in_user @admin_user
     @season = FactoryBot.create(:season_with_weeks_and_games, num_weeks: 4, num_games: 4)
     @season.setState(Season::STATES[:Open])
-    sign_out_user @admin_user # requires javascript and that is not setup yet
+    sign_out_user @admin_user
   end
 
   ### And Definitions ###

@@ -92,7 +92,9 @@ gem "twilio-ruby", ">= 7.8.0"
 gem "bootstrap", "~> 5.3.3"
 gem "dartsass-rails"
 gem "jquery-rails"
-gem "will_paginate-bootstrap4"
+
+# Pagination support
+gem "pagy", "~> 43.6"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

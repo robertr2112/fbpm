@@ -13,10 +13,12 @@
             <%= link_to '<i class="fa fa-home fa-fw"></i>Home'.html_safe,
                   root_path, class: 'nav-link'  %>
           </li>
-          <li class="nav-item">
-            <%= link_to '<i class="fa fa-wrench fa-fw"></i>Diagnostics'.html_safe,
-                  diagnostics_path, class: 'nav-link'  %>
-          </li>
+          <% if current_user&.admin? %>
+            <li class="nav-item">
+              <%= link_to '<i class="fa fa-wrench fa-fw"></i>Diagnostics'.html_safe,
+                    diagnostics_path, class: 'nav-link'  %>
+            </li>
+          <% end %>
           <!-- Level one dropdown for Pool Management -->
           <% season = current_season(1) %>
           <% if season %> <!-- Only show the pool menus if season has been created -->
@@ -36,10 +38,12 @@
                   <div class="dropdown-divider"></div>
                   <!-- Level two dropdown - This is the per pool menu list -->
                   <li class="nav-item dropdown">
-                    <a class="dropdown-item dropdown-toggle pool-name" id="dropdownMenuPools" href="#"
-                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <%= pool.name %>
-                    </a>
+                    <%= link_to pool.name, 
+                      "#",
+                      id: "dropdownMenuPools",
+                      class: "dropdown-item dropdown-toggle pool-name",
+                      data: { bs_toggle: "dropdown" },
+                      aria: { haspopup: "true", expanded: "false" } %>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools">
                       <% if pool.isOwner?(current_user) %>
                         <li><%= link_to "Edit pool", edit_pool_path(pool),
@@ -75,9 +79,12 @@
           </li>
           <!-- Level one dropdown for User management -->
           <li class="nav-item dropdown dropleft">
-            <a id="dropdownMenu2" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false" class="nav-link dropdown-toggle user-name">
-              <%= current_user.name %></a>
+            <%= link_to current_user.name,
+              "#",
+              id: "dropdownMenu2",
+              class: "nav-link dropdown-toggle user-name",
+              data: { bs_toggle: "dropdown" },
+              aria: { haspopup: "true", expanded: "false" } %>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
               <%= link_to '<i class="fa fa-user fa-fw"></i>Profile'.html_safe, current_user,
@@ -91,7 +98,8 @@
               <% end %>
               <div class="dropdown-divider"></div>
                 <%= link_to '<i class="fa fa-sign-out fa-fw"></i>Sign out'.html_safe, session_path, 
-                          data: { turbo_method: :delete }, class:'dropdown-item user-logout' %>
+                          data: { turbo_method: :delete }, class:'dropdown-item user-logout',
+                          id: 'user-logout' %>
             </div>
           </li>
           <!-- End Level one -->

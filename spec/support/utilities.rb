@@ -9,8 +9,18 @@ module AuthenticationHelper
 
   def sign_out_user(user)
     visit user_path(user)
-    find('a.user-name').hover
-    find('a.user-logout').click
+    find('h1.pageHeader', text: /#{Regexp.escape(user.name)}/)
+    if has_css?('.navbar-toggler', visible: true)
+      find('.navbar-toggler').click
+    end
+    find('a.user-name').click
+    # The following line is needed because the click on the link
+    # doesn't work in headless mode, so we use execute_script to click the link
+    # instead of find('#user-logout').click
+    logout_link = find('#user-logout', visible: false)
+
+    page.execute_script("arguments[0].click();", logout_link)
+    # execute_script("document.getElementById('user-logout').click();")
     find('h1.pageHeader', text: 'Sign in')
   end
 

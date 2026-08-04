@@ -20,7 +20,7 @@ class SeasonsController < ApplicationController
   end
 
   def index
-    @seasons = Season.paginate(page: params[:page])
+    @pagy, @seasons = pagy(Season.all, limit: 10)
   end
 
   def edit
@@ -52,10 +52,6 @@ class SeasonsController < ApplicationController
       flash[:warning] = "The season you tried to access does not exist"
       redirect_to seasons_path
     end
-  end
-
-  def index
-    @seasons = Season.paginate(page: params[:page])
   end
 
   def destroy

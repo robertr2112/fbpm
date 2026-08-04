@@ -4,9 +4,9 @@ class UsersController < ApplicationController
 
   def index
     if current_user.admin?
-      @users = User.paginate(page: params[:page], per_page: 25)
+      @pagy, @users = pagy(User.all, limit: 10)
     else
-      @users = User.where(activated: true).paginate(page: params[:page], per_page: 25)
+      @pagy, @users = pagy(User.where(activated: true), limit: 10)
     end
   end
 
@@ -46,7 +46,11 @@ class UsersController < ApplicationController
       @user.destroy
       flash[:success] = "User deleted."
     end
-    redirect_to users_url
+    respond_to do |format|
+      format.html { redirect_to users_url }
+      format.turbo_stream
+      format.json
+    end
   end
 
   def admin_add

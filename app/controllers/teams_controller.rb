@@ -31,7 +31,7 @@ class TeamsController < ApplicationController
     end
   end
   def index
-    @teams = Team.where(nfl: true).paginate(page: params[:page], per_page: 11).order("name ASC")
+    @pagy, @teams = pagy(Team.where(nfl: true), limit: 10)
   end
 
   private

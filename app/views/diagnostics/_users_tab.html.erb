@@ -1,21 +1,15 @@
-<!-- app/views/diagnostics/_users_tab.html.erb -->
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Email</th>
-      <th>Admin</th>
-      <th>Pools</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% users.each do |u| %>
-      <tr>
-        <td><%= u.id %></td>
-        <td><%= u.email %></td>
-        <td><%= u.admin? %></td>
-        <td><%= u.pools.count %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<turbo-frame id="diagnostics-users-pane">
+  <div class="container page-content">
+      <%== @pagy.series_nav(:bootstrap) %>
+      <div class="row row-header">
+        <div class= "col-sm-4">Name</div>
+        <div class= "col-sm-4">Email</div>
+        <div class= "col-sm-1">Admin?</div>
+        <div class= "col-sm-1">Pools</div>
+      </div>
+      <% users.each do |user| %>
+        <%= render 'user_tab_index', user: user %>
+      <% end %>
+      <%== @pagy.series_nav(:bootstrap) %>
+  </div>
+</turbo-frame>

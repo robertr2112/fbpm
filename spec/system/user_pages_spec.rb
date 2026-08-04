@@ -17,8 +17,7 @@ RSpec.describe 'User pages', type: :system do
     end
 
     after do
-      find('a.user-name').hover
-      find('a.user-logout').click
+      sign_out_user user
     end
 
     context 'All Users page content' do
@@ -39,8 +38,10 @@ RSpec.describe 'User pages', type: :system do
       end
 
       scenario 'should list each user' do
-        User.paginate(page: 1).first(20).each do |user|
-          expect(page).to have_selector('td', text: user.name)
+        # The limit(10) is dependent on the default per_page
+        # value in the pagy gem, which is 10
+        User.where(activated: true).limit(10).each do |user|
+          expect(page).to have_link(user.name, href: user_path(user))
         end
       end
     end

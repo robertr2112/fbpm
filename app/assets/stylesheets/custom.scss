@@ -81,6 +81,8 @@ h1, h2, h3, h4, h5, h6 {
 .pageContent {
   background-color: white;
   padding-bottom: 20px;
+  padding-left: 30px;
+  border: 5px solid #d9d9d9;
 }
 
 .pageHeader {
@@ -127,8 +129,28 @@ p {
 .appStateBtn {
   margin: 5px 2.5px 5px 2.5px;
 }
-
-/* footer */
+ 
+.row-header {
+  margin: 10px 0 10px 0; 
+  padding: 5px;
+  font-weight: bold;
+  border-bottom: 3px solid $gray-dark;
+}
+ 
+.row-item {
+  margin: 10px 0 10px 0; 
+  background-color: #eee;
+  padding: 5px;
+  box-shadow: 1px 3px $gray;
+}
+ 
+/* Nav tabs styling */
+.nav-tabs.nav-item,
+.nav-tabs {
+  border-width: 3px;
+  border-color: #DDD;
+  margin-bottom: 5px;
+}
 
 footer {
   margin-top: 45px;
