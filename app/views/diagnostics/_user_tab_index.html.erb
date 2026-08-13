@@ -4,6 +4,9 @@
     <div class= "col-sm-4"><%=user.email%></div>
     <div class= "col-sm-1"><%=user.admin?%></div>
     <div class= "col-sm-1"><%=user.pools.count%></div>
+    <div class="col-sm-2">
+      <small><%= link_to "<Change Password>", user_diagnostics_path(user), data: { turbo_frame: dom_id(user) } %></small>
+    </div>
     <!-- div class= "right col-sm-4"-->
       <!--%= link_to edit_doctor_path(doctor), class:"btn btn-outline-secondary btn-xs" do % -->
         <!--i class="bi bi-pencil-square" aria-hidden="true" --><!--/i-->

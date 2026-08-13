@@ -48,6 +48,12 @@ Rails.application.routes.draw do
 
   match "pools/diagnostics/:id",   to: "pools#pool_diagnostics",   as: :pool_diagnostics,    via: "get"
   match "pools/diag_chg/:id",      to: "pools#pool_diag_chg", as: :pool_diag_chg,    via: "get"
+  # Diagnostics: show the inline password form for a user
+  match "users/diagnostics/:id",   to: "users#user_diagnostics", as: :user_diagnostics, via: "get"
+  # Route to fetch just the user's row (to restore after cancel) - replaces only the user's turbo frame
+  match "users/row/:id",           to: "users#user_row",         as: :user_row,         via: "get"
+  # Route to handle diagnostics user changes (e.g. reset password via POST)
+  match "users/diag_chg/:id",       to: "users#user_diag_chg",  as: :user_diag_chg,   via: "post"
   match "seasons/diagnostics/:id", to: "seasons#season_diagnostics",   as: :season_diagnostics,    via: "get"
   match "seasons/diag_chg/:id",    to: "seasons#season_diag_chg", as: :season_diag_chg,    via: "get"
 

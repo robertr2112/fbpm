@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :correct_user, only: [ :edit, :update ]
-  before_action :admin_user, only: :destroy
+  before_action :admin_user, only: [:destroy, :user_diagnostics, :user_diag_chg, :user_row]
 
   def index
     if current_user.admin?
@@ -75,6 +75,74 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  # Render inline password form into the user's turbo frame
+  def user_diagnostics
+    user = User.find_by_id(params[:id])
+    if user
+      render turbo_stream: turbo_stream.replace(
+        view_context.dom_id(user),
+        partial: "diagnostics/user_password_form",
+        locals: { user: user }
+      )
+    else
+      head :not_found
+    end
+  end
+
+  # Return just the user's row so it can replace the user's turbo frame (used for Cancel)
+  def user_row
+    user = User.find_by_id(params[:id])
+    if user
+      render turbo_stream: turbo_stream.replace(
+        view_context.dom_id(user),
+        partial: "diagnostics/user_tab_index",
+        locals: { user: user }
+      )
+    else
+      head :not_found
+    end
+  end
+
+  # Handle POST from inline password form: set a chosen password via the Diagnostics service
+  def user_diag_chg
+    Rails.logger.info("user_diag_chg called by user=#{current_user&.id} params=#{params.to_unsafe_h}")
+    service = Diagnostics::UsersDiagnostics.new
+    commands = params[:commands] || ['user_pw']
+    result = service.handle_change(params.merge(commands: commands))
+
+    user = result[:user]
+    # find the first command result for user_pw
+    pw_result = result[:results]&.find { |r| r[:command] == 'user_pw' }
+
+    Rails.logger.info("user_diag_chg result=#{result.inspect}")
+
+    if pw_result && pw_result[:result][:status] == :ok
+      flash[:success] = "Password updated for #{user.email}"
+
+      actions = [
+        turbo_stream.replace(view_context.dom_id(user), partial: "diagnostics/user_tab_index", locals: { user: user }),
+        turbo_stream.replace("flash", partial: "layouts/flash")
+      ]
+
+      render turbo_stream: actions
+    else
+      # Attach errors to user if available so form can display them
+      if pw_result && pw_result[:result][:errors]
+        user.errors.add(:base, pw_result[:result][:errors].join(', '))
+        flash[:danger] = pw_result[:result][:errors].join(', ')
+      else
+        flash[:danger] = 'Unable to update password'
+      end
+
+      actions = [
+        turbo_stream.replace(view_context.dom_id(user), partial: "diagnostics/user_password_form", locals: { user: user }),
+        turbo_stream.replace("flash", partial: "layouts/flash")
+      ]
+
+      render turbo_stream: actions, status: :unprocessable_entity
+    end
+  end
+
   # Setup to resend the activation email !!!! Is this still needed?
   # def resend_activation
   #  user = User.find_by_id(params[:id])
@@ -103,7 +171,12 @@ class UsersController < ApplicationController
     def admin_user
       if !current_user.admin?
         flash[:danger] = "Only an Admin User can access that page!"
-        redirect_to root_url
+        if request.format.turbo_stream?
+          # Replace the global flash area so Turbo frame requests can display the error inline
+          render turbo_stream: turbo_stream.replace("flash", partial: "layouts/flash"), status: :forbidden
+        else
+          redirect_to root_url
+        end
       end
     end
 end
