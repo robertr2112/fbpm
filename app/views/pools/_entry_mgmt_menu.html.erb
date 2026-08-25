@@ -8,11 +8,11 @@
 <% entries = pool.entries.where(user_id: current_user.id) %>
 <% entries.each do |entry| %>
   <li class="nav-item dropdown">
-    <a class="dropdown-item dropdown-toggle" id="dropdownMenuEntries" href="#"
+    <a class="dropdown-item dropdown-toggle" id="dropdownMenuEntries-<%= entry.id %>" href="#"
        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <%= entry.name %>
     </a>
-    <ul class="dropdown-menu left" aria-labelledby="dropdownMenuEntries">
+    <ul class="dropdown-menu left" aria-labelledby="dropdownMenuEntries-<%= entry.id %>">
       <li><%= link_to "Edit entry", edit_entry_path(entry),
                         class:'dropdown-item'  %></li>
       <li> <%= link_to "Delete entry", entry, method: :delete,
