@@ -38,13 +38,13 @@
                   <div class="dropdown-divider"></div>
                   <!-- Level two dropdown - This is the per pool menu list -->
                   <li class="nav-item dropdown">
-                    <%= link_to pool.name,
+                    <%= link_to pool.name, 
                       "#",
-                      id: "dropdownMenuPools-#{pool.id}",
+                      id: "dropdownMenuPools",
                       class: "dropdown-item dropdown-toggle pool-name",
                       data: { bs_toggle: "dropdown" },
                       aria: { haspopup: "true", expanded: "false" } %>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools-<%= pool.id %>">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools">
                       <% if pool.isOwner?(current_user) %>
                         <li><%= link_to "Edit pool", edit_pool_path(pool),
                               class:'dropdown-item pool-edit' %></li>
