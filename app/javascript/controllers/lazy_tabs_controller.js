@@ -2,55 +2,28 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    this.boundLoad = this.load.bind(this)
-    this.element.querySelectorAll(".nav-link").forEach((button) => {
-      button.addEventListener("shown.bs.tab", this.boundLoad)
-    })
+    this.element.addEventListener("shown.bs.tab", this.load.bind(this))
 
+    // Load the initially active tab
     const activeTab = this.element.querySelector(".nav-link.active")
     if (activeTab) {
-      this.scheduleLoad(activeTab)
+      this.load({ target: activeTab })
     }
-  }
-
-  disconnect() {
-    if (!this.boundLoad) return
-
-    this.element.querySelectorAll(".nav-link").forEach((button) => {
-      button.removeEventListener("shown.bs.tab", this.boundLoad)
-    })
-  }
-
-  scheduleLoad(button) {
-    requestAnimationFrame(() => this.load({ target: button }))
   }
 
   load(event) {
-    const button = event?.target?.closest?.(".nav-link") || event?.currentTarget || this.element.querySelector(".nav-link.active")
-    if (!button) return
+    const button = event.target
+    const url = button.dataset.url
+    const frameId = button.dataset.turboFrame
 
-    const url = button.dataset?.url
-    if (!url) return
+    if (!url || !frameId) return
 
-    const frameId = button.dataset?.turboFrame
-    const targetSelector = button.dataset?.bsTarget
+    const frame = document.getElementById(frameId)
 
-    let frame = frameId ? document.getElementById(frameId) : null
-    if (!frame && targetSelector) {
-      const pane = document.querySelector(targetSelector)
-      frame = pane?.querySelector("turbo-frame") || null
-    }
-
-    if (!frame) {
-      // Bootstrap can fire the tab event before the pane is mounted, especially when the
-      // controller reconnects or the user clicks quickly. Retry on the next animation frame.
-      this.scheduleLoad(button)
-      return
-    }
-
+    // Only load once
     if (frame.dataset.loaded) return
 
     frame.dataset.loaded = true
-    frame.setAttribute("src", url)
+    frame.src = url
   }
 }
