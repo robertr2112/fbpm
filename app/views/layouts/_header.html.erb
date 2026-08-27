@@ -40,11 +40,11 @@
                   <li class="dropdown-submenu">
                     <%= link_to pool.name, 
                       "#",
-                      id: "dropdownMenuPools",
+                      id: "dropdownMenuPools-#{pool.id}",
                       class: "dropdown-item dropdown-toggle pool-name",
                       data: { action: "click->dropdown#toggleSubmenu" },
                       aria: { haspopup: "true", expanded: "false" } %>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuPools-<%= pool.id %>">
                       <% if pool.isOwner?(current_user) %>
                         <li><%= link_to "Edit pool", edit_pool_path(pool),
                               class:'dropdown-item pool-edit' %></li>

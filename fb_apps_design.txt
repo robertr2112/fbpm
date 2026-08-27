@@ -181,3 +181,162 @@ Password Reset
           - redirect_to password_reset#new
       - otherwise update users password : @user.update(user_params)
       - if that fails got back to password_reset#edit
+
+Lazy Tabs Controller
+--------------------
+Stimulus Controller Design Summary — Lazy‑Loading Turbo Frames in Bootstrap Tabs
+Purpose
+This controller provides reliable, one‑time lazy loading of Turbo Frames inside Bootstrap tab panes. It is engineered to handle real‑world DOM timing issues common in Rails 8 apps using Turbo, Stimulus, and Bootstrap together.
+
+The controller ensures that:
+
+  - Each tab loads its Turbo Frame only once
+
+  - The correct frame is located whether referenced by ID or nested inside the pane
+
+  - Bootstrap’s shown.bs.tab event is handled safely even when fired early
+
+  - Stimulus reconnects do not cause duplicate event bindings
+
+  - Fast user interactions do not break loading behavior
+
+High‑Level Behavior
+On connect:
+
+  - Bind a shown.bs.tab listener to each .nav-link
+
+  - Load the initially active tab (deferred one animation frame)
+
+On tab activation:
+
+  - Identify the correct tab button and associated Turbo Frame
+
+  - Retry if the frame is not yet mounted
+
+  - Load the frame only once by setting data-loaded
+
+3. On disconnect:
+
+  - Remove all event listeners to prevent duplicate bindings
+
+Key Design Goals
+
+1. Robustness Against DOM Timing Issues
+Bootstrap may fire shown.bs.tab before Turbo has mounted the pane.
+The controller uses requestAnimationFrame to retry until the frame exists.
+
+2. Safe Event Binding
+Listeners are attached directly to .nav-link elements and removed on disconnect.
+This prevents:
+
+  - Double‑binding
+
+  - Multiple loads
+
+  - Stimulus reconnect side effects
+
+3. Flexible Frame Resolution
+The controller supports two patterns:
+
+  - Explicit data-turbo-frame="frame_id"
+
+  - Implicit: Turbo Frame nested inside the pane referenced by data-bs-target
+
+This makes the controller compatible with both simple and complex tab layouts.
+
+4. Defensive Event Target Normalization
+Bootstrap events sometimes provide:
+
+  - event.target as a child element
+
+  - event.currentTarget as the button
+
+  - No usable target during reconnects
+
+The controller normalizes all cases to reliably identify the correct tab button.
+
+5. Guaranteed One‑Time Loading
+Each frame is marked with data-loaded to prevent redundant requests.
+
+Core Responsibilities
+
+connect()
+  - Bind tab event listeners
+
+  - Store a bound version of load() for cleanup
+
+  - Trigger initial tab load using scheduleLoad()
+
+disconnect()
+  - Remove all listeners to avoid duplicate firing on reconnect
+
+scheduleLoad(button)
+  - Defer loading until the next animation frame
+
+  - Used for initial load and retry logic
+
+load(event)
+  - Resolve the correct tab button
+
+  - Extract URL and frame identifiers
+
+  - Locate the Turbo Frame (ID or nested)
+
+  - Retry if frame not yet mounted
+
+  - Load the frame once by setting src and data-loaded
+
+Error & Edge Case Handling
+
+Frame Not Mounted Yet
+  - Retry via scheduleLoad()
+
+  - Solves race conditions between Turbo and Bootstrap
+
+Missing Data Attributes
+  - Gracefully aborts without throwing errors
+
+  - Uses optional chaining throughout
+
+Fast User Interaction
+  - Retrying ensures the correct frame loads even if the user clicks rapidly
+
+Stimulus Reconnects
+  - Cleanup prevents duplicate listeners
+
+  - Initial load is re-triggered safely
+
+Why This Controller Exists
+  - Rails 8 + Turbo + Bootstrap tabs create a perfect storm of timing issues:
+
+  - Turbo mounts frames asynchronously
+
+  - Bootstrap fires tab events early
+
+  - Stimulus reconnects frequently
+
+  - Users click faster than the DOM stabilizes
+
+Controller #2 is designed to be production‑safe, eliminating intermittent failures that appear only under real user behavior.
+
+Intended Usage
+  - Use this controller for any tabbed interface where:
+
+  - Each tab contains a Turbo Frame
+
+  - You want to lazy‑load content only when the tab is activated
+
+  - You need reliability across Turbo navigation, partial reloads, and reconnects
+
+This controller is ideal for:
+
+  - Diagnostics dashboards
+
+  - Admin panels
+
+  - Multi‑pane detail views
+
+  - Lazy‑loaded reports or charts
+
+Any tabbed UI with expensive server-rendered content
+
