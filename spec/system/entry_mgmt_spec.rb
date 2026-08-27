@@ -75,6 +75,7 @@ RSpec.describe 'Entry Management', type: :system do
     find('h1.pageHeader', text: 'Create New Pool')
     fill_in 'pool_name', with: 'Test Pool'
     click_button 'Create pool'
+    expect(page).to have_text("Pool 'Test Pool' was created successfully!")
     @pool = Pool.find_by_name('Test Pool')
     sign_out_user @user2
   end
@@ -94,6 +95,7 @@ RSpec.describe 'Entry Management', type: :system do
     find('h1.pageHeader', text: 'Create New Pool')
     fill_in 'pool_name', with: 'Test Pool'
     click_button 'Create pool'
+    expect(page).to have_text("Pool 'Test Pool' was created successfully!")
     @pool = Pool.find_by_name('Test Pool')
   end
 
@@ -106,16 +108,16 @@ RSpec.describe 'Entry Management', type: :system do
 
   def when_I_leave_the_pool
     visit pool_path(@pool)
-    find_link('Pool Management').hover
-    find_link("#{@pool.name}").hover
+    find_link('Pool Management').click
+    find_link("#{@pool.name}").click
     click_link 'Leave Pool'
   end
 
   def when_I_update_the_entry_name
-    find_link('Pool Management').hover
-    find_link("#{@pool.name}").hover
+    find_link('Pool Management').click
+    find_link("#{@pool.name}").click
     entry_name = @user.user_name
-    find('a.dropdown-item', text: "#{entry_name}").hover
+    find('a.dropdown-item', text: "#{entry_name}").click
     click_link 'Edit entry'
     @new_entry_name = "New Entry Name"
     fill_in 'entry_name', with: "#{@new_entry_name}"

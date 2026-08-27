@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Header hamburger smoke', type: :system, js: true do
+  after do
+    page.driver.browser.manage.window.resize_to(1920, 1080)
+  end
+
   it 'opens the collapsed navigation when the toggle is clicked' do
     page.driver.browser.manage.window.resize_to(375, 812)
     visit root_path

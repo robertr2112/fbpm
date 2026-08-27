@@ -1,15 +1,11 @@
 require 'rails_helper'
 RSpec.describe 'Pool Management', type: :system do
   before do
-    # driven_by(:selenium_chrome_headless)
-    # driven_by(:selenium_chrome_headless_sandboxless)
+    driven_by(:selenium_chrome_headless_sandboxless)
     # driven_by(:selenium_chrome)
   end
 
   feature 'Create' do
-    before do
-      driven_by(:selenium_chrome_headless_sandboxless)
-    end
 
     scenario 'A user can create a new pool', js: true do
       given_that_a_season_has_been_created
@@ -20,9 +16,6 @@ RSpec.describe 'Pool Management', type: :system do
   end
 
   feature 'update' do
-    before do
-      driven_by(:selenium_chrome_headless_sandboxless)
-    end
 
     scenario 'Can update a pool name', js: true do
       given_that_a_season_has_been_created
@@ -34,9 +27,6 @@ RSpec.describe 'Pool Management', type: :system do
   end
 
   feature 'Delete' do
-    before do
-      driven_by(:selenium_chrome_headless_sandboxless)
-    end
 
     scenario 'Deleting a pool', js: true do
       given_that_a_season_has_been_created
@@ -75,12 +65,13 @@ RSpec.describe 'Pool Management', type: :system do
     find('h1.pageHeader', text: 'Create New Pool')
     fill_in 'pool_name', with: 'Test Pool'
     click_button 'Create pool'
+    expect(page).to have_text("Pool 'Test Pool' was created successfully!")
     @pool = Pool.find_by_name('Test Pool')
   end
 
   def when_I_update_the_pool_name
-    find('a.pool-mgmt').hover
-    find('a.pool-name').hover
+    find('a.pool-mgmt').click
+    find('a.pool-name').click
     find('a.pool-edit').click
     @pool.name = 'Test Pool 2'
     fill_in 'pool_name', with: @pool.name
@@ -88,10 +79,11 @@ RSpec.describe 'Pool Management', type: :system do
   end
 
   def when_I_delete_a_pool
-    find('a.pool-mgmt').hover
-    find('a.pool-name').hover
-    find('a.pool-delete').click
-    page.driver.browser.switch_to.alert.accept
+    find('a.pool-mgmt').click
+    find('a.pool-name').click
+    accept_confirm("Are you sure?") do
+      find('a.pool-delete').click
+    end
   end
 
   # Then Definitions

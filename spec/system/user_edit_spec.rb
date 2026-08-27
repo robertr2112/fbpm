@@ -87,7 +87,7 @@ RSpec.describe 'Edit page', type: :system, js: true do
         user.reload
         find('h1.pageHeader', text: "#{user.name} - My Pools")
         Capybara.using_wait_time(5) do
-          find('a.user-name').hover
+          find('a.user-name').click
           expect(page).to have_link('Sign out', href: session_path)
         end
       end

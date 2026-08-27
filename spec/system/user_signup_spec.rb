@@ -158,7 +158,12 @@ RSpec.describe 'User signup', type: :system, js: true do
       context 'after creating the user' do
         before do
           click_button submit
-          find('div.alert.alert-info')
+          expect(page).to have_current_path(%r{\A/users/\d+\z})
+          expect(page).to have_selector('h1.pageHeader', text: 'Example User')
+          expect(page).to have_selector(
+            'div.alert.alert-info',
+            text: 'Please check your email to activate your account.'
+          )
         end
         let(:user) { User.find_by(email: 'user1@example.com') }
 
@@ -181,7 +186,7 @@ RSpec.describe 'User signup', type: :system, js: true do
         end
 
         scenario 'clicking resend_activation button should resend email', js: true do
-          find('a.user-name').hover
+          find('a.user-name').click
           find('a.user-resend').click
           find('div.alert.alert-success')
           expect(page).to have_selector('div.alert.alert-success',
