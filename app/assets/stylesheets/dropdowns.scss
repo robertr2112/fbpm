@@ -32,9 +32,9 @@
 
 /* Styling for Weeks mgmt dropdown/scroll bar */
 .mgmtWeeksDropdown {
-  display: static;
   max-height: 100px;
   overflow-y: auto;
+  z-index: 1040;
 }
 
 @media (min-width: 576px) {
