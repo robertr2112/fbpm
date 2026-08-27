@@ -13,6 +13,5 @@ import "@fortawesome/fontawesome-free"
 
 import "controllers"
 import "custom/forms"
-import "custom/header_dropdowns"
 import "custom/picks"
 import "custom/weeks"

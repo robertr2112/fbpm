@@ -7,9 +7,9 @@
 <!-- Level Three dropdown - This is the per entry menu list -->
 <% entries = pool.entries.where(user_id: current_user.id) %>
 <% entries.each do |entry| %>
-  <li class="nav-item dropdown">
+  <li class="dropdown-submenu">
     <a class="dropdown-item dropdown-toggle" id="dropdownMenuEntries" href="#"
-       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       data-action="click->dropdown#toggleSubmenu" aria-haspopup="true" aria-expanded="false">
       <%= entry.name %>
     </a>
     <ul class="dropdown-menu left" aria-labelledby="dropdownMenuEntries">

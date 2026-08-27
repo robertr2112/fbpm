@@ -1,52 +1,49 @@
-/* Styling for the header multi-level dropdowns */
-.dropdown-menu {
-    margin-top: 0;
-}
-.dropdown-menu .dropdown-toggle::after {
-    vertical-align: middle;
-    border-left: 4px solid;
-    border-bottom: 4px solid transparent;
-    border-top: 4px solid transparent;
-}
-.dropdown-menu .dropdown .dropdown-menu {
-    left: 100%;
-    top: 0%;
-    margin:0 20px;
-    border-width: 0;
-}
-.dropdown-menu .dropdown .dropdown-menu.left {
-    right: 100%;
-    left: auto;
+/* Styling for nested header dropdowns controlled by Stimulus. */
+.dropdown-menu .dropdown-submenu {
+  position: relative;
 }
 
-.dropdown-menu > li a:hover,
-.dropdown-menu > li.show {
-	background: #007bff;
-	color: white;
-}
-.dropdown-menu > li.show > a{
-	color: white;
+.dropdown-menu .dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+  margin-left: 0;
 }
 
-@media (min-width: 768px) {
-    .dropdown-menu .dropdown .dropdown-menu {
-        margin:0;
-        border-width: 1px;
-    }
+.dropdown-menu .dropdown-submenu > .dropdown-menu.show {
+  display: block;
 }
 
-/* Styling for Weeks mgmt dropdown/scroll bar*/
+.dropdown-menu .dropdown-submenu > .dropdown-menu.left {
+  right: 100%;
+  left: auto;
+}
+
+@media (max-width: 767.98px) {
+  .dropdown-menu .dropdown-submenu > .dropdown-menu {
+    position: static;
+    margin: 0;
+  }
+
+  .dropdown-menu .dropdown-submenu > .dropdown-menu.left {
+    right: auto;
+  }
+}
+
+/* Styling for Weeks mgmt dropdown/scroll bar */
 .mgmtWeeksDropdown {
   display: static;
   max-height: 100px;
   overflow-y: auto;
 }
-@media (min-width: 576px){
+
+@media (min-width: 576px) {
   .mgmtWeeksDropdown {
     max-height: 400px;
   }
 }
-@media (max-width: 575.98px){
+
+@media (max-width: 575.98px) {
   .mgmtWeeksDropdown {
     max-height: 250px;
   }
