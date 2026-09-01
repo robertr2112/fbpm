@@ -4,6 +4,7 @@ import "@hotwired/stimulus"
 import "@hotwired/stimulus-loading"
 import "jquery"
 import "bootstrap"
+import { ScrollSpy } from "bootstrap"
 import "@popperjs/core"
 import "@rails/activestorage"
 import "@rails/actioncable"
@@ -14,3 +15,24 @@ import "@fortawesome/fontawesome-free"
 import "controllers"
 import "custom/forms"
 import "custom/picks"
+
+function initializeHelpScrollSpy() {
+  const scrollSpyEls = document.querySelectorAll('[data-bs-spy]');
+
+  scrollSpyEls.forEach((element) => {
+    const instance = ScrollSpy.getOrCreateInstance(element);
+    instance.refresh();
+
+    requestAnimationFrame(() => {
+      instance.refresh();
+    });
+  });
+}
+
+$(document).on('turbo:load', function() {
+  initializeHelpScrollSpy();
+});
+
+$(document).on('turbo:render', function() {
+  initializeHelpScrollSpy();
+});
