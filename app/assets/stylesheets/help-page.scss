@@ -1,19 +1,97 @@
 
-/* This is the styling for the nav-pills nav-top example */
+/* Docs-style nested scrollspy nav for the Help page */
 .help-nav {
-    position: relative;
-    padding: 1rem;
-    margin: 1rem -15px 0px;
-    border-style: solid;
-    border-color: rgb(248, 249, 250);
-    border-image: initial;
-    border-width: 0.2rem 0px 0px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  position: relative;
+  padding: 1rem;
+  margin: 1rem -15px 0;
+  border: 1px solid #e4e7eb;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #f8f9fa 0%, #f3f5f7 100%);
+}
+
+.help-nav > nav {
+  flex: 0 0 260px;
+  position: sticky;
+  top: 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.help-nav .nav {
+  width: 100%;
+}
+
+.help-nav .nav .nav {
+  margin-top: 0.2rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid #e5e7eb;
+}
+
+.help-nav .nav-link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: #4b5563;
+  font-size: 0.96rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  transition: all 0.2s ease;
+}
+
+.help-nav .nav-link:hover {
+  background: rgba(22, 101, 52, 0.05);
+  color: #14532d;
+}
+
+.help-nav .nav-link.active {
+  background: #edf2ff;
+  color: #1d4ed8;
+  box-shadow: inset 0 0 0 1px rgba(29, 78, 216, 0.08);
+}
+
+.help-nav .nav .nav .nav-link {
+  padding: 0.42rem 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.help-nav .nav .nav .nav-link.active {
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
 .scrollspy-help-nav {
-    position: relative;
-    height: 600px;
-    overflow: auto;
+  position: relative;
+  flex: 1 1 auto;
+  height: 70vh;
+  overflow: auto;
+  padding: 1.5rem 1.75rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.scrollspy-help-nav h1,
+.scrollspy-help-nav h2,
+.scrollspy-help-nav h3,
+.scrollspy-help-nav h4,
+.scrollspy-help-nav h5,
+.scrollspy-help-nav h6 {
+  color: #1f2937;
+}
+
+.help-item,
+.help-sub-item {
+  scroll-margin-top: 1rem;
 }
 
 .item-hidden {
@@ -21,7 +99,32 @@
   display: none;
 }
 
-/* Pad the last item to ensure that the second to last item is targeted, even it is small */
 .help-last-item {
-  padding-bottom:70px;
+  padding-bottom: 70px;
+}
+
+@media (max-width: 767.98px) {
+  .help-nav {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .help-nav > nav {
+    flex-basis: auto;
+    width: 100%;
+    position: static;
+  }
+
+  .help-nav .nav .nav {
+    margin-left: 0;
+    padding-left: 0.5rem;
+  }
+
+  .scrollspy-help-nav {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    padding: 1rem 1rem 1.5rem;
+  }
 }

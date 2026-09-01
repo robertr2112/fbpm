@@ -2,31 +2,30 @@
 
 <div class="help-nav">
   <nav id="navbar-help" class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">Help Menu</a>
-    <ul class="nav nav-pills">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">Pool Administrators</a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item item-hidden" href="#admin">Pool Administrators</a>
-          <a class="dropdown-item" href="#managepool">Managing a Pool</a>
-          <a class="dropdown-item" href="#createpool">Creating a Pool</a>
-          <a class="dropdown-item" href="#editpool">Editing a Pool</a>
-          <a class="dropdown-item" href="#deletepool">Deleting a Pool</a>
-          <a class="dropdown-item" href="#joinpool">Joining a Pool</a>
-          <a class="dropdown-item" href="#leavepool">Leaving a Pool</a>
-          <a class="dropdown-item" href="#pooltype">Types of Pools</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">Managing Weeks</a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item item-hidden" href="#manageweek">Managing Weeks</a>
-          <a class="dropdown-item" href="#createweek">Create Weeks</a>
-          <a class="dropdown-item" href="#editweek">Editing Weeks</a>
-          <a class="dropdown-item" href="#states">Week States</a>
-        </div>
-      </li>
-    </ul>
+    <div class="nav nav-pills flex-column">
+      <a class="nav-link" href="#admin">Pool Administrators</a>
+      <div class="nav nav-pills flex-column ms-3">
+        <a class="nav-link" href="#managepool">Managing a Pool</a>
+        <a class="nav-link" href="#createpool">Creating a Pool</a>
+        <a class="nav-link" href="#editpool">Editing a Pool</a>
+        <a class="nav-link" href="#deletepool">Deleting a Pool</a>
+        <a class="nav-link" href="#joinpool">Joining a Pool</a>
+        <a class="nav-link" href="#leavepool">Leaving a Pool</a>
+        <a class="nav-link" href="#pooltype">Types of Pools</a>
+      </div>
+
+      <a class="nav-link" href="#manageweek">Managing Weeks</a>
+      <div class="nav nav-pills flex-column ms-3">
+        <a class="nav-link" href="#createweek">Create Weeks</a>
+        <a class="nav-link" href="#editweek">Editing Weeks</a>
+        <a class="nav-link" href="#states">Week States</a>
+      </div>
+
+      <a class="nav-link" href="#members">Pool Members</a>
+      <div class="nav nav-pills flex-column ms-3">
+        <a class="nav-link" href="#manageentries">Managing Entries</a>
+      </div>
+    </div>
   </nav>
 
   <div data-bs-spy="scroll" data-bs-target="#navbar-help" data-bs-offset="15" tabindex="0" class="scrollspy-help-nav">
