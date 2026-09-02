@@ -421,7 +421,7 @@ GEM
       regexp_parser (>= 2.0)
       rubocop (~> 1.86, >= 1.86.2)
     ruby-progressbar (1.13.0)
-    rubyzip (3.1.0)
+    rubyzip (3.5.0)
     sass-embedded (1.94.0-aarch64-linux-gnu)
       google-protobuf (~> 4.31)
     sass-embedded (1.94.0-aarch64-linux-musl)
@@ -572,7 +572,7 @@ DEPENDENCIES
   rspec-rails (~> 8.0)
   rubocop-rails-omakase
   rubocop-rspec
-  rubyzip (~> 3.0)
+  rubyzip (~> 3.5)
   select2-rails
   selenium-webdriver (= 4.35)
   simple_form (~> 5.3, >= 5.3.1)

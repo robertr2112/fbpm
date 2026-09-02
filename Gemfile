@@ -59,7 +59,7 @@ gem "benchmark"
 #  Use concurrent-ruby 1.3.4 until using Rails version 7.1 !!!
 gem "concurrent-ruby", "1.3.5"
 # Update to rubyzip 3.0
-gem "rubyzip", "~> 3.0"
+gem "rubyzip", "~> 3.5"
 # This gem is added to work around some already initialized constant errors
 # with net/protocol in Ruby version
 gem "net-http"
