@@ -57,7 +57,7 @@ gem "fiddle", "1.1.8"
 #  load benchmark because it's no longer in ruby after ruby 3.5.0
 gem "benchmark"
 #  Use concurrent-ruby 1.3.4 until using Rails version 7.1 !!!
-gem "concurrent-ruby", "1.3.5"
+gem "concurrent-ruby", "1.3.8"
 # Update to rubyzip 3.0
 gem "rubyzip", "~> 3.0"
 # This gem is added to work around some already initialized constant errors
